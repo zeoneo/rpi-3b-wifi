@@ -9,10 +9,18 @@ This is an attempt to write bare metal wifi driver for raspberry pi by following
 - Invoke `./build.sh`
 - Find binary in current working directory folder.
 
-Current Status : NOT WORKING
+Current Status : Wifi driver NOT WORKING
 
-- As of now this code can display root directory contents.
-- First task is to remove dependency of EMMC controller to read sd card.
-- So I will try to use uboot's sdhost implementation to read sd card.
-- Next I will try to enable wifi using EMMC controller. I will refer richard miller's wifi driver written for PLAN9.
-
+### Development Plan
+- [x] Set up basic utilities like printf, timers, interrupt
+- [x] Use emmec controller to read sd card's contents
+- []  Add sdhost driver to read sd card's content
+- [] Remove EMMC dependency to read sd card
+- [] Write basic SDIO driver for EMMC
+- [] Use emmc + sdio to enable wifi
+- [] Get broadcom binary driver for wifi chip
+- [] Load broadcom driver into wifi chip
+- [] Initialize wifi
+- [] Send packets
+- [] Use light wight network library to use wifi
+- [] Write basic http hello world test example using wifi
