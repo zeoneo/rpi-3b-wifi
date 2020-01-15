@@ -2,8 +2,8 @@
 #include <stdint.h>
 #include <plibc/stdio.h>
 
-#include <device/keyboard.h>
-#include <device/mouse.h>
+
+#include <device/sd_card.h>
 #include <device/uart0.h>
 #include <device/dma.h>
 #include <fs/fat.h>
@@ -34,15 +34,19 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 	printf("\n Kernel End: 0x%x \n", &__kernel_end);
 
 	mem_alloc_init((uint32_t)&__kernel_end, 0x100000 * 16); // 16 MB
-	show_dma_demo();
-	if(initialize_fat()) {
-		printf("-------Successfully Initialized FAT----------\n");
-		print_root_directory_info();
-	} else {
-		printf("-------Failed to initialize FAT----------\n");
+	// show_dma_demo();
+	init_sdcard();
+
+	// if(initialize_fat()) {
+	// 	printf("-------Successfully Initialized FAT----------\n");
+	// 	print_root_directory_info();
+	// } else {
+	// 	printf("-------Failed to initialize FAT----------\n");
+	// }
+
+
+	while (1)
+	{
 	}
-while (1)
-{
-}
 
 }

@@ -43,12 +43,15 @@ src/emmc.o \
 src/fat.o \
 src/fat16.o \
 src/fat32.o \
+src/sd_card.o \
+src/gpio.o \
 src/kernel_alloc.o \
 src/rpi-armtimer.o \
 src/rpi-interrupts.o \
 src/rpi-mailbox-interface.o \
 src/rpi-mailbox.o \
 src/systimer.o \
+src/sdhost.o \
 src/uart0.o \
 src/memcmp.o \
 src/memcpy.o \

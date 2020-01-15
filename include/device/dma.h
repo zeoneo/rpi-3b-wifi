@@ -6,7 +6,9 @@
 // Taken all of the following code is taken from linux source
 #define DMA_BASE PERIPHERAL_BASE + 0x7000
 
-#define BIT(nr) (1UL << (nr))
+#ifndef BIT
+#define BIT(nr)		(1 << (nr))
+#endif
 
 // For peripheral
 // #define TIMER_BASE 0x3F003000

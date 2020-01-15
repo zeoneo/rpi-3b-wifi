@@ -65,8 +65,18 @@ typedef enum
     TAG_GET_TEMPERATURE = 0x30006,
     TAG_GET_MAX_TEMPERATURE = 0x3000A,
 
+    /* GPIO */
+	TAG_GET_DOMAIN_STATE = 0x30030,
+	TAG_GET_GPIO_STATE = 0x30041,
+	TAG_SET_GPIO_STATE = 0x38041,
 
+	TAG_GET_GPIO_CONFIG = 0x30043,
+	TAG_SET_GPIO_CONFIG = 0x38043,
 
+	TAG_SET_CUSTOMER_OTP = 0x38021,
+	TAG_SET_DOMAIN_STATE = 0x38030,
+	TAG_SET_SDHOST_CLOCK = 0x38042,
+    
     /* Framebuffer */
     TAG_ALLOCATE_BUFFER = 0x40001,
     TAG_RELEASE_BUFFER = 0x48001,
@@ -135,17 +145,18 @@ typedef struct
 typedef enum
 {
     TAG_CLOCK_RESERVED = 0,
-    TAG_CLOCK_EMMC,
-    TAG_CLOCK_UART,
-    TAG_CLOCK_ARM,
-    TAG_CLOCK_CORE,
-    TAG_CLOCK_V3D,
-    TAG_CLOCK_H264,
-    TAG_CLOCK_ISP,
-    TAG_CLOCK_SDRAM,
-    TAG_CLOCK_PIXEL,
-    TAG_CLOCK_PWM,
+    TAG_CLOCK_EMMC = 1,
+    TAG_CLOCK_UART = 2,
+    TAG_CLOCK_ARM = 3,
+    TAG_CLOCK_CORE = 4,
+    TAG_CLOCK_V3D = 5,
+    TAG_CLOCK_H264 = 6,
+    TAG_CLOCK_ISP = 7,
+    TAG_CLOCK_SDRAM = 8,
+    TAG_CLOCK_PIXEL = 9,
+    TAG_CLOCK_PWM = 10,
 } rpi_tag_clock_id_t;
+
 
 extern void RPI_PropertyInit(void);
 extern void RPI_PropertyAddTag(rpi_mailbox_tag_t tag, ...);
