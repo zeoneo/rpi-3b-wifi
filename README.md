@@ -7,7 +7,8 @@ This is an attempt to write bare metal wifi driver for raspberry pi by following
 - Get docker desktop for your host operating system
 - Change directory to `rpi-3b-wifi`
 - Invoke `./build.sh`
-- Find binary in current working directory folder.
+- Find binary in current working directory.
+- `IMAGE` directory has all the files which can be directly copied to sd card of PI to test this code.
 
 Current Status : Wifi driver NOT WORKING
 
