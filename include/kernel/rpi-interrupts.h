@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <device/uart0.h>
+#include <kernel/rpi-interrupts.h>
 #include "rpi-base.h"
 
 #define RPI_INTERRUPT_CONTROLLER_BASE (PERIPHERAL_BASE + 0xB200)
@@ -43,10 +44,11 @@ typedef enum
     RPI_BASIC_GPU_0_HALTED_IRQ = (1 << 4),
     RPI_BASIC_GPU_1_HALTED_IRQ = (1 << 5),
     RPI_BASIC_ACCESS_ERROR_1_IRQ = (1 << 6),
-    RPI_BASIC_ACCESS_ERROR_0_IRQ = (1 << 7)
+    RPI_BASIC_ACCESS_ERROR_0_IRQ = (1 << 7),
+    IRQ_SDHOST = 56
 } irq_number_t;
 
-typedef struct
+typedef struct __attribute__((packed, aligned(4)))
 {
     volatile uint32_t IRQ_basic_pending;
     volatile uint32_t IRQ_pending_1;

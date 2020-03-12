@@ -17,6 +17,7 @@
 
 #define NUM_IRQS 72
 
+
 /** @brief The BCM2835 Interupt controller peripheral at it's base address */
 static rpi_irq_controller_t *rpiIRQController =
     (rpi_irq_controller_t *)RPI_INTERRUPT_CONTROLLER_BASE;
@@ -95,13 +96,15 @@ void __attribute__((interrupt("FIQ"))) fast_interrupt_vector(void)
 
 void interrupts_init(void)
 {
-    _enable_interrupts();
+    // _enable_interrupts();
     DISABLE_INTERRUPTS();
     bzero(handlers, sizeof(interrupt_handler_f) * NUM_IRQS);
     bzero(clearers, sizeof(interrupt_clearer_f) * NUM_IRQS);
     rpiIRQController->Disable_Basic_IRQs = 0xffffffff; // disable all interrupts
     rpiIRQController->Disable_IRQs_1 = 0xffffffff;
     rpiIRQController->Disable_IRQs_2 = 0xffffffff;
+    __asm__ __volatile__("cpsie i");
+    //  _enable_interrupts();
     ENABLE_INTERRUPTS();
 }
 
@@ -110,7 +113,7 @@ void interrupts_init(void)
  */
 void irq_handler(void)
 {
-    printf("IRQ triggered");
+    // printf("IRQ triggered");
     int32_t j;
     for (j = 0; j < NUM_IRQS; j++)
     {
@@ -138,13 +141,17 @@ void register_irq_handler(irq_number_t irq_num, interrupt_handler_f handler, int
     }
     else if (IRQ_IS_GPU2(irq_num))
     {
+        printf("registering GPU1 IRQ2 \n");
         irq_pos = irq_num - 32;
         handlers[irq_num] = handler;
         clearers[irq_num] = clearer;
-        rpiIRQController->Enable_IRQs_2 |= (1 << irq_pos);
+        printf(" IRQ2: %x \n ", rpiIRQController->Enable_IRQs_2);
+        rpiIRQController->Enable_IRQs_2 |= (1 << ((irq_num) & (32 - 1)));
+        printf("After IRQ2: %x \n ", rpiIRQController->Enable_IRQs_2);
     }
     else if (IRQ_IS_GPU1(irq_num))
     {
+        printf("registering GPU1 IRQ1 \n");
         irq_pos = irq_num;
         handlers[irq_num] = handler;
         clearers[irq_num] = clearer;
@@ -155,6 +162,7 @@ void register_irq_handler(irq_number_t irq_num, interrupt_handler_f handler, int
         printf("ERROR: CANNOT REGISTER IRQ HANDLER: INVALID IRQ NUMBER: %d\n", irq_num);
     }
 }
+
 void unregister_irq_handler(irq_number_t irq_num)
 {
     uint32_t irq_pos;

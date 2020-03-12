@@ -52,6 +52,7 @@ src/rpi-mailbox-interface.o \
 src/rpi-mailbox.o \
 src/systimer.o \
 src/sdhost.o \
+src/sdhost1.o \
 src/uart0.o \
 src/memcmp.o \
 src/memcpy.o \

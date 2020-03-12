@@ -5,7 +5,8 @@
 #include <kernel/systimer.h>
 #include <device/sdhost.h>
 #include <device/gpio.h>
-
+#include <kernel/rpi-interrupts.h>
+#include <kernel/rpi-mailbox-interface.h>
 
 #define DEBUG_INFO 1
 #if DEBUG_INFO == 1
@@ -21,23 +22,23 @@
 
 #define msleep(a) MicroDelay(a * 1000)
 
-#define SDCMD  0x00 /* Command to SD card              - 16 R/W */
-#define SDARG  0x04 /* Argument to SD card             - 32 R/W */
-#define SDTOUT 0x08 /* Start value for timeout counter - 32 R/W */
-#define SDCDIV 0x0c /* Start value for clock divider   - 11 R/W */
-#define SDRSP0 0x10 /* SD card response (31:0)         - 32 R   */
-#define SDRSP1 0x14 /* SD card response (63:32)        - 32 R   */
-#define SDRSP2 0x18 /* SD card response (95:64)        - 32 R   */
-#define SDRSP3 0x1c /* SD card response (127:96)       - 32 R   */
-#define SDHSTS 0x20 /* SD host status                  - 11 R/W */
-#define SDVDD  0x30 /* SD card power control           -  1 R/W */
-#define SDEDM  0x34 /* Emergency Debug Mode            - 13 R/W */
-#define SDHCFG 0x38 /* Host configuration              -  2 R/W */
-#define SDHBCT 0x3c /* Host byte count (debug)         - 32 R/W */
-#define SDDATA 0x40 /* Data to/from SD card            - 32 R/W */
-#define SDHBLC 0x50 /* Host block count (SDIO/SDHC)    -  9 R/W */
+#define SDCMD  (0x00 >> 2) /* Command to SD card              - 16 R/W */
+#define SDARG  (0x04 >> 2)/* Argument to SD card             - 32 R/W */
+#define SDTOUT (0x08 >> 2) /* Start value for timeout counter - 32 R/W */
+#define SDCDIV (0x0c >> 2)/* Start value for clock divider   - 11 R/W */
+#define SDRSP0 (0x10 >> 2)/* SD card response (31:0)         - 32 R   */
+#define SDRSP1 (0x14 >> 2)/* SD card response (63:32)        - 32 R   */
+#define SDRSP2 (0x18 >> 2)/* SD card response (95:64)        - 32 R   */
+#define SDRSP3 (0x1c >> 2)/* SD card response (127:96)       - 32 R   */
+#define SDHSTS (0x20 >> 2)/* SD host status                  - 11 R/W */
+#define SDVDD  (0x30 >> 2)/* SD card power control           -  1 R/W */
+#define SDEDM  (0x34 >> 2)/* Emergency Debug Mode            - 13 R/W */
+#define SDHCFG (0x38 >> 2)/* Host configuration              -  2 R/W */
+#define SDHBCT (0x3c >> 2)/* Host byte count (debug)         - 32 R/W */
+#define SDDATA (0x40 >> 2)/* Data to/from SD card            - 32 R/W */
+#define SDHBLC (0x50 >> 2)/* Host block count (SDIO/SDHC)    -  9 R/W */
 
-#define SDCMD_NEW_FLAG			0x8000
+#define HC_CMD_ENABLE			0x8000
 #define SDCMD_FAIL_FLAG			0x4000
 #define SDCMD_BUSYWAIT			0x800
 #define SDCMD_NO_RESPONSE		0x400
@@ -125,7 +126,7 @@ static uint32_t edm_fifo_fill(uint32_t edm)
 #define FIFO_WRITE_THRESHOLD	4
 #define SDDATA_FIFO_PIO_BURST	8
 
-#define SDHST_TIMEOUT_MAX_USEC	100000
+#define SDHST_TIMEOUT_MAX_USEC	1000
 #define SDHOSTREGS	(PERIPHERAL_BASE + 0x202000)
 
 struct sdhost_state host_state = {0};
@@ -144,6 +145,7 @@ static uint32_t readl(uint32_t reg)
 	return r[reg];
 }
 
+#define USED(x) if(x);else{}
 
 static void bcm2835_dumpregs()
 {
@@ -192,11 +194,26 @@ static void bcm2835_reset_internal(struct sdhost_state *host)
 	msleep(20);
 	writel(SDVDD_POWER_ON, SDVDD);
 	/* Wait for all components to go through power on cycle */
-	msleep(20);
-	host->clock = 0;
+	msleep(40);
+	host->clock = 250 * 1000 * 1000;
 	writel(host->hcfg, SDHCFG);
 	writel(host->cdiv, SDCDIV);
-	bcm2835_dumpregs();
+	// bcm2835_dumpregs();
+}
+
+static void sdhost_interrupt_clearer() {
+	LOG_DEBUG("Interrupt clearer called");
+}
+
+static void sdhost_interrupt_handler()
+{	
+
+	uint32_t i = readl(SDHSTS);
+	writel(i, SDHSTS);
+	if(i & SDHCFG_BUSY_IRPT_EN){
+		LOG_DEBUG("Interrupt Done");
+	}
+	LOG_DEBUG("Interrupt hnadler called.");
 }
 
 static int bcm2835_wait_transfer_complete()
@@ -339,7 +356,7 @@ static int bcm2835_transfer_pio(struct sdhost_state *host)
 
 static void bcm2835_prepare_data(struct sdhost_state *host, struct mmc_data *data)
 {
-	LOG_DEBUG("preparing data \n ");
+	// LOG_DEBUG("preparing data \n ");
 
 	host->data = data;
 	if (!data)
@@ -352,39 +369,25 @@ static void bcm2835_prepare_data(struct sdhost_state *host, struct mmc_data *dat
 	writel(data->blocks, SDHBLC);
 }
 
-#define readl_poll_timeout(addr, val, cond, timeout_us)	\
-({ \
-	uint64_t timeout = timer_getTickCount64() + timeout_us; \
-	for (;;) { \
-		(val) = readl(addr); \
-		if (cond) \
-			break; \
-		if (timeout_us && tick_difference(timer_getTickCount64(), timeout)) { \
-			(val) = readl(addr); \
-			break; \
-		} \
-	} \
-	(cond) ? 0 : -1; \
-})
-
 static int bcm2835_read_wait_sdcmd()
 {
-	int value;
-	int ret;
-	int timeout_us = SDHST_TIMEOUT_MAX_USEC;
+	int timeout = 1000;
+	while ((readl(SDCMD) & HC_CMD_ENABLE) && --timeout > 0) {
+		MicroDelay(SDHST_TIMEOUT_MAX_USEC);
+	}
 
-	ret = readl_poll_timeout(SDCMD, value, !(value & SDCMD_NEW_FLAG), timeout_us);
-	if (ret == -1) {
-        LOG_DEBUG("%s: timeout (%d us)\n", __func__, timeout_us);
+	// Timeout counter is either zero or -1
+	if (timeout <= 0) {
+        LOG_DEBUG("%s: timeout (%d us)\n", __func__, SDHST_TIMEOUT_MAX_USEC);
     }
-	return value;
+	return readl(SDCMD);
 }
 
 static int bcm2835_send_command(struct sdhost_state *host, struct mmc_cmd *cmd, struct mmc_data *data)
 {
 	uint32_t sdcmd, sdhsts;
 
-	LOG_DEBUG("Command Index %x \n", cmd->cmdidx);
+	// LOG_DEBUG("Command Index %d \n", cmd->cmdidx);
 
 	if ((cmd->resp_type & MMC_RSP_136) && (cmd->resp_type & MMC_RSP_BUSY)) {
 		LOG_DEBUG("unsupported response type!\n");
@@ -392,17 +395,18 @@ static int bcm2835_send_command(struct sdhost_state *host, struct mmc_cmd *cmd, 
 	}
 
 	sdcmd = bcm2835_read_wait_sdcmd(host);
-	if (sdcmd & SDCMD_NEW_FLAG) {
+	if (sdcmd & HC_CMD_ENABLE) {
 		LOG_DEBUG("previous command never completed.\n");
 		bcm2835_dumpregs();
 		return -2;
 	}
 
 	host->cmd = cmd;
+	// LOG_DEBUG("Host cmd: %x host->cmd->resp_type:%d %d\n", host->cmd, host->cmd->resp_type, cmd->resp_type);
 
 	/* Clear any error flags */
 	sdhsts = readl(SDHSTS);
-	bcm2835_dumpregs();
+	// bcm2835_dumpregs();
 	if (sdhsts & SDHSTS_ERROR_MASK) {
         writel(sdhsts, SDHSTS);
     }
@@ -410,10 +414,11 @@ static int bcm2835_send_command(struct sdhost_state *host, struct mmc_cmd *cmd, 
 	writel(0, SDARG);
 	MicroDelay(1000);
 	bcm2835_prepare_data(host, data);
-	LOG_DEBUG("Starting command execution arg: %x \n", cmd->cmdarg);
+	// LOG_DEBUG("Starting command execution arg: %x \n", cmd->cmdarg);
 	writel(cmd->cmdarg, SDARG);
 
 	sdcmd = cmd->cmdidx & SDCMD_CMD_MASK;
+	// LOG_DEBUG("Starting command execution sdcmd: %x \n", sdcmd);
 
 	host->use_busy = 0;
 	if (!(cmd->resp_type & MMC_RSP_PRESENT)) {
@@ -434,8 +439,8 @@ static int bcm2835_send_command(struct sdhost_state *host, struct mmc_cmd *cmd, 
 			sdcmd |= SDCMD_READ_CMD;
 	}
 
-	writel(sdcmd | SDCMD_NEW_FLAG, SDCMD);
-
+	writel(sdcmd | HC_CMD_ENABLE, SDCMD);
+	// LOG_DEBUG("Ebnding command execution sdcmd: %x \n", sdcmd);
 	return 0;
 }
 
@@ -448,46 +453,58 @@ static int bcm2835_finish_command(struct sdhost_state *host)
 	sdcmd = bcm2835_read_wait_sdcmd(host);
 
 	/* Check for errors */
-	if (sdcmd & SDCMD_NEW_FLAG) {
-		LOG_DEBUG("command never completed.\n");
+	if (sdcmd & HC_CMD_ENABLE) {
+		LOG_DEBUG("command never completed. sdcmd: %x HC_CMD_ENABLE: %x\n", sdcmd, HC_CMD_ENABLE);
 		bcm2835_dumpregs();
 		return -1;
 	} else if (sdcmd & SDCMD_FAIL_FLAG) {
+
 		uint32_t sdhsts = readl(SDHSTS);
+		if(sdhsts & SDHSTS_ERROR_MASK) {
+			LOG_DEBUG("command Failed Check Error. sdcmd: %x status: %x\n", sdcmd, sdhsts);
+			return -1;
+		}
+		LOG_DEBUG("command Failed Unknown Error. sdcmd: %x status: %x\n", sdcmd, sdhsts);
+		return -1;
 
 		/* Clear the errors */
 		writel(SDHSTS_ERROR_MASK, SDHSTS);
 
-		if (!(sdhsts & SDHSTS_CRC7_ERROR) ||
-		    (host->cmd->cmdidx != MMC_CMD_SEND_OP_COND)) {
+		if (!(sdhsts & SDHSTS_CRC7_ERROR) || (host->cmd->cmdidx != MMC_CMD_SEND_OP_COND)) {
 			if (sdhsts & SDHSTS_CMD_TIME_OUT) {
+				LOG_DEBUG("unexpected error cond1:%d cond2:%d \n", (!(sdhsts & SDHSTS_CRC7_ERROR)), (host->cmd->cmdidx != MMC_CMD_SEND_OP_COND));
+				bcm2835_dumpregs(host);
 				ret = -1;
 			} else {
 				LOG_DEBUG("unexpected command %d error\n", host->cmd->cmdidx);
+				cmd->response[0] = readl(SDRSP0);
+				cmd->response[1] = readl(SDRSP1);
+				cmd->response[2] = readl(SDRSP2);
+				cmd->response[3] = readl(SDRSP3);
 				bcm2835_dumpregs(host);
 				ret = -2;
 			}
-
 			return ret;
 		}
 	}
-
+		// LOG_DEBUG("Is command %d AA\n", cmd->resp_type);
 	if (cmd->resp_type & MMC_RSP_PRESENT) {
+		// LOG_DEBUG("Is command %d  BB\n", cmd->resp_type);
 		if (cmd->resp_type & MMC_RSP_136) {
-			int i;
-
-			for (i = 0; i < 4; i++) {
-				cmd->response[3 - i] =
-					readl(SDRSP0 + i * 4);
-			}
+			cmd->response[0] = readl(SDRSP0);
+			cmd->response[1] = readl(SDRSP1);
+			cmd->response[2] = readl(SDRSP2);
+			cmd->response[3] = readl(SDRSP3);
+			bcm2835_dumpregs();
 		} else {
 			cmd->response[0] = readl(SDRSP0);
+			// LOG_DEBUG("Is else command %d \n", cmd->resp_type);
 		}
 	}
-
+	// bcm2835_dumpregs(host);
 	/* Processed actual command. */
 	host->cmd = NULL;
-
+	// printf("Returning bcm2835_finish_command \n");
 	return ret;
 }
 
@@ -538,12 +555,17 @@ static int bcm2835_transmit(struct sdhost_state *host)
 
 	/* Check for errors */
 	ret = bcm2835_check_data_error(host, intmask);
-	if (ret)
+	if (ret) {
+		LOG_DEBUG("Data error");
 		return ret;
+	}
+		
 
 	ret = bcm2835_check_cmd_error(host, intmask);
-	if (ret)
+	if (ret) {
+		LOG_DEBUG("cmd error");
 		return ret;
+	}
 
 	/* Handle wait for busy end */
 	if (host->use_busy && (intmask & SDHSTS_BUSY_IRPT)) {
@@ -567,7 +589,7 @@ static int bcm2835_transmit(struct sdhost_state *host)
 			host->data = NULL;
 		}
 	}
-
+	LOG_DEBUG("Return %s \n", __func__);
 	return 0;
 }
 
@@ -639,7 +661,7 @@ int bcm2835_send_cmd(struct sdhost_state *host, struct mmc_cmd *cmd, struct mmc_
 {
 	uint32_t edm, fsm;
 	int ret = 0;
-	LOG_DEBUG("received command : %d \n ", cmd->cmdidx);
+	// LOG_DEBUG("received command : %d \n ", cmd->cmdidx);
 
 	if (data && !is_power_of_2(data->blocksize)) {
 		LOG_DEBUG("unsupported block size (%d bytes)\n", data->blocksize);
@@ -665,13 +687,9 @@ int bcm2835_send_cmd(struct sdhost_state *host, struct mmc_cmd *cmd, struct mmc_
 		return 0;
 	}
 
-    struct mmc_cmd cmd1;
-    cmd1.cmdidx = MMC_CMD_GO_IDLE_STATE;
-	cmd1.cmdarg = 0;
-	cmd1.resp_type = MMC_RSP_NONE;
-	LOG_DEBUG("Previous command  %x \n", readl(SDCMD));
+	// LOG_DEBUG("Previous command  %x \n", readl(SDCMD));
 	if (cmd) {
-		ret = bcm2835_send_command(host, &cmd1, data);
+		ret = bcm2835_send_command(host, cmd, data);
 		if (!ret && !host->use_busy) {
 			ret = bcm2835_finish_command(host);
 		}
@@ -679,12 +697,13 @@ int bcm2835_send_cmd(struct sdhost_state *host, struct mmc_cmd *cmd, struct mmc_
 
 	/* Wait for completion of busy signal or data transfer */
 	while (host->use_busy || host->data) {
+		LOG_DEBUG("host->use_busy : %d host->data: %x \n",host->use_busy , host->data);
 		ret = bcm2835_transmit(host);
 		if (ret) {
 			break;
 		}
 	}
-
+	// LOG_DEBUG("Return from command: \n");
 	return ret;
 }
 
@@ -694,6 +713,7 @@ int bcm2835_set_ios(struct sdhost_state *host)
 
 	if (!mmc->clock || mmc->clock != host->clock) {
 		bcm2835_set_clock(host, mmc->clock);
+		printf("Setting clock \n");
 		host->clock = mmc->clock;
 	}
 
@@ -733,6 +753,11 @@ static void bcm2835_add_host(struct sdhost_state *host)
 
 	bcm2835_reset_internal(host);
 	bcm2835_set_ios(host);
+
+	MicroDelay(100);
+
+	register_irq_handler(IRQ_SDHOST, sdhost_interrupt_handler, sdhost_interrupt_clearer);
+
 }
 
 static struct sdhost_state * bcm2835_probe()
@@ -743,7 +768,7 @@ static struct sdhost_state * bcm2835_probe()
 
 	// Allocate all the memory here;
 	// host->max_clk = bcm2835_get_mmc_clock(BCM2835_MBOX_CLOCK_ID_CORE);
-	host_ptr->max_clk  = 250 * 100 * 100; // 250 Mhz
+	host_ptr->max_clk  = 250 * 1000 * 1000; // 250 Mhz
 	bcm2835_add_host(host_ptr);
 	LOG_DEBUG("%s -> OK\n", __func__);
 	return host_ptr;
@@ -751,18 +776,44 @@ static struct sdhost_state * bcm2835_probe()
 
 struct sdhost_state * sdhostInit () {
 	    // Following lines connect to SD card to SD HOST
-    for (uint32_t i = 48; i <= 53; i++) {
-        select_alt_func(i, Alt0);
-    }
+
+    // RPI_PropertyInit();
+	// RPI_PropertyAddTag(TAG_GET_POWER_STATE, 0x0, 0x3);
+    // RPI_PropertyProcess();
+	// rpi_mailbox_property_t *mp = RPI_PropertyGet(TAG_GET_POWER_STATE);
+
+    // uint32_t width = (uint32_t)(mp->data.buffer_32[0]);
+    // uint32_t height = (uint32_t)(mp->data.buffer_32[1]);
+	// printf(" id: %d state: %d ", width, height);
+
+    RPI_PropertyInit();
+    RPI_PropertyAddTag(TAG_SET_POWER_STATE, 0x0, 0x3);
+    RPI_PropertyProcess();
+
+
+	
 
 	// FOllowing lines connect EMMC controller to wifi
     for ( uint32_t i = 34; i <= 39; i++)
     {
         select_alt_func(i, Alt3);
-        if (i == 34)
-            disable_pulling(i); // Pull off
-        else
-            pullup_pin(i);
+        // if (i == 34)
+        //     disable_pulling(i); // Pull off
+        // else
+        //     pullup_pin(i);
+    }
+
+	for (uint32_t i = 48; i <= 53; i++) {
+		
+		// select_alt_func(i, Alt0);
+		// if(i == 0x30) {
+		// 	disable_pulling(i);
+		// 	printf("Disable pulling \n");
+		// } else {
+		// 	pullup_pin(i);
+		// }
+
+        select_alt_func(i, Alt0);
     }
 	return bcm2835_probe();
 }

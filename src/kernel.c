@@ -30,7 +30,7 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 
 	timer_init();
 	// This will flash activity led
-	timer_set(500000);
+	timer_set(5000);
 	printf("\n Kernel End: 0x%x \n", &__kernel_end);
 
 	mem_alloc_init((uint32_t)&__kernel_end, 0x100000 * 16); // 16 MB
