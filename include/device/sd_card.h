@@ -9,8 +9,7 @@ extern "C"
 #include<stdint.h>
 
 int init_sdcard();
-// int read_block(uint32_t addr, uint32_t length, uin8_t *buffer);
-
+int mmc_read_blocks(uint32_t startBlock, uint32_t numBlocks, uint8_t *dest);
 
 /**
  * End of all the declarations here.

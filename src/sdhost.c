@@ -495,7 +495,7 @@ static int bcm2835_finish_command(struct sdhost_state *host)
 			cmd->response[1] = readl(SDRSP1);
 			cmd->response[2] = readl(SDRSP2);
 			cmd->response[3] = readl(SDRSP3);
-			bcm2835_dumpregs();
+			// bcm2835_dumpregs();
 		} else {
 			cmd->response[0] = readl(SDRSP0);
 			// LOG_DEBUG("Is else command %d \n", cmd->resp_type);

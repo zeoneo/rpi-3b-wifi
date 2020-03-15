@@ -47,7 +47,7 @@ __bitfield(uint32_t *src, int start, int len) {
 		(pnm)[5] = '\0';					\
 	} while (/*CONSTCOND*/0)
 
-/*
+
 #define SD_CSD_CSDVER(resp)		MMC_RSP_BITS((resp), 126, 2)
 #define  SD_CSD_CSDVER_1_0		0
 #define  SD_CSD_CSDVER_2_0		1
@@ -106,6 +106,8 @@ __bitfield(uint32_t *src, int start, int len) {
 #define SD_CSD_FILE_FORMAT(resp)	MMC_RSP_BITS((resp), 10, 2)
 
 
+static struct sdhost_state * sd_ctrl = (void *)0;
+
 static void print_csd(uint32_t *csd) {
     uint32_t block_length, capacity_bytes, clock_div;
     if (SD_CSD_CSDVER(csd) == SD_CSD_CSDVER_2_0) {
@@ -135,9 +137,46 @@ static void print_csd(uint32_t *csd) {
 			return;
 		}
 
-		printf(" block length: %d capacity_bytes: %d clock_div: %d ", block_length, capacity_bytes, clock_div);
+		printf(" block length: %d capacity_bytes: %lu clock_div: %d \n", block_length, capacity_bytes, clock_div);
+        // printf(" block length: %d capacity_bytes: %d clock_div: %d ", block_length, capacity_bytes, clock_div);
 }
-*/
+
+
+int mmc_read_blocks(uint32_t startBlock, uint32_t numBlocks, uint8_t *dest)
+{
+	struct mmc_cmd cmd;
+	struct mmc_data data;
+
+	if (numBlocks > 1)
+		cmd.cmdidx = MMC_CMD_READ_MULTIPLE_BLOCK;
+	else
+		cmd.cmdidx = MMC_CMD_READ_SINGLE_BLOCK;
+
+	if (sd_ctrl->mmc->high_capacity)
+		cmd.cmdarg = startBlock;
+	else
+		cmd.cmdarg = startBlock * sd_ctrl->mmc->read_bl_len;
+
+	cmd.resp_type = MMC_RSP_R1;
+
+	data.dest = dest;
+	data.blocks = numBlocks;
+	data.blocksize = sd_ctrl->mmc->read_bl_len;
+	data.flags = MMC_DATA_READ;
+
+	if (bcm2835_send_cmd(sd_ctrl, &cmd, &data))
+		return 0;
+
+	if (numBlocks > 1) {
+		cmd.cmdidx = MMC_CMD_STOP_TRANSMISSION;
+		cmd.cmdarg = 0;
+		cmd.resp_type = MMC_RSP_R1b;
+		if (bcm2835_send_cmd(sd_ctrl, &cmd, (void *)0)) {
+			return 0;
+		}
+	}
+	return numBlocks;
+}
 
 static int use_sdhost() {
 
@@ -270,121 +309,31 @@ static int use_sdhost() {
     bcm2835_send_cmd(sd_host, &cmd, (void *)0);
     printf("Resp APP CSD:  %x%x%x%x \n", cmd.response[0], cmd.response[1], cmd.response[2],cmd.response[3]);
 
-    // if(cmd.response != 0 ) {
-    //     print_csd(&cmd.response[0]);
-    // }
+    if(cmd.response != 0 ) {
+        print_csd(&cmd.response[0]);
+    }
     
-    return 0;
-}
-
-
-/*
-
-
-enum {
-	Inittimeout	= 15,
-	Multiblock	= 1,
-
-	// Commands //
-	GO_IDLE_STATE	= 0,
-	ALL_SEND_CID	= 2,
-	SEND_RELATIVE_ADDR= 3,
-	SWITCH_FUNC	= 6,
-	SELECT_CARD	= 7,
-	SD_SEND_IF_COND	= 8,
-	SEND_CSD	= 9,
-	STOP_TRANSMISSION= 12,
-	SEND_STATUS	= 13,
-	SET_BLOCKLEN	= 16,
-	READ_SINGLE_BLOCK= 17,
-	READ_MULTIPLE_BLOCK= 18,
-	WRITE_BLOCK	= 24,
-	WRITE_MULTIPLE_BLOCK= 25,
-	APP_CMD		= 55,	// prefix for following app-specific commands //
-	SET_BUS_WIDTH	= 6,
-	SD_SEND_OP_COND	= 41,
-
-	// Command arguments //
-	// SD_SEND_IF_COND //
-	Voltage		= 1<<8,
-	Checkpattern	= 0x42,
-
-	// SELECT_CARD //
-	Rcashift	= 16,
-
-	// SD_SEND_OP_COND //
-	Hcs	= 1<<30,	// host supports SDHC & SDXC //
-	Ccs	= 1<<30,	// card is SDHC or SDXC //
-	V3_3	= 3<<20,	// 3.2-3.4 volts //
-
-	// SET_BUS_WIDTH //
-	Width1	= 0<<0,
-	Width4	= 2<<0,
-
-	// SWITCH_FUNC //
-	Dfltspeed	= 0<<0,
-	Hispeed		= 1<<0,
-	Checkfunc	= 0x00FFFFF0,
-	Setfunc		= 0x80FFFFF0,
-	Funcbytes	= 64,
-
-	// OCR (operating conditions register) 
-	Powerup	= 1<<31,
-};
-
-struct Ctlr {
-	// SD card registers //
-	uint16_t	rca;
-	uint32_t	ocr;
-	uint32_t	cid[4];
-	uint32_t	csd[4];
-};
-
-uint32_t r[4];
-struct Ctlr ctlr;
-
-static void print_resp() {
-    printf("R[0]: %x R[1]: %x R[2]: %x R[3]: %x \n", r[0], r[1], r[2], r[3]);
-}
-
-static int use_plan9() {
-    init_sdhost();
-	uint32_t hcs = 0;
-	sdhost1_cmd(SD_SEND_IF_COND, Voltage|Checkpattern, r);
-	
-    if(r[0] == (Voltage|Checkpattern)) {	// SD 2.0 or above //
-        hcs = Hcs;
+    cmd.cmdidx = MMC_CMD_SELECT_CARD;
+    cmd.cmdarg =  (sd_host->mmc->rca) <<16;
+    cmd.resp_type = MMC_RSP_R1;
+    is_success = bcm2835_send_cmd(sd_host, &cmd, (void *)0);
+    if(is_success) {
+        printf("Can't select the card \n");
     }
 
-    int i;
-	for(i = 0; i < Inittimeout; i++){
-		MicroDelay(10000);
-		sdhost1_cmd(APP_CMD, 0, r);
-		sdhost1_cmd(SD_SEND_OP_COND, hcs | V3_3, r);
-		if(r[0] & Powerup) {
-            break;
-        }
-	}
-
-	if(i == Inittimeout){
-		printf("sdmmc: card won't power up\n");
-		return -1;
-	}
-    printf("Successfullt powered on the card");
-
-    ctlr.ocr = r[0];
-    print_resp();
-    sdhost1_cmd(ALL_SEND_CID, 0, r);
-    print_resp();
+    cmd.cmdidx = MMC_CMD_SET_BLOCKLEN;
+	cmd.resp_type = MMC_RSP_R1;
+	cmd.cmdarg = 512;
+    is_success = bcm2835_send_cmd(sd_host, &cmd, (void *)0);
+    if(is_success) {
+        printf("Can't set the block length \n");
+    }
+    sd_host->mmc->read_bl_len = 512;
+    printf("Completed SD Card Init");
+    sd_ctrl = sd_host;
     return 0;
 }
-*/
 
 int init_sdcard() {
-    
-    return use_sdhost();
+   return use_sdhost();
 }
-
-// int read_block(uint32_t addr, uint32_t length, uin8_t *buffer) {
-//     return 0;
-// }

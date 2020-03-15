@@ -37,6 +37,16 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 	// show_dma_demo();
 	init_sdcard();
 
+	uint8_t bpb_buffer[512] __attribute__((aligned(4)));
+
+    if (!mmc_read_blocks(0, 1, bpb_buffer))
+    {	printf("PRINT Furst vlock\n");
+        for(uint32_t i = 0; i <512; i++) {
+			printf("%x", bpb_buffer[i]);
+		}
+    }
+
+	// initialize_fat();
 	// if(initialize_fat()) {
 	// 	printf("-------Successfully Initialized FAT----------\n");
 	// 	print_root_directory_info();
