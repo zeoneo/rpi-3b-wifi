@@ -7,9 +7,10 @@ extern "C"
 #endif
 
 #include<stdint.h>
+#include<stdbool.h>
 
 int init_sdcard();
-int mmc_read_blocks(uint32_t startBlock, uint32_t numBlocks, uint8_t *dest);
+bool mmc_read_blocks(uint32_t startBlock, uint32_t numBlocks, uint8_t *dest);
 
 /**
  * End of all the declarations here.

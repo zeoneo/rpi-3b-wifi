@@ -86,17 +86,21 @@ uint32_t search_directory_contents(uint32_t directory_first_cluster, uint8_t *ne
 uint32_t search_directory_cluster_contents(uint32_t directory_first_sector, uint8_t *next_dir_name, uint32_t next_index);
 uint32_t search_entries_in_sector(uint32_t sector_number, uint8_t *buffer, uint8_t *next_dir_name, uint32_t next_index);
 
-bool initialize_fat()
+static read_handler_t block_read_handler;
+
+bool initialize_fat(read_handler_t read_handler)
 {
-    if (sdInitCard(false) != SD_OK)
-    {
-        printf("Failed to initialize SD card");
+    if(read_handler == (void *) 0) {
         return false;
     }
+
+    // Save function pointer to read handler 
+    block_read_handler = read_handler;
+
     uint8_t num_of_blocks = 1;
 
     uint8_t bpb_buffer[512] __attribute__((aligned(4)));
-    if (!sdcard_read(0, num_of_blocks, (uint8_t *)&bpb_buffer[0]))
+    if (!block_read_handler(0, num_of_blocks, (uint8_t *)&bpb_buffer[0]))
     {
         printf("FAT: UNABLE to read first block in sd card. \n");
         return false;
@@ -117,7 +121,7 @@ bool initialize_fat()
             struct partition_info *pd = &mbr_info->partitionData[0];
             current_sd_partition.unusedSectors = pd->firstSector;
             // Read first unused sector i.e. 512 Bytes
-            if (!sdcard_read(pd->firstSector, 1, (uint8_t *)&bpb_buffer[0]))
+            if (!block_read_handler(pd->firstSector, 1, (uint8_t *)&bpb_buffer[0]))
             {
                 printf("Could not mbr first sector. \n");
                 return false;
@@ -241,7 +245,7 @@ uint32_t search_directory_contents(uint32_t directory_first_cluster, uint8_t *ne
         if (old_fat_sector_num != fat_sector_num)
         {
             // printf("Reading fat for cluster:%d fat_sector_number:%d ", cluster_number, fat_sector_num);
-            if (!sdcard_read(fat_sector_num, 1, (uint8_t *)&fat_sector_buffer[0]))
+            if (!block_read_handler(fat_sector_num, 1, (uint8_t *)&fat_sector_buffer[0]))
             {
                 printf("FAT: Could not read FAT sector :%d. \n", fat_sector_num);
                 return 0;
@@ -305,7 +309,7 @@ uint32_t search_entries_in_sector(uint32_t sector_number, uint8_t *buffer, uint8
     uint32_t limit = 512;
     uint32_t index = 0;
 
-    if (!sdcard_read(sector_number, 1, (uint8_t *)&buffer[0]))
+    if (!block_read_handler(sector_number, 1, (uint8_t *)&buffer[0]))
     {
         printf("FAT: ROOT DIR sector :%d. \n", sector_number);
         return 0;
@@ -404,7 +408,7 @@ void print_file_cluster_contents(uint32_t directory_first_sector)
     bool is_done = false;
     while (sector_number < last_clust_root_dir_sector && !is_done)
     {
-        if (!sdcard_read(sector_number, 1, (uint8_t *)&buffer[0]))
+        if (!block_read_handler(sector_number, 1, (uint8_t *)&buffer[0]))
         {
             printf("FAT: ROOT DIR sector :%d. \n", sector_number);
             return;
@@ -439,7 +443,7 @@ void read_file(uint8_t *absolute_file_name)
         if (old_fat_sector_num != fat_sector_num)
         {
             // printf("Reading fat for cluster:%d fat_sector_number:%d ", cluster_number, fat_sector_num);
-            if (!sdcard_read(fat_sector_num, 1, (uint8_t *)&fat_sector_buffer[0]))
+            if (!block_read_handler(fat_sector_num, 1, (uint8_t *)&fat_sector_buffer[0]))
             {
                 printf("FAT: Could not read FAT sector :%d. \n", fat_sector_num);
                 return;
@@ -470,7 +474,7 @@ void print_directory_contents(uint32_t directory_first_cluster)
         if (old_fat_sector_num != fat_sector_num)
         {
             // printf("Reading fat for cluster:%d fat_sector_number:%d ", cluster_number, fat_sector_num);
-            if (!sdcard_read(fat_sector_num, 1, (uint8_t *)&fat_sector_buffer[0]))
+            if (!block_read_handler(fat_sector_num, 1, (uint8_t *)&fat_sector_buffer[0]))
             {
                 printf("FAT: Could not read FAT sector :%d. \n", fat_sector_num);
                 return;
@@ -574,7 +578,7 @@ void print_entries_in_sector(uint32_t sector_number, uint8_t *buffer)
     uint32_t limit = 512;
     uint32_t index = 0;
 
-    if (!sdcard_read(sector_number, 1, (uint8_t *)&buffer[0]))
+    if (!block_read_handler(sector_number, 1, (uint8_t *)&buffer[0]))
     {
         printf("FAT: ROOT DIR sector :%d. \n", sector_number);
         return;

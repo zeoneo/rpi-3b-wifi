@@ -75,7 +75,9 @@ extern "C"
 		uint16_t LDIR_Name3[2];		  // Characters 12-13 of long name (UTF 16)
 	};
 
-	bool initialize_fat();
+typedef bool (*read_handler_t)(uint32_t, uint32_t, uint8_t *);
+
+	bool initialize_fat(read_handler_t read_handler);
 	void print_root_directory_info();
 	uint32_t get_file_size(uint8_t *absolute_file_name);
 	void read_file(uint8_t *absolute_file_name);

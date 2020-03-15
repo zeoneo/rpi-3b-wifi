@@ -1,3 +1,4 @@
+#include <device/gpio.h>
 #include <device/emmc.h>
 #include <plibc/stdio.h>
 #include <kernel/rpi-base.h>
@@ -1291,6 +1292,16 @@ static SDRESULT sdAppSendOpCond(uint32_t arg)
 SDRESULT sdInitCard(bool mount)
 {
 	SDRESULT resp;
+
+	// FOllowing lines connect EMMC controller to SD CARD
+    for ( uint32_t i = 34; i <= 39; i++)
+    {
+        select_alt_func(i, Alt0);
+    }
+
+	for (uint32_t i = 48; i <= 53; i++) {
+        select_alt_func(i, Alt3);
+    }
 
 	// Reset the card.
 	if ((resp = sdResetCard()))

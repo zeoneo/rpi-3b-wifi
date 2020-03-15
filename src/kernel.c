@@ -4,6 +4,7 @@
 
 
 #include <device/sd_card.h>
+#include <device/emmc.h>
 #include <device/uart0.h>
 #include <device/dma.h>
 #include <fs/fat.h>
@@ -35,25 +36,24 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 
 	mem_alloc_init((uint32_t)&__kernel_end, 0x100000 * 16); // 16 MB
 	// show_dma_demo();
+
+
+	printf("<---------------PRINT ROOT DIR USING SDHOST ----------------->\n");
 	init_sdcard();
-
-	uint8_t bpb_buffer[512] __attribute__((aligned(4)));
-
-    if (!mmc_read_blocks(0, 1, bpb_buffer))
-    {	printf("PRINT Furst vlock\n");
-        for(uint32_t i = 0; i <512; i++) {
-			printf("%x", bpb_buffer[i]);
+	if(initialize_fat(mmc_read_blocks)) {
+		print_root_directory_info();
+	}
+	
+	if (sdInitCard(false) == SD_OK) {
+		printf("<---------------PRINT ROOT DIR USING ARASAN EMMC ----------------->\n");
+        printf("Failed to initialize SD card");
+		if(initialize_fat(sdcard_read)) {
+			printf("-------Successfully Initialized FAT----------\n");
+			print_root_directory_info();
+		} else {
+			printf("-------Failed to initialize FAT----------\n");
 		}
     }
-
-	// initialize_fat();
-	// if(initialize_fat()) {
-	// 	printf("-------Successfully Initialized FAT----------\n");
-	// 	print_root_directory_info();
-	// } else {
-	// 	printf("-------Failed to initialize FAT----------\n");
-	// }
-
 
 	while (1)
 	{

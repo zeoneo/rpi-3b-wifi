@@ -142,7 +142,7 @@ static void print_csd(uint32_t *csd) {
 }
 
 
-int mmc_read_blocks(uint32_t startBlock, uint32_t numBlocks, uint8_t *dest)
+bool mmc_read_blocks(uint32_t startBlock, uint32_t numBlocks, uint8_t *dest)
 {
 	struct mmc_cmd cmd;
 	struct mmc_data data;
@@ -165,17 +165,17 @@ int mmc_read_blocks(uint32_t startBlock, uint32_t numBlocks, uint8_t *dest)
 	data.flags = MMC_DATA_READ;
 
 	if (bcm2835_send_cmd(sd_ctrl, &cmd, &data))
-		return 0;
+		return true;
 
 	if (numBlocks > 1) {
 		cmd.cmdidx = MMC_CMD_STOP_TRANSMISSION;
 		cmd.cmdarg = 0;
 		cmd.resp_type = MMC_RSP_R1b;
 		if (bcm2835_send_cmd(sd_ctrl, &cmd, (void *)0)) {
-			return 0;
+			return true;
 		}
 	}
-	return numBlocks;
+	return false;
 }
 
 static int use_sdhost() {

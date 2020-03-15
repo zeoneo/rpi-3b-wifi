@@ -238,9 +238,9 @@ static int bcm2835_wait_transfer_complete()
 		}
 
 		/* Error out after 100000 register reads (~1s) */
-		if (timediff++ == 100000) {
+		if (timediff++ == 200000) {
 			LOG_DEBUG("wait_transfer_complete - still waiting after %d retries\n", timediff);
-			bcm2835_dumpregs();
+			// bcm2835_dumpregs();
 			return -1;
 		}
 	}
@@ -797,22 +797,9 @@ struct sdhost_state * sdhostInit () {
     for ( uint32_t i = 34; i <= 39; i++)
     {
         select_alt_func(i, Alt3);
-        // if (i == 34)
-        //     disable_pulling(i); // Pull off
-        // else
-        //     pullup_pin(i);
     }
 
 	for (uint32_t i = 48; i <= 53; i++) {
-		
-		// select_alt_func(i, Alt0);
-		// if(i == 0x30) {
-		// 	disable_pulling(i);
-		// 	printf("Disable pulling \n");
-		// } else {
-		// 	pullup_pin(i);
-		// }
-
         select_alt_func(i, Alt0);
     }
 	return bcm2835_probe();
