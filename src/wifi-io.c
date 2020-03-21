@@ -35,6 +35,31 @@ static uint32_t rambase;
 // static uint8_t txseq;
 // static uint8_t	rxseq;
 
+#if !defined(__STRINGIFY2)
+#define __STRINGIFY2(__p) #__p
+#define __STRINGIFY(__p) __STRINGIFY2(__p)
+#endif
+
+#define INCLUDE_BINARY_FILE(__variable, __fileName, __section)					 \
+__asm__ (                                                                        \
+    ".pushsection " __section                                          "\n\t"    \
+    ".globl " __STRINGIFY(__variable) "_start;"                        "\n\t"    \
+    ".balign 4"                                                        "\n\t"    \
+    __STRINGIFY(__variable) "_start: .incbin \"" __fileName "\""       "\n\t"    \
+    ".globl " __STRINGIFY(__variable) "_end;"		                   "\n\t"    \
+    __STRINGIFY(__variable) "_end: .4byte 0;"                          "\n\t"    \
+    ".balign 4"                                                        "\n\t"    \
+    ".popsection"                                                      "\n\t"    \
+);\
+extern const uint8_t __variable ## _start;\
+extern const  uint8_t __variable ## _end;
+
+INCLUDE_BINARY_FILE(wifibinary, "lib/brcmfmac43430-sdio.bin", ".rodata.brcmfmac43430_sdio_bin");
+
+
+INCLUDE_BINARY_FILE(wifitext, "lib/brcmfmac43430-sdio.txt", ".rodata.brcmfmac43430_sdio_txt");
+// uint32_t binarysize = (uint32_t)&wifibinary_end - (uint32_t)&wifibinary_start;
+
 
 
 enum {
@@ -297,15 +322,17 @@ static void sbrw(uint32_t fn, uint32_t write, uint8_t *buf, uint32_t len, uint32
 {
 	int n;
 	USED(fn);
-
+    printf("--length: %d \n", len);
 	if(write){
 		if(len >= 4){
 			n = len;
 			n &= ~3;
+
 			sdiorwext(Fn1, write, buf, n, off|Sb32bit, 1);
 			off += n;
 			buf += n;
 			len -= n;
+            
 		}
 		while(len > 0){
 			sdiowr(Fn1, off|Sb32bit, *buf);
@@ -314,14 +341,17 @@ static void sbrw(uint32_t fn, uint32_t write, uint8_t *buf, uint32_t len, uint32
 			len--;
 		}
 	} else{
-		if(len >= 4){
-			n = len;
-			n &= ~3;
-			sdiorwext(Fn1, write, buf, n, off|Sb32bit, 1);
-			off += n;
-			buf += n;
-			len -= n;
-		}
+		// if(len >= 4){
+		// 	n = len;
+		// 	n &= ~3;
+        //     printf("--sub length: %d \n", n);
+		// 	sdiorwext(Fn1, write, buf, n, off|Sb32bit, 1);
+		// 	off += n;
+		// 	buf += n;
+		// 	len -= n;
+        //     printf("-- length after: %d \n", len);
+		// }
+        printf("-- length after2: %d \n", len);
 		while(len > 0){
 			*buf = sdiord(Fn1, off|Sb32bit);
 			off++;
@@ -340,7 +370,7 @@ static void sbmem(uint32_t write, uint32_t *buf, uint32_t len, uint32_t off)
 	if(n == 0) {
         n = Sbwsize;
     }
-		
+	printf("sbmem length: %d \n ", n);
 	while(len > 0){
 		if(n > len) {
             n = len;
@@ -609,8 +639,12 @@ static bool sb_init() {
 }
 
 bool startWifi () {
+    // uint32_t binarysize = (uint32_t)&brcmfmac43430_sdio_bin_end - (uint32_t)&brcmfmac43430_sdio_bin_start;
+    uint32_t binarysize = (uint32_t)&wifibinary_end - (uint32_t)&wifibinary_start;
+    printf("Binary Size: %d \n", binarysize);
     bool is_success = prepare_sdio();
     is_success = sb_init();
+
     return is_success;
 }
 
