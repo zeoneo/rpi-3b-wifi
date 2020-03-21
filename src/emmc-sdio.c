@@ -549,8 +549,8 @@ static EMMCCommand sdCommandTable[IX_IO_RW_DIRECT_EXTENDED + 1] = {
 	[IX_IO_SEND_OP_COND] = {"IO_SEND_OP_COND", .code.CMD_INDEX = 5, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
 	[IX_SEND_RELATIVE_ADDR] = {"SEND_REL_ADDR", .code.CMD_INDEX = 3, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
 	[IX_SELECT_CARD] = {"SELECT_CARD", .code.CMD_INDEX = 7, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-	[IX_IO_RW_DIRECT] = {"IO_RW_DIRECT", .code.CMD_INDEX = 52, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-	[IX_IO_RW_DIRECT_EXTENDED] = {"IO_RW_DIRECT_EXT", .code.CMD_INDEX = 53, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
+	[IX_IO_RW_DIRECT] = {"IO_RW_DIRECT", .code.CMD_INDEX = 52, .code.CMD_IXCHK_EN = 1, .code.CMD_CRCCHK_EN = 1, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
+	[IX_IO_RW_DIRECT_EXTENDED] = {"IO_RW_DIRECT", .code.CMD_INDEX = 53, .code.CMD_IXCHK_EN = 1, .code.CMD_ISDATA = 1, .code.CMD_CRCCHK_EN = 1, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
 };
 
 // static const char *SD_TYPE_NAME[] = {"Unknown", "MMC", "Type 1", "Type 2 SC", "Type 2 HC"};

@@ -7,8 +7,10 @@ extern "C"
 #endif
 
 #include <stdbool.h>
+#include <stdint.h>
 
 bool startWifi();
+uint32_t cfgreadl(int fn, uint32_t off);
 
 /**
  * End of all the declarations here.
