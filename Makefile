@@ -52,13 +52,14 @@ src/rpi-mailbox-interface.o \
 src/rpi-mailbox.o \
 src/systimer.o \
 src/sdhost.o \
-src/sdhost1.o \
 src/uart0.o \
 src/memcmp.o \
 src/memcpy.o \
 src/memset.o \
 src/printf.o \
 src/strlen.o \
+src/wifi-io.o \
+src/emmc-sdio.o \
 src/kernel.o
 
 OBJS= $(KERNEL_OBJS)

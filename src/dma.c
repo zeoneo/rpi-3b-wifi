@@ -179,7 +179,8 @@ static uint32_t dma_ints[13] = {
     INTERRUPT_DMA9,
     INTERRUPT_DMA10,
     INTERRUPT_DMA11,
-    INTERRUPT_DMA12};
+    INTERRUPT_DMA12
+};
 
 typedef enum
 {
