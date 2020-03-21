@@ -75,19 +75,23 @@ $(LIBS) \
 all: kernel8-32.img
 
 kernel8-32.img:kernel8-32.elf
-	arm-none-eabi-objdump -D kernel8-32.elf > kernel8-32.list
-	arm-none-eabi-nm  kernel8-32.elf  > kernel8-32.map
-	arm-none-eabi-objcopy kernel8-32.elf -O binary kernel8-32.img
+	@arm-none-eabi-objdump -D kernel8-32.elf > kernel8-32.list
+	@arm-none-eabi-nm  kernel8-32.elf  > kernel8-32.map
+	@echo "  OBJCOPY    $@"
+	@arm-none-eabi-objcopy kernel8-32.elf -O binary kernel8-32.img
 
 kernel8-32.elf: $(OBJS) ./linker.ld
-	$(CC) -T ./linker.ld -o $@ $(CFLAGS) $(LINK_LIST)
+	@echo "  LD    $@"
+	@$(CC) -T ./linker.ld -o $@ $(CFLAGS) $(LINK_LIST)
 	
 
 .c.o:
-	$(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
+	@echo "  CC    $@"
+	@$(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
 .S.o:
-	$(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+	@echo "  CC    $@"
+	@$(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 clean:
 	rm -f kernel8-32.elf kernel8-32.img

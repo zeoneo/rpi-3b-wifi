@@ -8,6 +8,9 @@
 *.ko
 *.obj
 *.elf
+*.img
+*.map
+*.list
 
 # Linker output
 *.ilk
@@ -52,3 +55,4 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
