@@ -342,6 +342,8 @@ static void init_channel(volatile dma_ctrl *ctrl, uint32_t chan)
 
 int dma_start(int chan, int dev, DMA_DIR dir, void *src, void *dst, int len)
 {
+
+    printf("\t dma_start  src:0x%x dst: 0x%x len: %d \n", src, dst, len);
     volatile dma_ctrl *ctrl = &dma[chan];
 
     if (ctrl->channel_status == DMA_READY || ctrl->channel_status == DMA_IN_PROGRESS)
@@ -352,6 +354,7 @@ int dma_start(int chan, int dev, DMA_DIR dir, void *src, void *dst, int len)
 
     if (ctrl->channel_status == DMA_NEED_INIT)
     {
+        // printf(" DNA NEED INIT \n");
         init_channel(ctrl, chan);
     }
 
@@ -410,19 +413,19 @@ int dma_start(int chan, int dev, DMA_DIR dir, void *src, void *dst, int len)
 int dma_wait(int chan)
 {
     volatile dma_ctrl *ctrl = &dma[chan];
-    MicroDelay(3000);
+    MicroDelay(10000);
     ctrl->channel_status = DMA_END;
     volatile dma_channel_header *channel_header = ctrl->channel_header;
     uint32_t status = channel_header->CS;
 
     if ((status & (BCM2835_DMA_ACTIVE | BCM2835_DMA_END | BCM2835_DMA_INT)) != BCM2835_DMA_END)
     {
-        printf("DMA ERROR: Channel status: %x \n", channel_header->CS);
+        printf("DMA ERROR: Channel status: %x channel_header->DEBUG:%x \n", channel_header->CS, channel_header->DEBUG);
         channel_header->CS = BCM2835_DMA_RESET;
         ctrl->channel_header->DEBUG = BCM2835_DMA_DEBUG_CLR_ERRORS;
-
         return -1;
     }
     channel_header->CS = BCM2835_DMA_END | BCM2835_DMA_INT;
+    printf("\t DMA Success: Channel: %d \n", chan);
     return 0;
 }

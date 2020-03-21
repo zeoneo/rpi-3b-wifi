@@ -663,9 +663,8 @@ static SDRESULT sdWaitForInterrupt(uint32_t mask)
 		(ival & INT_CMD_TIMEOUT) ||		   // Command timeout occurred
 		(ival & INT_DATA_TIMEOUT))		   // Data timeout occurred
 	{
-		printf("EMMC: Wait for interrupt %08x timeout: %08x %08x %08x\n",
-			   (unsigned int)mask, (unsigned int)EMMC_STATUS->Raw32,
-			   (unsigned int)ival, (unsigned int)*EMMC_RESP0); // Log any error if requested
+		printf("EMMC: Wait for interrupt %08x EMMC_STATUS: %08x int_val:%08x resp0: %08x\n", (unsigned int)mask, (unsigned int)EMMC_STATUS->Raw32, 
+		  (unsigned int)ival, (unsigned int)*EMMC_RESP0); // Log any error if requested
 
 		// Clear the interrupt register completely.
 		EMMC_INTERRUPT->Raw32 = ival; // Clear any interrupt that occured
@@ -922,8 +921,7 @@ bool sdio_send_command(int cmd_idx, uint32_t arg, uint32_t *resp) {
 
 
 static void mmc_interrupt_handler() {
-
-	printf("returning from interrupt handler. \n");
+	printf(" ");
 }
 
 static void mmc_interrupt_clearer() {
@@ -933,7 +931,7 @@ static void mmc_interrupt_clearer() {
 	}
 
 	EMMC_IRPT_EN->Raw32 = (EMMC_IRPT_EN->Raw32 & ~(EMMC_INTERRUPT->Raw32));
-	printf("returning from interrupt clearer. \n");
+	// printf("returning from interrupt clearer. \n");
 }
 
 static SDRESULT sdResetCard(void)
@@ -1001,6 +999,7 @@ static SDRESULT sdResetCard(void)
 
 void sdio_iosetup(bool write, void *buf, uint32_t bsize, uint32_t bcount)
 {
+	printf("\t Setting up io write: %d buf:0x%x bsize: %d bcount: %d \n", write, buf, bsize, bcount);
 	USED(write);
 	USED(buf);
 	EMMC_BLKSIZECNT->Raw32 = bcount<<16 | bsize;
@@ -1011,19 +1010,52 @@ void sdio_do_io(bool write, uint8_t *buf, uint32_t len) {
 		printf("SDIO_ERROR: ODD length is not allowed. Get lost. \n");
 		return;
 	}
-	uint8_t *emmc_data_buf = (uint8_t *)(EMMC_DATA);
 
+	uint8_t *emmc_data_buf = (uint8_t *)(EMMC_DATA);
 	if(write) {
 		dma_start(4, 11, MEM_TO_DEV, buf, emmc_data_buf, len);
 	} else {
 		dma_start(4, 11, DEV_TO_MEM, emmc_data_buf, buf,len);
 	}
-
 	
+	
+	MicroDelay(3000);
+
 	if(dma_wait(4) < 0) {
 		printf("DMA ERROR while transferring data. \n");
 		return;
 	}
+
+	// uint32_t *intbuff = (uint32_t *)buf;
+	// for (uint_fast16_t i = 0; i < (len/4); i++)
+	// {
+	// 	if (write)
+	// 		*EMMC_DATA = intbuff[i];
+	// 	else
+	// 		intbuff[i] = *EMMC_DATA;
+	// }
+	
+	
+
+	// for (uint_fast16_t i = 0; i < len; i++)
+	// {
+	// 	if (write)
+	// 	{
+	// 		uint32_t data = (buf[i]);
+	// 		data |= (buf[i + 1] << 8);
+	// 		data |= (buf[i + 2] << 16);
+	// 		data |= (buf[i + 3] << 24);
+	// 		*EMMC_DATA = data;
+	// 	}
+	// 	else
+	// 	{
+	// 		uint32_t data = *EMMC_DATA;
+	// 		buf[i] = (data)&0xff;
+	// 		buf[i + 1] = (data >> 8) & 0xff;
+	// 		buf[i + 2] = (data >> 16) & 0xff;
+	// 		buf[i + 3] = (data >> 24) & 0xff;
+	// 	}
+	// }
 
 	// if(!write)
 	// 	cachedinvse(buf, len);
@@ -1033,14 +1065,14 @@ void sdio_do_io(bool write, uint8_t *buf, uint32_t len) {
 	MicroDelay(3000);
 
 		
-	if(!EMMC_INTERRUPT->DATA_DONE) {
-		printf("SDIO_ERROR: Data not done: Status: 0x%x EMMC_INTERRUPT: 0x%x \n", EMMC_STATUS, EMMC_INTERRUPT);
+	if(EMMC_INTERRUPT->DATA_DONE == 0) {
+		printf("SDIO_ERROR: Data not done: Status: 0x%x EMMC_INTERRUPT: 0x%x \n", EMMC_STATUS->Raw32, EMMC_INTERRUPT->Raw32);
 		EMMC_INTERRUPT->Raw32 = EMMC_INTERRUPT->Raw32;
 		return ;
 	}
 
 	if(EMMC_INTERRUPT->ERR) {
-		printf("SDIO_ERROR: Status: 0x%x EMMC_INTERRUPT: 0x%x \n", EMMC_STATUS, EMMC_INTERRUPT);
+		printf("SDIO_ERROR: Status: 0x%x EMMC_INTERRUPT: 0x%x \n", EMMC_STATUS->Raw32, EMMC_INTERRUPT->Raw32);
 		EMMC_INTERRUPT->Raw32 = EMMC_INTERRUPT->Raw32;
 		return;
 	}

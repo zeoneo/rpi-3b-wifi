@@ -1,15 +1,59 @@
-#include<device/wifi-io.h>
+    #include<device/wifi-io.h>
 #include<device/emmc-sdio.h>
 #include <kernel/systimer.h>
 #include <plibc/stdio.h>
 #include <string.h>
+#include <mem/kernel_alloc.h>
 
+#define USED(x) if(x);else{}
 
 static uint32_t cmd_resp [4] = {0};
 static uint32_t ocr = 0;
 static uint32_t rca = 0;
+static uint32_t chipid;
+static uint32_t chiprev;
+// static char	*regufile;
+// static union {
+// 		uint32_t i;
+// 		uint8_t c[4];
+// } resetvec;
+static uint32_t armcore;
+static uint32_t chipcommon;
+static uint32_t armctl;
+static uint32_t armregs;
+static uint32_t d11ctl;
+static uint32_t socramregs;
+static uint32_t socramctl;
+static uint32_t sdregs;
+static uint32_t sdiorev;
+static uint32_t socramrev;
+static uint32_t socramsize;
+static uint32_t rambase;
+// static uint16_t reqid;
+// static uint8_t fcmask;
+// static uint8_t txwindow;
+// static uint8_t txseq;
+// static uint8_t	rxseq;
+
+
 
 enum {
+    SDIODEBUG = 0,
+	SBDEBUG = 0,
+	EVENTDEBUG = 0,
+	VARDEBUG = 0,
+	FWDEBUG  = 0,
+
+	Corescansz = 512,
+	Uploadsz = 2048,
+
+	Wifichan = 0,		/* default channel */
+	Firmwarecmp	= 1,
+
+	ARMcm3		= 0x82A,
+	ARM7tdmi	= 0x825,
+	ARMcr4		= 0x83E,
+
     Fn0	    = 0,
 	Fn1 	= 1,
 	Fn2	    = 2,
@@ -103,6 +147,34 @@ static bool prepare_sdio();
 #define ROUNDDN(x, y)	(((x)/(y))*(y))		/* floor */
 #define	ROUND(s, sz)	(((s)+(sz-1))&~(sz-1))
 
+
+// static uint8_t * put2(uint8_t *p, uint16_t v)
+// {
+// 	p[0] = v;
+// 	p[1] = v >> 8;
+// 	return p + 2;
+// }
+
+static uint8_t*put4(uint8_t *p, uint32_t v)
+{
+	p[0] = v;
+	p[1] = v >> 8;
+	p[2] = v >> 16;
+	p[3] = v >> 24;
+	return p + 4;
+}
+
+// static uint16_t get2(uint8_t *p)
+// {
+// 	return p[0] | p[1]<<8;
+// }
+
+// static uint32_t get4(uint8_t *p)
+// {
+// 	return p[0] | p[1]<<8 | p[2]<<16 | p[3]<<24;
+// }
+
+
 /*
  * Chip register and memory access via SDIO
  */
@@ -110,6 +182,11 @@ static bool prepare_sdio();
 static void cfgw(uint32_t off, int val)
 {
 	sdiowr(Fn1, off, val);
+}
+
+static uint32_t cfgr(uint32_t off)
+{
+	return sdiord(Fn1, off);
 }
 
 static uint32_t
@@ -123,40 +200,48 @@ sdiocmd_locked(uint32_t cmd_idx, uint32_t arg)
 
 static void sdiorwext(uint32_t fn, uint32_t write, void *a, uint32_t len, uint32_t addr, uint32_t incr)
 {
-	uint32_t bsize, blk, bcount, m;
+	uint32_t bsize, blk, bcount, effective_length;
 
 	bsize = fn == Fn2 ? 512 : 64;
+    printf("\n<----------Data Trasnsfer Started: Total len: %d \n", len);
 	while(len > 0){
-		if(len >= 511*bsize){
+		if(len >= 511 * bsize){
 			blk = 1;
 			bcount = 511;
-			m = bcount*bsize;
+			effective_length = bcount * bsize;
 		}else if(len > bsize){
 			blk = 1;
 			bcount = len/bsize;
-			m = bcount*bsize;
+			effective_length = bcount * bsize;
 		}else{
 			blk = 0;
 			bcount = len;
-			m = bcount;
+			effective_length = len;
 		}
 
+        
 		if(blk) {
+            printf("\t SDIO IO OP: bsize: %d bcount: %d\n", bsize, bcount);
             sdio_iosetup(write, a, bsize, bcount);
+            
         } else {
+            printf("\t SDIO IO OP: bsize: %d bcount: %d\n", bcount, 1);
             sdio_iosetup(write, a, bcount, 1);
         }
 
 		sdiocmd_locked(IX_IO_RW_DIRECT_EXTENDED, write<<31 | (fn&7)<<28 | blk<<27 | incr<<26 | (addr&0x1FFFF)<<9 | (bcount&0x1FF));
 
-		sdio_do_io(write, a, m);
+		sdio_do_io(write, a, effective_length);
+        
 
-		len -= m;
-		a = (char*)a + m;
+		len -= effective_length;
+		a = (char*)a + effective_length;
 		if(incr) {
-            addr += m;
+            addr += effective_length;
         }
 	}
+    printf("\n<----------Data Trasnsfer Ended - Length remaining: %d \n\n", len);
+    
 }
 
 
@@ -176,6 +261,30 @@ uint32_t cfgreadl(int fn, uint32_t off)
 	return p[0] | p[1]<<8 | p[2]<<16 | p[3]<<24;
 }
 
+
+static void
+cfgwritel(uint32_t fn, uint32_t off, uint32_t data)
+{
+	uint8_t cbuf[2*CACHELINESZ];
+	uint8_t *p;
+	// int retry;
+
+	p = (uint8_t*)ROUND((uint32_t) &cbuf[0], CACHELINESZ);
+	put4(p, data);
+	printf("cfgwritel 0x%x: %2.2x %2.2x %2.2x %2.2x\n", off, p[0], p[1], p[2], p[3]);
+	// retry = 0;
+	// while(waserror()){
+	// 	printf("ether4330: cfgwritel retry %lux %ux\n", off, data);
+	// 	sdioabort(fn);
+	// 	if(++retry == 3)
+	// 		nexterror();
+	// }
+	sdiorwext(fn, 1, p, 4, off| Sb32bit , 1);
+    printf("sdiorwext after \n");
+	// poperror();
+}
+
+
 static void sbwindow(uint32_t addr)
 {
 	addr &= ~(Sbwsize-1);
@@ -184,22 +293,324 @@ static void sbwindow(uint32_t addr)
 	cfgw(Sbaddr+2, addr>>24);
 }
 
-static bool prepare_side_plane() {
+static void sbrw(uint32_t fn, uint32_t write, uint8_t *buf, uint32_t len, uint32_t off)
+{
+	int n;
+	USED(fn);
+
+	if(write){
+		if(len >= 4){
+			n = len;
+			n &= ~3;
+			sdiorwext(Fn1, write, buf, n, off|Sb32bit, 1);
+			off += n;
+			buf += n;
+			len -= n;
+		}
+		while(len > 0){
+			sdiowr(Fn1, off|Sb32bit, *buf);
+			off++;
+			buf++;
+			len--;
+		}
+	} else{
+		if(len >= 4){
+			n = len;
+			n &= ~3;
+			sdiorwext(Fn1, write, buf, n, off|Sb32bit, 1);
+			off += n;
+			buf += n;
+			len -= n;
+		}
+		while(len > 0){
+			*buf = sdiord(Fn1, off|Sb32bit);
+			off++;
+			buf++;
+			len--;
+		}
+	}
+}
+
+
+static void sbmem(uint32_t write, uint32_t *buf, uint32_t len, uint32_t off)
+{
+	uint32_t n;
+
+	n = ROUNDUP(off, Sbwsize) - off;
+	if(n == 0) {
+        n = Sbwsize;
+    }
+		
+	while(len > 0){
+		if(n > len) {
+            n = len;
+        }
+		sbwindow(off);
+		sbrw(Fn1, write, (void *)buf, n, off & (Sbwsize-1));
+		off += n;
+		buf += n;
+		len -= n;
+		n = Sbwsize;
+	}
+}
+
+
+#define nil (void *)0
+static void corescan(uint32_t r)
+{
+	uint8_t *buf;
+	uint32_t i, coreid, corerev;
+	uint32_t addr;
+
+	buf = mem_allocate(Corescansz);
+	if(buf == nil) {
+        printf(" Could not allocate memory of size : %d \n", Corescansz);
+        return;
+    }
+		
+	sbmem(0, (void *)buf, Corescansz, r);
+	coreid = 0;
+	corerev = 0;
+	for(i = 0; i < Corescansz; i += 4){
+		switch(buf[i] & 0xF){
+		case 0xF:	/* end */
+            printf(" Switch 0xf \n");
+			mem_deallocate(buf);
+			return;
+		case 0x1:	/* core info */
+			if((buf[i+4]&0xF) != 0x1) {
+                break;
+            }
+			coreid = (buf[i+1] | buf[i+2]<<8) & 0xFFF;
+			i += 4;
+			corerev = buf[i+3];
+			break;
+		case 0x05:	/* address */
+			addr = buf[i+1]<<8 | buf[i+2]<<16 | buf[i+3]<<24;
+			addr &= ~0xFFF;
+			printf("core %x %s 0x%x\n", coreid, buf[i]&0xC0? "ctl" : "mem", addr);
+			switch(coreid){
+			case 0x800:
+				if((buf[i] & 0xC0) == 0) {
+                    printf(" Switch chipcommon \n");
+                    chipcommon = addr;
+                }
+				break;
+			case ARMcm3:
+			case ARM7tdmi:
+			case ARMcr4:
+				armcore = coreid;
+				if(buf[i] & 0xC0){
+					if(armctl == 0) {
+                        armctl = addr;
+                         printf(" Switch armctl \n");
+                    }
+				} else{
+					if(armregs == 0) {
+                        armregs = addr;
+                         printf(" Switch armregs \n");
+                    }
+				}
+				break;
+			case 0x80E:
+				if(buf[i] & 0xC0) {
+                    socramctl = addr;
+                } else if(socramregs == 0) {
+                    socramregs = addr;
+                    printf(" Switch socramregs \n");
+                }
+				socramrev = corerev;
+				break;
+			case 0x829:
+				if((buf[i] & 0xC0) == 0) {
+                    sdregs = addr;
+                        printf(" Switch sdregs \n");
+                }
+				sdiorev = corerev;
+				break;
+			case 0x812:
+				if(buf[i] & 0xC0) {
+                    d11ctl = addr;
+                     printf(" Switch d11ctl \n");
+                }
+				break;
+			}
+		}
+	}
+	mem_deallocate(buf);
+}
+
+static void
+sbdisable(uint32_t regs, uint32_t pre, uint32_t ioctl)
+{
+	sbwindow(regs);
+	if((cfgreadl(Fn1, regs + Resetctrl) & 1) != 0){
+		cfgwritel(Fn1, regs + Ioctrl, 3|ioctl);
+		cfgreadl(Fn1, regs + Ioctrl);
+		return;
+	}
+	cfgwritel(Fn1, regs + Ioctrl, 3|pre);
+	cfgreadl(Fn1, regs + Ioctrl);
+	cfgwritel(Fn1, regs + Resetctrl, 1);
+	MicroDelay(10);
+
+	while((cfgreadl(Fn1, regs + Resetctrl) & 1) == 0);
+	cfgwritel(Fn1, regs + Ioctrl, 3|ioctl);
+	cfgreadl(Fn1, regs + Ioctrl);
+}
+
+
+static void
+sbreset(uint32_t regs, uint32_t pre, uint32_t ioctl)
+{
+	sbdisable(regs, pre, ioctl);
+	sbwindow(regs);
+	
+    printf("sbreset %#p %#lux %#lux ->", regs, cfgreadl(Fn1, regs+Ioctrl), cfgreadl(Fn1, regs+Resetctrl));
+	
+    while((cfgreadl(Fn1, regs + Resetctrl) & 1) != 0){
+		cfgwritel(Fn1, regs + Resetctrl, 0);
+		MicroDelay(40);
+	}
+	cfgwritel(Fn1, regs + Ioctrl, 1|ioctl);
+	cfgreadl(Fn1, regs + Ioctrl);
+	printf("%#lux %#lux\n", cfgreadl(Fn1, regs+Ioctrl), cfgreadl(Fn1, regs+Resetctrl));
+}
+
+static void
+ramscan()
+{
+	uint32_t r, n, size;
+	uint32_t banks, i;
+
+	if(armcore == ARMcr4){
+		r = armregs;
+		sbwindow(r);
+		n = cfgreadl(Fn1, r + Cr4Cap);
+		printf("cr4 banks %lux\n", n);
+		banks = ((n>>4) & 0xF) + (n & 0xF);
+		size = 0;
+		for(i = 0; i < banks; i++){
+			cfgwritel(Fn1, r + Cr4Bankidx, i);
+			n = cfgreadl(Fn1, r + Cr4Bankinfo);
+			printf("bank %d reg %lux size %lud\n", i, n, 8192 * ((n & 0x3F) + 1));
+			size += 8192 * ((n & 0x3F) + 1);
+		}
+		socramsize = size;
+		rambase = 0x198000;
+		return;
+	}
+	if(socramrev <= 7 || socramrev == 12){
+		printf("ether4330: SOCRAM rev %d not supported\n", socramrev);
+        return;
+	}
+	sbreset(socramctl, 0, 0);
+	r = socramregs;
+	sbwindow(r);
+	n = cfgreadl(Fn1, r + Coreinfo);
+	printf("socramrev %d coreinfo %lux\n", socramrev, n);
+	banks = (n>>4) & 0xF;
+	size = 0;
+	for(i = 0; i < banks; i++){
+		cfgwritel(Fn1, r + Bankidx, i);
+		n = cfgreadl(Fn1, r + Bankinfo);
+		if(SBDEBUG) printf("bank %d reg %lux size %lud\n", i, n, 8192 * ((n & 0x3F) + 1));
+		size += 8192 * ((n & 0x3F) + 1);
+	}
+	socramsize = size;
+	rambase = 0;
+	if(chipid == 43430){
+		cfgwritel(Fn1, r + Bankidx, 3);
+		cfgwritel(Fn1, r + Bankpda, 0);
+	}
+}
+
+
+static bool sb_init() {
     sbwindow(Enumbase);
 
 	uint32_t r;
-	uint32_t chipid;
+
 	// int8_t buf[16];
     r = cfgreadl(Fn1, Enumbase);
 	chipid = r & 0xFFFF;
 	printf("Chip Id %x %d \n", chipid, chipid);
+
+    switch(chipid){
+		case 0x4330:
+		case 43362:
+		case 43430:
+		case 0x4345:
+			chiprev = (r>>16)&0xF;
+			break;
+		default:
+			printf("ether4330: chipid %#x (%d) not supported\n", chipid, chipid);
+            return false;
+	}
+	r = cfgreadl(Fn1, Enumbase + 63*4);
+    corescan(r);
+
+    if(armctl == 0 || d11ctl == 0 || (armcore == ARMcm3 && (socramctl == 0 || socramregs == 0))) {
+        printf("corescan didn't find essential cores\n");
+        return false;
+    }   
+		
+	if(armcore == ARMcr4) {
+        printf("Reseting sonic backplane \n");
+        sbreset(armctl, Cr4Cpuhalt, Cr4Cpuhalt);
+    } else {
+        printf("Disabled sonic backplane \n");
+        sbdisable(armctl, 0, 0);
+    }
+
+    // sbreset(d11ctl, 8|4, 4);
+	// ramscan();
+	// printf("ARM %#p D11 %#p SOCRAM %#p,%#p %lud bytes @ %#p\n", armctl, d11ctl, socramctl, socramregs, socramsize, rambase);
+	// cfgw(Clkcsr, 0);
+    // MicroDelay(10);
+	
+    // printf("chipclk: %x\n", cfgr(Clkcsr));
+    // cfgw(Clkcsr, Nohwreq | ReqALP);
+
+	// while((cfgr(Clkcsr) & (HTavail|ALPavail)) == 0) {
+    //     MicroDelay(10);
+    // }
+		
+	// cfgw(Clkcsr, Nohwreq | ForceALP);
+	// MicroDelay(65);
+    // printf("chipclk: %x\n", cfgr(Clkcsr));
+	// cfgw(Pullups, 0);
+	// sbwindow(chipcommon);
+	// cfgwritel(Fn1, chipcommon + Gpiopullup, 0);
+	// cfgwritel(Fn1, chipcommon + Gpiopulldown, 0);
+	// if(chipid != 0x4330 && chipid != 43362) {
+    //     return true;
+    // }
+	// cfgwritel(Fn1, chipcommon + Chipctladdr, 1);
+	// if(cfgreadl(Fn1, chipcommon + Chipctladdr) != 1) {
+    //     printf("ether4330: can't set Chipctladdr\n");
+    // } else {
+	// 	r = cfgreadl(Fn1, chipcommon + Chipctldata);
+	// 	if(SBDEBUG) printf("chipcommon PMU (%lux) %lux", cfgreadl(Fn1, chipcommon + Chipctladdr), r);
+	// 	/* set SDIO drive strength >= 6mA */
+	// 	r &= ~0x3800;
+	// 	if(chipid == 0x4330) {
+    //         r |= 3<<11;
+    //     } else {
+    //         r |= 7<<11;
+    //     }
+	// 	cfgwritel(Fn1, chipcommon + Chipctldata, r);
+	// 	printf("-> %lux (= %lux)\n", r, cfgreadl(Fn1, chipcommon + Chipctldata));
+	// }
+
+    //
 
     return true;
 }
 
 bool startWifi () {
     bool is_success = prepare_sdio();
-    is_success = prepare_side_plane();
+    is_success = sb_init();
     return is_success;
 }
 

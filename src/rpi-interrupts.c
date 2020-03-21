@@ -141,17 +141,17 @@ void register_irq_handler(irq_number_t irq_num, interrupt_handler_f handler, int
     }
     else if (IRQ_IS_GPU2(irq_num))
     {
-        printf("registering GPU1 IRQ2 \n");
+        // printf("registering GPU1 IRQ2 \n");
         irq_pos = irq_num - 32;
         handlers[irq_num] = handler;
         clearers[irq_num] = clearer;
-        printf(" IRQ2: %x \n ", rpiIRQController->Enable_IRQs_2);
+        // printf(" IRQ2: %x \n ", rpiIRQController->Enable_IRQs_2);
         rpiIRQController->Enable_IRQs_2 |= (1 << ((irq_num) & (32 - 1)));
-        printf("After IRQ2: %x \n ", rpiIRQController->Enable_IRQs_2);
+        // printf("After IRQ2: %x \n ", rpiIRQController->Enable_IRQs_2);
     }
     else if (IRQ_IS_GPU1(irq_num))
     {
-        printf("registering GPU1 IRQ1 \n");
+        // printf("registering GPU1 IRQ1 \n");
         irq_pos = irq_num;
         handlers[irq_num] = handler;
         clearers[irq_num] = clearer;
