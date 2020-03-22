@@ -569,7 +569,7 @@ typedef struct SDDescriptor
 	struct regOCR ocr;	 // Card ocr
 	uint32_t status;	   // Card last status
 
-	EMMCCommand *lastCmd;
+	uint32_t last_cmd_idx;
 
 	struct
 	{
@@ -590,7 +590,7 @@ typedef struct SDDescriptor
 {--------------------------------------------------------------------------*/
 static SDDescriptor sdCard = {0};
 
-static int sdSendCommandP(EMMCCommand *cmd, uint32_t arg, uint32_t * resp);
+static int sdSendCommandP(EMMCCommand cmd, uint32_t arg, uint32_t * resp);
 static SDRESULT sdSetClock(uint32_t freq);
 
 static uint_fast8_t fls_uint32_t(uint32_t x)
@@ -714,7 +714,7 @@ static SDRESULT sdWaitForCommand(void)
 }
 
 #define R1_ERRORS_MASK 0xfff9c004
-static int sdSendCommandP(EMMCCommand *cmd, uint32_t arg, uint32_t *resp)
+static int sdSendCommandP(EMMCCommand cmd, uint32_t arg, uint32_t *resp)
 {
 	SDRESULT res;
 
@@ -725,24 +725,24 @@ static int sdSendCommandP(EMMCCommand *cmd, uint32_t arg, uint32_t *resp)
 	/* Clear interrupt flags.  This is done by setting the ones that are currently set */
 	EMMC_INTERRUPT->Raw32 = EMMC_INTERRUPT->Raw32; // Clear interrupts
 
-	if(cmd->code.CMD_ISDATA) {
-		cmd->code.Raw32 |= 1<<8; // This enables DMA
+	if(cmd.code.CMD_ISDATA) {
+		cmd.code.Raw32 |= 1<<8; // This enables DMA
 	}
 
 	/*
 	 * CMD6 may be Setbuswidth or Switchfunc depending on Appcmd prefix = 6
 	 */
-	if(cmd->code.CMD_INDEX == 6 && sdCard.lastCmd->code.CMD_INDEX == 55) {
-		cmd->code.CMD_ISDATA = 1;
-		cmd->code.TM_DAT_DIR = 1;
+	if(cmd.code.CMD_INDEX == 6 && sdCard.last_cmd_idx == 55) {
+		cmd.code.CMD_ISDATA = 1;
+		cmd.code.TM_DAT_DIR = 1;
 	}
 	
 	// Check if command is IORWextended
-	if(cmd->code.CMD_INDEX == 53) {
+	if(cmd.code.CMD_INDEX == 53) {
 		if(arg & (1<<31)) {
-			cmd->code.TM_DAT_DIR = 0; // Host to card. This means write
+			cmd.code.TM_DAT_DIR = 0; // Host to card. This means write
 		} else {
-			cmd->code.TM_DAT_DIR = 1; // Card to host. This means read
+			cmd.code.TM_DAT_DIR = 1; // Card to host. This means read
 		}
 	}
 
@@ -750,17 +750,17 @@ static int sdSendCommandP(EMMCCommand *cmd, uint32_t arg, uint32_t *resp)
 	// & 
 
 	if((EMMC_BLKSIZECNT->Raw32  & 0xFFFF0000) != 0x10000) {
-		cmd->code.TM_BLKCNT_EN = 1;
-		cmd->code.TM_MULTI_BLOCK = 1;
+		cmd.code.TM_BLKCNT_EN = 1;
+		cmd.code.TM_MULTI_BLOCK = 1;
 	}
 			// c |= Multiblock | Blkcnten;
 
 
 	/* Set the argument and the command code, Some commands require a delay before reading the response */
 	*EMMC_ARG1 = arg;		 // Set argument to SD card
-	*EMMC_CMDTM = cmd->code ; // Send command to SD card
-	if (cmd->delay) {
-		MicroDelay(cmd->delay); // Wait for required delay
+	*EMMC_CMDTM = cmd.code ; // Send command to SD card
+	if (cmd.delay) {
+		MicroDelay(cmd.delay); // Wait for required delay
 	}
 		
 
@@ -772,7 +772,7 @@ static int sdSendCommandP(EMMCCommand *cmd, uint32_t arg, uint32_t *resp)
 	uint32_t resp0 = *EMMC_RESP0; // Fetch SD card response 0 to command
 
 	/* Handle response types for command */
-	switch (cmd->code.CMD_RSPNS_TYPE)
+	switch (cmd.code.CMD_RSPNS_TYPE)
 	{
 	// no response
 	case CMD_NO_RESP:
@@ -798,28 +798,28 @@ static int sdSendCommandP(EMMCCommand *cmd, uint32_t arg, uint32_t *resp)
 		break;
 	}
 
-	if(cmd->code.CMD_RSPNS_TYPE == CMD_BUSY48BIT_RESP) {
+	if(cmd.code.CMD_RSPNS_TYPE == CMD_BUSY48BIT_RESP) {
 		EMMC_IRPT_EN->Raw32 = (EMMC_IRPT_EN->Raw32 | 1<<1 | 1<<15); // DataDone | Err
 		MicroDelay(3000);
 		if(EMMC_INTERRUPT->DATA_DONE == 0) {
-			printf("Error: no Datadone after CMD %d\n", cmd->code.Raw32);
+			printf("Error: no Datadone after CMD %d\n", cmd.code.Raw32);
 		}
 		
 		if(EMMC_INTERRUPT->ERR) {
-			printf("emmcio: CMD %d error interrupt %ux\n",cmd->code.Raw32,EMMC_INTERRUPT->Raw32);
+			printf("emmcio: CMD %d error interrupt %ux\n",cmd.code.Raw32,EMMC_INTERRUPT->Raw32);
 		}
 		EMMC_INTERRUPT->Raw32 = EMMC_INTERRUPT->Raw32;//reset interuppts;
 	}
 
 	// Handle command specific cases
 
-	if(cmd->code.CMD_INDEX == 7){ // MMC_SELECT
+	if(cmd.code.CMD_INDEX == 7){ // MMC_SELECT
 		MicroDelay(10);
 		sdSetClock(FREQ_NORMAL); //25 Mhz
 		MicroDelay(10);
 		// emmc.fastclock = 1;
-	} else if(cmd->code.CMD_INDEX == 6) { // Setbuswidth
-		if(sdCard.lastCmd->code.CMD_INDEX == 55){ //  last command == App command
+	} else if(cmd.code.CMD_INDEX == 6) { // Setbuswidth
+		if(sdCard.last_cmd_idx == 55){ //  last command == App command
 			/*
 			 * If card bus width changes, change host bus width
 			 */
@@ -841,7 +841,7 @@ static int sdSendCommandP(EMMCCommand *cmd, uint32_t arg, uint32_t *resp)
 				MicroDelay(10);
 			}
 		}
-	} else if(cmd->code.CMD_INDEX == 52 && ((arg & ~0xFF) == ( 1<<31 | 0<<28 | 7<<9)) ){ // IORWdirect = 52
+	} else if(cmd.code.CMD_INDEX == 52 && ((arg & ~0xFF) == ( 1<<31 | 0<<28 | 7<<9)) ){ // IORWdirect = 52
 		switch(arg & 0x3){
 			case 0:
 				EMMC_CONTROL0->Raw32 = (EMMC_CONTROL0->Raw32 & (~ (1<<1)));
@@ -852,7 +852,7 @@ static int sdSendCommandP(EMMCCommand *cmd, uint32_t arg, uint32_t *resp)
 		}
 	}
 
-	sdCard.lastCmd = cmd;
+	sdCard.last_cmd_idx = cmd.code.CMD_INDEX;
 
 	return SD_OK;
 }
@@ -915,7 +915,7 @@ static SDRESULT sdSetClock(uint32_t freq)
 
 bool sdio_send_command(int cmd_idx, uint32_t arg, uint32_t *resp) {
 	EMMCCommand *cmd = &sdCommandTable[cmd_idx];
-	SDRESULT sdio_resp = sdSendCommandP(cmd, arg, resp);
+	SDRESULT sdio_resp = sdSendCommandP(*cmd, arg, resp);
 	return sdio_resp == SD_OK;
 }
 
@@ -988,7 +988,7 @@ static SDRESULT sdResetCard(void)
 	/* Reset our card structure entries */
 	sdCard.rca = 0;				   // Zero rca
 	sdCard.ocr.Raw32 = 0;		   // Zero ocr
-	sdCard.lastCmd = 0;			   // Zero lastCmd
+	// sdCard.lastCmd =			   // Zero lastCmd
 	sdCard.status = 0;			   // Zero status
 	sdCard.type = SD_TYPE_UNKNOWN; // Set card type unknown
 
@@ -999,7 +999,7 @@ static SDRESULT sdResetCard(void)
 
 void sdio_iosetup(bool write, void *buf, uint32_t bsize, uint32_t bcount)
 {
-	printf("\t Setting up io write: %d buf:0x%x bsize: %d bcount: %d \n", write, buf, bsize, bcount);
+	// printf("\t Setting up io write: %d buf:0x%x bsize: %d bcount: %d \n", write, buf, bsize, bcount);
 	USED(write);
 	USED(buf);
 	EMMC_BLKSIZECNT->Raw32 = bcount<<16 | bsize;
@@ -1025,37 +1025,6 @@ void sdio_do_io(bool write, uint8_t *buf, uint32_t len) {
 		printf("DMA ERROR while transferring data. \n");
 		return;
 	}
-
-	// uint32_t *intbuff = (uint32_t *)buf;
-	// for (uint_fast16_t i = 0; i < (len/4); i++)
-	// {
-	// 	if (write)
-	// 		*EMMC_DATA = intbuff[i];
-	// 	else
-	// 		intbuff[i] = *EMMC_DATA;
-	// }
-	
-	
-
-	// for (uint_fast16_t i = 0; i < len; i++)
-	// {
-	// 	if (write)
-	// 	{
-	// 		uint32_t data = (buf[i]);
-	// 		data |= (buf[i + 1] << 8);
-	// 		data |= (buf[i + 2] << 16);
-	// 		data |= (buf[i + 3] << 24);
-	// 		*EMMC_DATA = data;
-	// 	}
-	// 	else
-	// 	{
-	// 		uint32_t data = *EMMC_DATA;
-	// 		buf[i] = (data)&0xff;
-	// 		buf[i + 1] = (data >> 8) & 0xff;
-	// 		buf[i + 2] = (data >> 16) & 0xff;
-	// 		buf[i + 3] = (data >> 24) & 0xff;
-	// 	}
-	// }
 
 	// if(!write)
 	// 	cachedinvse(buf, len);

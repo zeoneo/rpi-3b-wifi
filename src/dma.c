@@ -344,7 +344,7 @@ static void init_channel(volatile dma_ctrl *ctrl, uint32_t chan)
 int dma_start(int chan, int dev, DMA_DIR dir, void *src, void *dst, int len)
 {
 
-    printf("\t dma_start  src:0x%x dst: 0x%x len: %d \n", src, dst, len);
+    // printf("\t dma_start  src:0x%x dst: 0x%x len: %d \n", src, dst, len);
     volatile dma_ctrl *ctrl = &dma[chan];
 
     if (ctrl->channel_status == DMA_READY || ctrl->channel_status == DMA_IN_PROGRESS)
@@ -406,9 +406,6 @@ int dma_start(int chan, int dev, DMA_DIR dir, void *src, void *dst, int len)
     MicroDelay(2);
 
 
-    __asm__ volatile ("dsb sy" : : : "memory");
-    __asm__ volatile ("dmb sy" : : : "memory");
-
     ctrl->channel_header->CS = BCM2835_DMA_ACTIVE;
     //set active bit, but everything else is 0.
 
@@ -432,8 +429,8 @@ int dma_wait(int chan)
         return -1;
     }
     channel_header->CS = BCM2835_DMA_END | BCM2835_DMA_INT;
-    printf("\t DMA Success: Channel: %d \n", chan);
-        __asm__ volatile ("dsb sy" : : : "memory");
-    __asm__ volatile ("dmb sy" : : : "memory");
+    // printf("\t DMA Success: Channel: %d \n", chan);
+    //     __asm__ volatile ("dsb sy" : : : "memory");
+    // __asm__ volatile ("dmb sy" : : : "memory");
     return 0;
 }

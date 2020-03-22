@@ -18,7 +18,7 @@ KERNEL_ARCH_CPPFLAGS=
 KERNEL_ARCH_LDFLAGS=
 KERNEL_ARCH_LIBS=
 
-CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra -Werror -Wno-sign-compare -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-nonnull-compare -Wno-unused-function
+CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra -Werror -Wno-sign-compare -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-nonnull-compare
 CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lm -lgcc
@@ -55,6 +55,7 @@ src/sdhost.o \
 src/uart0.o \
 src/memcmp.o \
 src/memcpy.o \
+src/memmove.o \
 src/memset.o \
 src/printf.o \
 src/strlen.o \
@@ -87,7 +88,7 @@ kernel8-32.elf: $(OBJS) ./linker.ld
 
 .c.o:
 	@echo "  CC    $@"
-	@$(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
+	@$(CC) -MD -c $< -o $@ -std=c11 $(CFLAGS) $(CPPFLAGS)
 
 .S.o:
 	@echo "  CC    $@"

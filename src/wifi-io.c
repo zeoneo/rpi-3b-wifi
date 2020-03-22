@@ -2,21 +2,22 @@
 #include<device/emmc-sdio.h>
 #include <kernel/systimer.h>
 #include <plibc/stdio.h>
-#include <string.h>
+#include <plibc/string.h>
 #include <mem/kernel_alloc.h>
 
 #define USED(x) if(x);else{}
+#define nelem(x)	(sizeof(x)/sizeof((x)[0]))
 
 static uint32_t cmd_resp [4] = {0};
 static uint32_t ocr = 0;
 static uint32_t rca = 0;
 static uint32_t chipid;
 static uint32_t chiprev;
-// static char	*regufile;
-// static union {
-// 		uint32_t i;
-// 		uint8_t c[4];
-// } resetvec;
+static char	*regufile;
+static union {
+		uint32_t i;
+		uint8_t c[4];
+} resetvec;
 static uint32_t armcore;
 static uint32_t chipcommon;
 static uint32_t armctl;
@@ -34,6 +35,7 @@ static uint32_t rambase;
 // static uint8_t txwindow;
 // static uint8_t txseq;
 // static uint8_t	rxseq;
+
 
 #if !defined(__STRINGIFY2)
 #define __STRINGIFY2(__p) #__p
@@ -55,9 +57,8 @@ extern const uint8_t __variable ## _start;\
 extern const  uint8_t __variable ## _end;
 
 INCLUDE_BINARY_FILE(wifibinary, "lib/brcmfmac43430-sdio.bin", ".rodata.brcmfmac43430_sdio_bin");
-
-
 INCLUDE_BINARY_FILE(wifitext, "lib/brcmfmac43430-sdio.txt", ".rodata.brcmfmac43430_sdio_txt");
+
 // uint32_t binarysize = (uint32_t)&wifibinary_end - (uint32_t)&wifibinary_start;
 
 
@@ -166,11 +167,48 @@ static int sdiord(uint32_t fn, uint32_t addr);
 static void sdiowr(int fn, int addr, int data);
 static void sdioset(uint32_t fn, uint32_t addr, uint32_t bits);
 static bool prepare_sdio();
+static void sbreset(uint32_t regs, uint32_t pre, uint32_t ioctl);
 
 #define HOWMANY(x, y)	(((x)+((y)-1))/(y))
 #define ROUNDUP(x, y)	(HOWMANY((x), (y))*(y))	/* ceiling */
 #define ROUNDDN(x, y)	(((x)/(y))*(y))		/* floor */
 #define	ROUND(s, sz)	(((s)+(sz-1))&~(sz-1))
+
+
+struct Cmd {
+	uint8_t	cmd[4];
+	uint8_t	len[4];
+	uint8_t	flags[2];
+	uint8_t	id[2];
+	uint8_t	status[4];
+};
+
+typedef struct {
+	uint8_t *file_buf;
+	uint8_t *current_buf;
+	uint32_t size;
+} FileInfo;
+
+FileInfo bin_file = { 0 };
+FileInfo text_file = { 0 };
+
+static char config40181[] = "bcmdhd.cal.40181";
+static char config40183[] = "bcmdhd.cal.40183.26MHz";
+
+struct {
+	uint32_t chipid;
+	uint32_t chiprev;
+	char *fwfile;
+	char *cfgfile;
+	char *regufile;
+} firmware[] = {
+	{ 0x4330, 3,	"fw_bcm40183b1.bin", config40183, 0 },
+	{ 0x4330, 4,	"fw_bcm40183b2.bin", config40183, 0 },
+	{ 43362, 0,	"fw_bcm40181a0.bin", config40181, 0 },
+	{ 43362, 1,	"fw_bcm40181a2.bin", config40181, 0 },
+	{ 43430, 1,	"brcmfmac43430-sdio.bin", "brcmfmac43430-sdio.txt", 0 },
+	{ 0x4345, 6, "brcmfmac43455-sdio.bin", "brcmfmac43455-sdio.txt", "brcmfmac43455-sdio.clm_blob" },
+};
 
 
 // static uint8_t * put2(uint8_t *p, uint16_t v)
@@ -228,7 +266,7 @@ static void sdiorwext(uint32_t fn, uint32_t write, void *a, uint32_t len, uint32
 	uint32_t bsize, blk, bcount, effective_length;
 
 	bsize = fn == Fn2 ? 512 : 64;
-    printf("\n<----------Data Trasnsfer Started: Total len: %d \n", len);
+    // printf("\n<----------Data Trasnsfer Started: Total len: %d \n", len);
 	while(len > 0){
 		if(len >= 511 * bsize){
 			blk = 1;
@@ -246,11 +284,11 @@ static void sdiorwext(uint32_t fn, uint32_t write, void *a, uint32_t len, uint32
 
         
 		if(blk) {
-            printf("\t SDIO IO OP: bsize: %d bcount: %d\n", bsize, bcount);
+            // printf("\t SDIO IO OP: bsize: %d bcount: %d\n", bsize, bcount);
             sdio_iosetup(write, a, bsize, bcount);
             
         } else {
-            printf("\t SDIO IO OP: bsize: %d bcount: %d\n", bcount, 1);
+            // printf("\t SDIO IO OP: bsize: %d bcount: %d\n", bcount, 1);
             sdio_iosetup(write, a, bcount, 1);
         }
 
@@ -265,7 +303,7 @@ static void sdiorwext(uint32_t fn, uint32_t write, void *a, uint32_t len, uint32
             addr += effective_length;
         }
 	}
-    printf("\n<----------Data Trasnsfer Ended - Length remaining: %d \n\n", len);
+    // printf("\n<----------Data Trasnsfer Ended - Length remaining: %d \n\n", len);
     
 }
 
@@ -281,7 +319,7 @@ uint32_t cfgreadl(int fn, uint32_t off)
 	memset(p, 0, 4);
 	sdiorwext(fn, 0, p, 4, off|Sb32bit, 1);
 	
-    printf("cfgreadl %lx: %2.2x %2.2x %2.2x %2.2x\n", off, p[0], p[1], p[2], p[3]);
+    // printf("cfgreadl %lx: %2.2x %2.2x %2.2x %2.2x\n", off, p[0], p[1], p[2], p[3]);
 
 	return p[0] | p[1]<<8 | p[2]<<16 | p[3]<<24;
 }
@@ -296,19 +334,9 @@ cfgwritel(uint32_t fn, uint32_t off, uint32_t data)
 
 	p = (uint8_t*)ROUND((uint32_t) &cbuf[0], CACHELINESZ);
 	put4(p, data);
-	printf("cfgwritel 0x%x: %2.2x %2.2x %2.2x %2.2x\n", off, p[0], p[1], p[2], p[3]);
-	// retry = 0;
-	// while(waserror()){
-	// 	printf("ether4330: cfgwritel retry %lux %ux\n", off, data);
-	// 	sdioabort(fn);
-	// 	if(++retry == 3)
-	// 		nexterror();
-	// }
+	// printf("cfgwritel 0x%x: %2.2x %2.2x %2.2x %2.2x\n", off, p[0], p[1], p[2], p[3]);
 	sdiorwext(fn, 1, p, 4, off| Sb32bit , 1);
-    printf("sdiorwext after \n");
-	// poperror();
 }
-
 
 static void sbwindow(uint32_t addr)
 {
@@ -322,7 +350,6 @@ static void sbrw(uint32_t fn, uint32_t write, uint8_t *buf, uint32_t len, uint32
 {
 	int n;
 	USED(fn);
-    printf("--length: %d \n", len);
 	if(write){
 		if(len >= 4){
 			n = len;
@@ -332,7 +359,6 @@ static void sbrw(uint32_t fn, uint32_t write, uint8_t *buf, uint32_t len, uint32
 			off += n;
 			buf += n;
 			len -= n;
-            
 		}
 		while(len > 0){
 			sdiowr(Fn1, off|Sb32bit, *buf);
@@ -341,17 +367,14 @@ static void sbrw(uint32_t fn, uint32_t write, uint8_t *buf, uint32_t len, uint32
 			len--;
 		}
 	} else{
-		// if(len >= 4){
-		// 	n = len;
-		// 	n &= ~3;
-        //     printf("--sub length: %d \n", n);
-		// 	sdiorwext(Fn1, write, buf, n, off|Sb32bit, 1);
-		// 	off += n;
-		// 	buf += n;
-		// 	len -= n;
-        //     printf("-- length after: %d \n", len);
-		// }
-        printf("-- length after2: %d \n", len);
+		if(len >= 4){
+			n = len;
+			n &= ~3;
+			sdiorwext(Fn1, write, buf, n, off|Sb32bit, 1);
+			off += n;
+			buf += n;
+			len -= n;
+		}
 		while(len > 0){
 			*buf = sdiord(Fn1, off|Sb32bit);
 			off++;
@@ -362,7 +385,7 @@ static void sbrw(uint32_t fn, uint32_t write, uint8_t *buf, uint32_t len, uint32
 }
 
 
-static void sbmem(uint32_t write, uint32_t *buf, uint32_t len, uint32_t off)
+static void sbmem(uint32_t write, void *buf, uint32_t len, uint32_t off)
 {
 	uint32_t n;
 
@@ -370,19 +393,297 @@ static void sbmem(uint32_t write, uint32_t *buf, uint32_t len, uint32_t off)
 	if(n == 0) {
         n = Sbwsize;
     }
-	printf("sbmem length: %d \n ", n);
 	while(len > 0){
 		if(n > len) {
             n = len;
         }
 		sbwindow(off);
-		sbrw(Fn1, write, (void *)buf, n, off & (Sbwsize-1));
+		sbrw(Fn1, write, buf, n, off & (Sbwsize-1));
 		off += n;
 		buf += n;
 		len -= n;
 		n = Sbwsize;
 	}
 }
+
+
+/*
+ * Firmware and config file uploading
+ */
+
+/*
+ * Condense config file contents (in buffer buf with length n)
+ * to 'var=value\0' list for firmware:
+ *	- remove comments (starting with '#') and blank lines
+ *	- remove carriage returns
+ *	- convert newlines to nulls
+ *	- mark end with two nulls
+ *	- pad with nulls to multiple of 4 bytes total length
+ */
+static int condense(uint8_t *buf, uint8_t n)
+{
+	uint8_t *p, *ep, *lp, *op;
+	uint32_t c, skipping;
+
+	skipping = 0;	/* true if in a comment */
+	ep = buf + n;	/* end of input */
+	op = buf;	/* end of output */
+	lp = buf;	/* start of current output line */
+	for(p = buf; p < ep; p++){
+		switch(c = *p) {
+		case '#':
+			skipping = 1;
+			break;
+		case '\0':
+		case '\n':
+			skipping = 0;
+			if(op != lp){
+				*op++ = '\0';
+				lp = op;
+			}
+			break;
+		case '\r':
+			break;
+		default:
+			if(!skipping) {
+				*op++ = c;
+			}
+			break;
+		}
+	}
+	if(!skipping && op != lp) {
+		*op++ = '\0';
+	}
+	*op++ = '\0';
+	for(n = op - buf; n & 03; n++) {
+		*op++ = '\0';
+	}
+	return n;
+}
+
+
+/*
+ * Try to find firmware file in /boot or in /sys/lib/firmware.
+ * Throw an error if not found.
+ */
+FileInfo *findfirmware(char *file)
+{
+
+	// I am supposed to write some code to locate file from file system here.
+	// But for now I have loaded the wifi firmware files with kernel.
+	// So if file names match I will return the pointer to corresponsing buffer.
+	// It's big TODO here.: Replace with file APIs
+
+	if(memcmp("brcmfmac43430-sdio.bin", file, 22) == 0) {
+		printf("brcmfmac43430-sdio.bin Firmware file found. \n");
+		bin_file.file_buf = (uint8_t *)&wifibinary_start;
+		bin_file.current_buf = (uint8_t *)&wifibinary_start;
+		bin_file.size = ((uint32_t)&wifibinary_end - (uint32_t)&wifibinary_start);
+		return &bin_file;
+	} else if(memcmp("brcmfmac43430-sdio.txt", file, 22) == 0) {
+		printf("brcmfmac43430-sdio.txt Firmware file found. \n");
+		text_file.file_buf = (uint8_t *)&wifitext_start;
+		text_file.current_buf = (uint8_t *)&wifitext_start;
+		text_file.size = ((uint32_t)&wifitext_end - (uint32_t)&wifitext_start);
+		return &text_file;
+	}
+	printf("Could not locate any firmware file. File Name: %s \n", file);
+	return NULL;
+}
+
+static uint32_t read_file_in_buffer(FileInfo *file_info, uint8_t *buffer, uint32_t size, uint32_t offset) {
+	if(offset >= file_info->size) {
+		return 0;
+	}
+
+	uint8_t *start_ptr = file_info->file_buf + offset;
+	uint8_t *end_ptr = file_info->file_buf + file_info->size;
+	uint32_t count = 0;
+	while(1) {
+		buffer[count] = *start_ptr;
+		count++;
+		start_ptr++;
+		if(count == size) {
+			// printf("Breaking due to size. \n");
+			break;
+		} else if (start_ptr == end_ptr) {
+			printf("Breaking due to EOF. \n");
+			break;
+		}
+	}
+	// printf("Final Ptr: 0x%x offset: %d count: %d \n", start_ptr, offset, count);
+	return count;
+}
+
+static int upload(char *file, int isconfig)
+{
+	FileInfo *file_info;
+	uint8_t *buf = NULL;
+	uint8_t *cbuf = NULL;
+	uint32_t off, n;
+
+	file_info = findfirmware(file);
+
+	if(file_info == NULL) {
+		printf(" Could not load the file. \n");
+		return -1;
+	}
+
+	buf = mem_allocate(Uploadsz);
+
+	if(buf == NULL) {
+		printf("Could not allocate memory for buffer. \n");
+		return -1;
+	}
+
+	if(Firmwarecmp){
+		cbuf = mem_allocate(Uploadsz);
+		if(buf == NULL) {
+			printf("Could not allocate memory for compare buffer. \n");
+			return -1;
+		}
+	}
+	off = 0;
+	for(;;){
+		n = read_file_in_buffer(file_info, buf, Uploadsz, off);
+		if(n <= 0) {
+			printf("EOF reached. \n");
+			break;
+		}
+			
+		if(isconfig){
+			n = condense(buf, n);
+			off = socramsize - n - 4;
+		} else if(off == 0) {
+			memmove(resetvec.c, buf, sizeof(resetvec.c));
+		}
+
+		while(n&3) {
+			buf[n++] = 0;
+		}
+		// printf("Transferring bytes: %d \n", n);
+		sbmem(1, buf, n, rambase + off);
+		if(isconfig) {
+			// printf("ITs config file breaking. \n");
+			break;
+		}
+		off += n;
+	}
+
+	printf("Completed transfer now off to compare.\n");
+	if(Firmwarecmp) {
+		printf("compare... \n");
+		if(!isconfig) {
+			off = 0;
+		}
+		for(;;) {
+			if(!isconfig){
+				n = read_file_in_buffer(file_info, buf, Uploadsz, off);
+				if(n <= 0) {
+					break;
+				}
+				while(n&3) {
+					buf[n++] = 0;
+				}
+			}
+			// printf("Reading data for comparison offset: %d \n", off);
+			sbmem(0, cbuf, n, rambase + off);
+			if(memcmp(buf, cbuf, n) != 0){
+				printf(" Error ether4330: firmware load failed offset %d\n", off);
+				return -1;
+			}
+			if(isconfig) {
+				// printf("ITs config file breaking comparison. \n");
+				break;
+			}
+			off += n;
+		}
+		printf("Successful comparison. \n");
+	}
+	printf("\n");
+	mem_deallocate(buf);
+	mem_deallocate(cbuf);
+	return n;
+}
+
+static void sbenable()
+{
+	uint32_t i;
+
+	printf("enabling HT clock...\n");
+	cfgw(Clkcsr, 0);
+	MicroDelay(100);
+	cfgw(Clkcsr, ReqHT);
+	MicroDelay(100);
+	for(i = 0; (cfgr(Clkcsr) & HTavail) == 0; i++){
+		if(i == 100){
+			printf("Error: ether4330: can't enable HT clock: csr %x\n", cfgr(Clkcsr));
+			break;
+		}
+		MicroDelay(100);
+		cfgw(Clkcsr, ReqHT);
+		MicroDelay(100);
+	}
+	cfgw(Clkcsr, cfgr(Clkcsr) | ForceHT);
+	MicroDelay(10);
+	printf("chipclk: %x is high clock enabled: %d \n", cfgr(Clkcsr), (cfgr(Clkcsr) & HTavail));
+	sbwindow(sdregs);
+	cfgwritel(Fn1, sdregs + Sbmboxdata, 4 << 16);	/* protocol version */
+	cfgwritel(Fn1, sdregs + Intmask, FrameInt | MailboxInt | Fcchange);
+	sdioset(Fn0, Ioenable, 1<<Fn2);
+	for(i = 0; !(sdiord(Fn0, Ioready) & 1<<Fn2); i++){
+		if(i == 100){
+			printf("Error: ether4330: can't enable SDIO function 2 - ioready %x\n", sdiord(Fn0, Ioready));
+			return;
+		}
+		MicroDelay(100);
+	}
+	sdiowr(Fn0, Intenable, (1<<Fn1) | (1<<Fn2) | 1);
+}
+
+
+static void fwload() {
+	uint8_t buf[4];
+	uint32_t i, n;
+
+	i = 0;
+	while(firmware[i].chipid != chipid || firmware[i].chiprev != chiprev){
+		if(++i == nelem(firmware)){
+			printf("ERROR ether4330: no firmware for chipid %x (%d) chiprev %d\n", chipid, chipid, chiprev);
+			return;
+		}
+	}
+	regufile = firmware[i].regufile;
+	cfgw(Clkcsr, ReqALP);
+	while((cfgr(Clkcsr) & ALPavail) == 0) {
+		MicroDelay(10);
+	}
+		
+	memset(buf, 0, 4);
+	sbmem(1, buf, 4, rambase + socramsize - 4);
+	
+	printf("started firmware load...");
+	upload(firmware[i].fwfile, 0);
+	printf("config load...");
+	n = upload(firmware[i].cfgfile, 1);
+	n /= 4;
+	n = (n & 0xFFFF) | (~n << 16);
+	put4(buf, n);
+	sbmem(1, buf, 4, rambase + socramsize - 4);
+	if(armcore == ARMcr4) {
+		sbwindow(sdregs);
+		cfgwritel(Fn1, sdregs + Intstatus, ~0);
+		if(resetvec.i != 0){
+			// printf("%ux\n", resetvec.i);
+			sbmem(1, resetvec.c, sizeof(resetvec.c), 0);
+		}
+		sbreset(armctl, Cr4Cpuhalt, 0);
+	}else {
+		sbreset(armctl, 0, 0);
+	}
+}
+
+
 
 
 #define nil (void *)0
@@ -404,7 +705,7 @@ static void corescan(uint32_t r)
 	for(i = 0; i < Corescansz; i += 4){
 		switch(buf[i] & 0xF){
 		case 0xF:	/* end */
-            printf(" Switch 0xf \n");
+            // printf(" Switch 0xf \n");
 			mem_deallocate(buf);
 			return;
 		case 0x1:	/* core info */
@@ -418,11 +719,11 @@ static void corescan(uint32_t r)
 		case 0x05:	/* address */
 			addr = buf[i+1]<<8 | buf[i+2]<<16 | buf[i+3]<<24;
 			addr &= ~0xFFF;
-			printf("core %x %s 0x%x\n", coreid, buf[i]&0xC0? "ctl" : "mem", addr);
+			// printf("core %x %s 0x%x\n", coreid, buf[i]&0xC0? "ctl" : "mem", addr);
 			switch(coreid){
 			case 0x800:
 				if((buf[i] & 0xC0) == 0) {
-                    printf(" Switch chipcommon \n");
+                    // printf(" Switch chipcommon \n");
                     chipcommon = addr;
                 }
 				break;
@@ -433,12 +734,12 @@ static void corescan(uint32_t r)
 				if(buf[i] & 0xC0){
 					if(armctl == 0) {
                         armctl = addr;
-                         printf(" Switch armctl \n");
+                        //  printf(" Switch armctl \n");
                     }
 				} else{
 					if(armregs == 0) {
                         armregs = addr;
-                         printf(" Switch armregs \n");
+                        //  printf(" Switch armregs \n");
                     }
 				}
 				break;
@@ -447,21 +748,21 @@ static void corescan(uint32_t r)
                     socramctl = addr;
                 } else if(socramregs == 0) {
                     socramregs = addr;
-                    printf(" Switch socramregs \n");
+                    // printf(" Switch socramregs \n");
                 }
 				socramrev = corerev;
 				break;
 			case 0x829:
 				if((buf[i] & 0xC0) == 0) {
                     sdregs = addr;
-                        printf(" Switch sdregs \n");
+                        // printf(" Switch sdregs \n");
                 }
 				sdiorev = corerev;
 				break;
 			case 0x812:
 				if(buf[i] & 0xC0) {
                     d11ctl = addr;
-                     printf(" Switch d11ctl \n");
+                    //  printf(" Switch d11ctl \n");
                 }
 				break;
 			}
@@ -490,13 +791,12 @@ sbdisable(uint32_t regs, uint32_t pre, uint32_t ioctl)
 }
 
 
-static void
-sbreset(uint32_t regs, uint32_t pre, uint32_t ioctl)
+static void sbreset(uint32_t regs, uint32_t pre, uint32_t ioctl)
 {
 	sbdisable(regs, pre, ioctl);
 	sbwindow(regs);
 	
-    printf("sbreset %#p %#lux %#lux ->", regs, cfgreadl(Fn1, regs+Ioctrl), cfgreadl(Fn1, regs+Resetctrl));
+    // printf("sbreset %#p %#lux %#lux ->", regs, cfgreadl(Fn1, regs+Ioctrl), cfgreadl(Fn1, regs+Resetctrl));
 	
     while((cfgreadl(Fn1, regs + Resetctrl) & 1) != 0){
 		cfgwritel(Fn1, regs + Resetctrl, 0);
@@ -504,7 +804,7 @@ sbreset(uint32_t regs, uint32_t pre, uint32_t ioctl)
 	}
 	cfgwritel(Fn1, regs + Ioctrl, 1|ioctl);
 	cfgreadl(Fn1, regs + Ioctrl);
-	printf("%#lux %#lux\n", cfgreadl(Fn1, regs+Ioctrl), cfgreadl(Fn1, regs+Resetctrl));
+	// printf("%#lux %#lux\n", cfgreadl(Fn1, regs+Ioctrl), cfgreadl(Fn1, regs+Resetctrl));
 }
 
 static void
@@ -593,45 +893,46 @@ static bool sb_init() {
         sbdisable(armctl, 0, 0);
     }
 
-    // sbreset(d11ctl, 8|4, 4);
-	// ramscan();
-	// printf("ARM %#p D11 %#p SOCRAM %#p,%#p %lud bytes @ %#p\n", armctl, d11ctl, socramctl, socramregs, socramsize, rambase);
-	// cfgw(Clkcsr, 0);
-    // MicroDelay(10);
+    sbreset(d11ctl, 8|4, 4);
+	ramscan();
+	printf("ARM 0x%x D11 0x%x SOCRAM 0x%x,0x%x %lu bytes @ 0x%x\n", armctl, d11ctl, socramctl, socramregs, socramsize, rambase);
+	cfgw(Clkcsr, 0);
+    MicroDelay(10);
 	
-    // printf("chipclk: %x\n", cfgr(Clkcsr));
-    // cfgw(Clkcsr, Nohwreq | ReqALP);
+    printf("chipclk: %x\n", cfgr(Clkcsr));
+    cfgw(Clkcsr, Nohwreq | ReqALP);
 
-	// while((cfgr(Clkcsr) & (HTavail|ALPavail)) == 0) {
-    //     MicroDelay(10);
-    // }
+	while((cfgr(Clkcsr) & (HTavail|ALPavail)) == 0) {
+        MicroDelay(10);
+    }
 		
-	// cfgw(Clkcsr, Nohwreq | ForceALP);
-	// MicroDelay(65);
-    // printf("chipclk: %x\n", cfgr(Clkcsr));
-	// cfgw(Pullups, 0);
-	// sbwindow(chipcommon);
-	// cfgwritel(Fn1, chipcommon + Gpiopullup, 0);
-	// cfgwritel(Fn1, chipcommon + Gpiopulldown, 0);
-	// if(chipid != 0x4330 && chipid != 43362) {
-    //     return true;
-    // }
-	// cfgwritel(Fn1, chipcommon + Chipctladdr, 1);
-	// if(cfgreadl(Fn1, chipcommon + Chipctladdr) != 1) {
-    //     printf("ether4330: can't set Chipctladdr\n");
-    // } else {
-	// 	r = cfgreadl(Fn1, chipcommon + Chipctldata);
-	// 	if(SBDEBUG) printf("chipcommon PMU (%lux) %lux", cfgreadl(Fn1, chipcommon + Chipctladdr), r);
-	// 	/* set SDIO drive strength >= 6mA */
-	// 	r &= ~0x3800;
-	// 	if(chipid == 0x4330) {
-    //         r |= 3<<11;
-    //     } else {
-    //         r |= 7<<11;
-    //     }
-	// 	cfgwritel(Fn1, chipcommon + Chipctldata, r);
-	// 	printf("-> %lux (= %lux)\n", r, cfgreadl(Fn1, chipcommon + Chipctldata));
-	// }
+	cfgw(Clkcsr, Nohwreq | ForceALP);
+	MicroDelay(65);
+    printf("chipclk: %x\n", cfgr(Clkcsr));
+	cfgw(Pullups, 0);
+	sbwindow(chipcommon);
+	cfgwritel(Fn1, chipcommon + Gpiopullup, 0);
+	cfgwritel(Fn1, chipcommon + Gpiopulldown, 0);
+	if(chipid != 0x4330 && chipid != 43362) {
+        return true;
+    }
+	cfgwritel(Fn1, chipcommon + Chipctladdr, 1);
+	if(cfgreadl(Fn1, chipcommon + Chipctladdr) != 1) {
+        printf("ERROR: ether4330: can't set Chipctladdr\n");
+		return false;
+    } else {
+		r = cfgreadl(Fn1, chipcommon + Chipctldata);
+		printf("chipcommon PMU (0x%x) 0x%x", cfgreadl(Fn1, chipcommon + Chipctladdr), r);
+		/* set SDIO drive strength >= 6mA */
+		r &= ~0x3800;
+		if(chipid == 0x4330) {
+            r |= 3<<11;
+        } else {
+            r |= 7<<11;
+        }
+		cfgwritel(Fn1, chipcommon + Chipctldata, r);
+		printf("-> %lux (= %lux)\n", r, cfgreadl(Fn1, chipcommon + Chipctldata));
+	}
 
     //
 
@@ -639,12 +940,15 @@ static bool sb_init() {
 }
 
 bool startWifi () {
-    // uint32_t binarysize = (uint32_t)&brcmfmac43430_sdio_bin_end - (uint32_t)&brcmfmac43430_sdio_bin_start;
     uint32_t binarysize = (uint32_t)&wifibinary_end - (uint32_t)&wifibinary_start;
     printf("Binary Size: %d \n", binarysize);
-    bool is_success = prepare_sdio();
-    is_success = sb_init();
-
+    bool is_success = true;
+	if(chipid == 0) {
+		is_success = prepare_sdio();
+    	is_success = sb_init();
+		fwload();
+		sbenable();
+	}
     return is_success;
 }
 
