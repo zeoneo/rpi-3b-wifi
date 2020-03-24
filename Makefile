@@ -59,8 +59,8 @@ src/memmove.o \
 src/memset.o \
 src/printf.o \
 src/strlen.o \
-src/wifi-io.o \
-src/emmc-sdio.o \
+src/plan9_ether4330.o \
+src/plan9_emmc.o \
 src/kernel.o
 
 OBJS= $(KERNEL_OBJS)

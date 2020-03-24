@@ -1,5 +1,6 @@
-    #include<device/wifi-io.h>
-#include<device/emmc-sdio.h>
+#include<device/wifi-io.h>
+#include <device/gpio.h>
+#include <device/plan9_emmc.h>
 #include <kernel/systimer.h>
 #include <plibc/stdio.h>
 #include <plibc/string.h>
@@ -9,28 +10,33 @@
 #define nelem(x)	(sizeof(x)/sizeof((x)[0]))
 
 static uint32_t cmd_resp [4] = {0};
-static uint32_t ocr = 0;
-static uint32_t rca = 0;
-static uint32_t chipid;
-static uint32_t chiprev;
-static char	*regufile;
-static union {
+typedef struct 
+{
+	uint32_t ocr;
+	uint32_t rca;
+	uint32_t chipid;
+	uint32_t chiprev;
+	char	*regufile;
+	union {
 		uint32_t i;
 		uint8_t c[4];
-} resetvec;
-static uint32_t armcore;
-static uint32_t chipcommon;
-static uint32_t armctl;
-static uint32_t armregs;
-static uint32_t d11ctl;
-static uint32_t socramregs;
-static uint32_t socramctl;
-static uint32_t sdregs;
-static uint32_t sdiorev;
-static uint32_t socramrev;
-static uint32_t socramsize;
-static uint32_t rambase;
-// static uint16_t reqid;
+	} resetvec;
+	uint32_t armcore;
+	uint32_t chipcommon;
+	uint32_t armctl;
+	uint32_t armregs;
+	uint32_t d11ctl;
+	uint32_t socramregs;
+	uint32_t socramctl;
+	uint32_t sdregs;
+	uint32_t sdiorev;
+	uint32_t socramrev;
+	uint32_t socramsize;
+	uint32_t rambase;
+} Ctrl;
+
+static Ctrl ctrl = { 0 };
+// 	uint16_t reqid;
 // static uint8_t fcmask;
 // static uint8_t txwindow;
 // static uint8_t txseq;
@@ -166,7 +172,7 @@ enum {
 static int sdiord(uint32_t fn, uint32_t addr);
 static void sdiowr(int fn, int addr, int data);
 static void sdioset(uint32_t fn, uint32_t addr, uint32_t bits);
-static bool prepare_sdio();
+static bool sdioinit();
 static void sbreset(uint32_t regs, uint32_t pre, uint32_t ioctl);
 
 #define HOWMANY(x, y)	(((x)+((y)-1))/(y))
@@ -256,7 +262,7 @@ static uint32_t
 sdiocmd_locked(uint32_t cmd_idx, uint32_t arg)
 {
 	uint32_t resp[4];
-	sdio_send_command(cmd_idx, arg, &resp[0]);
+	emmccmd(cmd_idx, arg, &resp[0]);
 	return resp[0];
 }
 
@@ -285,16 +291,16 @@ static void sdiorwext(uint32_t fn, uint32_t write, void *a, uint32_t len, uint32
         
 		if(blk) {
             // printf("\t SDIO IO OP: bsize: %d bcount: %d\n", bsize, bcount);
-            sdio_iosetup(write, a, bsize, bcount);
+            emmciosetup(write, a, bsize, bcount);
             
         } else {
             // printf("\t SDIO IO OP: bsize: %d bcount: %d\n", bcount, 1);
-            sdio_iosetup(write, a, bcount, 1);
+            emmciosetup(write, a, bcount, 1);
         }
 
-		sdiocmd_locked(IX_IO_RW_DIRECT_EXTENDED, write<<31 | (fn&7)<<28 | blk<<27 | incr<<26 | (addr&0x1FFFF)<<9 | (bcount&0x1FF));
+		sdiocmd_locked(53, write<<31 | (fn&7)<<28 | blk<<27 | incr<<26 | (addr&0x1FFFF)<<9 | (bcount&0x1FF));
 
-		sdio_do_io(write, a, effective_length);
+		emmcio(write, a, effective_length);
         
 
 		len -= effective_length;
@@ -315,7 +321,7 @@ uint32_t cfgreadl(int fn, uint32_t off)
 	uint8_t cbuf[2*CACHELINESZ];
 	uint8_t *p;
 
-	p = (uint8_t *) ROUND((uint32_t) &cbuf[0], CACHELINESZ);
+	p = (uint8_t *) ROUND((uint32_t) &cbuf[0], CACHELINESZ); //TODO check if it's failing because of this.
 	memset(p, 0, 4);
 	sdiorwext(fn, 0, p, 4, off|Sb32bit, 1);
 	
@@ -553,16 +559,16 @@ static int upload(char *file, int isconfig)
 			
 		if(isconfig){
 			n = condense(buf, n);
-			off = socramsize - n - 4;
+			off = ctrl.socramsize - n - 4;
 		} else if(off == 0) {
-			memmove(resetvec.c, buf, sizeof(resetvec.c));
+			memmove(ctrl.resetvec.c, buf, sizeof(ctrl.resetvec.c));
 		}
 
 		while(n&3) {
 			buf[n++] = 0;
 		}
 		// printf("Transferring bytes: %d \n", n);
-		sbmem(1, buf, n, rambase + off);
+		sbmem(1, buf, n, ctrl.rambase + off);
 		if(isconfig) {
 			// printf("ITs config file breaking. \n");
 			break;
@@ -587,7 +593,7 @@ static int upload(char *file, int isconfig)
 				}
 			}
 			// printf("Reading data for comparison offset: %d \n", off);
-			sbmem(0, cbuf, n, rambase + off);
+			sbmem(0, cbuf, n, ctrl.rambase + off);
 			if(memcmp(buf, cbuf, n) != 0){
 				printf(" Error ether4330: firmware load failed offset %d\n", off);
 				return -1;
@@ -621,15 +627,15 @@ static void sbenable()
 			break;
 		}
 		MicroDelay(100);
-		cfgw(Clkcsr, ReqHT);
-		MicroDelay(100);
+		// cfgw(Clkcsr, ReqHT);
+		// MicroDelay(100);
 	}
 	cfgw(Clkcsr, cfgr(Clkcsr) | ForceHT);
 	MicroDelay(10);
 	printf("chipclk: %x is high clock enabled: %d \n", cfgr(Clkcsr), (cfgr(Clkcsr) & HTavail));
-	sbwindow(sdregs);
-	cfgwritel(Fn1, sdregs + Sbmboxdata, 4 << 16);	/* protocol version */
-	cfgwritel(Fn1, sdregs + Intmask, FrameInt | MailboxInt | Fcchange);
+	sbwindow(ctrl.sdregs);
+	cfgwritel(Fn1, ctrl.sdregs + Sbmboxdata, 4 << 16);	/* protocol version */
+	cfgwritel(Fn1, ctrl.sdregs + Intmask, FrameInt | MailboxInt | Fcchange);
 	sdioset(Fn0, Ioenable, 1<<Fn2);
 	for(i = 0; !(sdiord(Fn0, Ioready) & 1<<Fn2); i++){
 		if(i == 100){
@@ -647,20 +653,20 @@ static void fwload() {
 	uint32_t i, n;
 
 	i = 0;
-	while(firmware[i].chipid != chipid || firmware[i].chiprev != chiprev){
+	while(firmware[i].chipid != ctrl.chipid || firmware[i].chiprev != ctrl.chiprev){
 		if(++i == nelem(firmware)){
-			printf("ERROR ether4330: no firmware for chipid %x (%d) chiprev %d\n", chipid, chipid, chiprev);
+			printf("ERROR ether4330: no firmware for chipid %x (%d) chiprev %d\n", ctrl.chipid, ctrl.chipid, ctrl.chiprev);
 			return;
 		}
 	}
-	regufile = firmware[i].regufile;
+	ctrl.regufile = firmware[i].regufile;
 	cfgw(Clkcsr, ReqALP);
 	while((cfgr(Clkcsr) & ALPavail) == 0) {
 		MicroDelay(10);
 	}
 		
 	memset(buf, 0, 4);
-	sbmem(1, buf, 4, rambase + socramsize - 4);
+	sbmem(1, buf, 4, ctrl.rambase + ctrl.socramsize - 4);
 	
 	printf("started firmware load...");
 	upload(firmware[i].fwfile, 0);
@@ -669,17 +675,17 @@ static void fwload() {
 	n /= 4;
 	n = (n & 0xFFFF) | (~n << 16);
 	put4(buf, n);
-	sbmem(1, buf, 4, rambase + socramsize - 4);
-	if(armcore == ARMcr4) {
-		sbwindow(sdregs);
-		cfgwritel(Fn1, sdregs + Intstatus, ~0);
-		if(resetvec.i != 0){
+	sbmem(1, buf, 4, ctrl.rambase + ctrl.socramsize - 4);
+	if(ctrl.armcore == ARMcr4) {
+		sbwindow(ctrl.sdregs);
+		cfgwritel(Fn1, ctrl.sdregs + Intstatus, ~0);
+		if(ctrl.resetvec.i != 0){
 			// printf("%ux\n", resetvec.i);
-			sbmem(1, resetvec.c, sizeof(resetvec.c), 0);
+			sbmem(1, ctrl.resetvec.c, sizeof(ctrl.resetvec.c), 0);
 		}
-		sbreset(armctl, Cr4Cpuhalt, 0);
+		sbreset(ctrl.armctl, Cr4Cpuhalt, 0);
 	}else {
-		sbreset(armctl, 0, 0);
+		sbreset(ctrl.armctl, 0, 0);
 	}
 }
 
@@ -724,44 +730,44 @@ static void corescan(uint32_t r)
 			case 0x800:
 				if((buf[i] & 0xC0) == 0) {
                     // printf(" Switch chipcommon \n");
-                    chipcommon = addr;
+                    ctrl.chipcommon = addr;
                 }
 				break;
 			case ARMcm3:
 			case ARM7tdmi:
 			case ARMcr4:
-				armcore = coreid;
+				ctrl.armcore = coreid;
 				if(buf[i] & 0xC0){
-					if(armctl == 0) {
-                        armctl = addr;
+					if(ctrl.armctl == 0) {
+                        ctrl.armctl = addr;
                         //  printf(" Switch armctl \n");
                     }
 				} else{
-					if(armregs == 0) {
-                        armregs = addr;
+					if(ctrl.armregs == 0) {
+                        ctrl.armregs = addr;
                         //  printf(" Switch armregs \n");
                     }
 				}
 				break;
 			case 0x80E:
 				if(buf[i] & 0xC0) {
-                    socramctl = addr;
-                } else if(socramregs == 0) {
-                    socramregs = addr;
+                    ctrl.socramctl = addr;
+                } else if(ctrl.socramregs == 0) {
+                    ctrl.socramregs = addr;
                     // printf(" Switch socramregs \n");
                 }
-				socramrev = corerev;
+				ctrl.socramrev = corerev;
 				break;
 			case 0x829:
 				if((buf[i] & 0xC0) == 0) {
-                    sdregs = addr;
+                    ctrl.sdregs = addr;
                         // printf(" Switch sdregs \n");
                 }
-				sdiorev = corerev;
+				ctrl.sdiorev = corerev;
 				break;
 			case 0x812:
 				if(buf[i] & 0xC0) {
-                    d11ctl = addr;
+                    ctrl.d11ctl = addr;
                     //  printf(" Switch d11ctl \n");
                 }
 				break;
@@ -813,8 +819,8 @@ ramscan()
 	uint32_t r, n, size;
 	uint32_t banks, i;
 
-	if(armcore == ARMcr4){
-		r = armregs;
+	if(ctrl.armcore == ARMcr4){
+		r = ctrl.armregs;
 		sbwindow(r);
 		n = cfgreadl(Fn1, r + Cr4Cap);
 		printf("cr4 banks %lux\n", n);
@@ -826,19 +832,19 @@ ramscan()
 			printf("bank %d reg %lux size %lud\n", i, n, 8192 * ((n & 0x3F) + 1));
 			size += 8192 * ((n & 0x3F) + 1);
 		}
-		socramsize = size;
-		rambase = 0x198000;
+		ctrl.socramsize = size;
+		ctrl.rambase = 0x198000;
 		return;
 	}
-	if(socramrev <= 7 || socramrev == 12){
-		printf("ether4330: SOCRAM rev %d not supported\n", socramrev);
+	if(ctrl.socramrev <= 7 || ctrl.socramrev == 12){
+		printf("ether4330: SOCRAM rev %d not supported\n", ctrl.socramrev);
         return;
 	}
-	sbreset(socramctl, 0, 0);
-	r = socramregs;
+	sbreset(ctrl.socramctl, 0, 0);
+	r = ctrl.socramregs;
 	sbwindow(r);
 	n = cfgreadl(Fn1, r + Coreinfo);
-	printf("socramrev %d coreinfo %lux\n", socramrev, n);
+	printf("socramrev %d coreinfo %lux\n", ctrl.socramrev, n);
 	banks = (n>>4) & 0xF;
 	size = 0;
 	for(i = 0; i < banks; i++){
@@ -847,21 +853,19 @@ ramscan()
 		if(SBDEBUG) printf("bank %d reg %lux size %lud\n", i, n, 8192 * ((n & 0x3F) + 1));
 		size += 8192 * ((n & 0x3F) + 1);
 	}
-	socramsize = size;
-	rambase = 0;
-	if(chipid == 43430){
+	ctrl.socramsize = size;
+	ctrl.rambase = 0;
+	if(ctrl.chipid == 43430){
 		cfgwritel(Fn1, r + Bankidx, 3);
 		cfgwritel(Fn1, r + Bankpda, 0);
 	}
 }
 
 
-static bool sb_init() {
-    sbwindow(Enumbase);
+static bool sbinit() {
+	uint32_t r,chipid;
 
-	uint32_t r;
-
-	// int8_t buf[16];
+	sbwindow(Enumbase);
     r = cfgreadl(Fn1, Enumbase);
 	chipid = r & 0xFFFF;
 	printf("Chip Id %x %d \n", chipid, chipid);
@@ -871,7 +875,10 @@ static bool sb_init() {
 		case 43362:
 		case 43430:
 		case 0x4345:
-			chiprev = (r>>16)&0xF;
+			ctrl.chiprev = (r>>16)&0xF;
+
+			printf("Chip rev: %d \n", ctrl.chiprev);
+			ctrl.chipid = chipid;
 			break;
 		default:
 			printf("ether4330: chipid %#x (%d) not supported\n", chipid, chipid);
@@ -880,49 +887,49 @@ static bool sb_init() {
 	r = cfgreadl(Fn1, Enumbase + 63*4);
     corescan(r);
 
-    if(armctl == 0 || d11ctl == 0 || (armcore == ARMcm3 && (socramctl == 0 || socramregs == 0))) {
+    if(ctrl.armctl == 0 || ctrl.d11ctl == 0 || (ctrl.armcore == ARMcm3 && (ctrl.socramctl == 0 || ctrl.socramregs == 0))) {
         printf("corescan didn't find essential cores\n");
         return false;
     }   
 		
-	if(armcore == ARMcr4) {
+	if(ctrl.armcore == ARMcr4) {
         printf("Reseting sonic backplane \n");
-        sbreset(armctl, Cr4Cpuhalt, Cr4Cpuhalt);
+        sbreset(ctrl.armctl, Cr4Cpuhalt, Cr4Cpuhalt);
     } else {
         printf("Disabled sonic backplane \n");
-        sbdisable(armctl, 0, 0);
+        sbdisable(ctrl.armctl, 0, 0);
     }
 
-    sbreset(d11ctl, 8|4, 4);
+    sbreset(ctrl.d11ctl, 8|4, 4);
 	ramscan();
-	printf("ARM 0x%x D11 0x%x SOCRAM 0x%x,0x%x %lu bytes @ 0x%x\n", armctl, d11ctl, socramctl, socramregs, socramsize, rambase);
+	printf("ARM 0x%x D11 0x%x SOCRAM 0x%x,0x%x %lu bytes @ 0x%x\n", ctrl.armctl, ctrl.d11ctl, ctrl.socramctl, ctrl.socramregs, ctrl.socramsize, ctrl.rambase);
 	cfgw(Clkcsr, 0);
     MicroDelay(10);
 	
     printf("chipclk: %x\n", cfgr(Clkcsr));
-    cfgw(Clkcsr, Nohwreq | ReqALP);
+    cfgw(Clkcsr, Nohwreq | ReqHT);
 
 	while((cfgr(Clkcsr) & (HTavail|ALPavail)) == 0) {
         MicroDelay(10);
     }
-		
+	printf(" HT or ALP avail? %d clk:0x%x \n", (cfgr(Clkcsr) & (HTavail|ALPavail)), cfgr(Clkcsr));
 	cfgw(Clkcsr, Nohwreq | ForceALP);
 	MicroDelay(65);
     printf("chipclk: %x\n", cfgr(Clkcsr));
 	cfgw(Pullups, 0);
-	sbwindow(chipcommon);
-	cfgwritel(Fn1, chipcommon + Gpiopullup, 0);
-	cfgwritel(Fn1, chipcommon + Gpiopulldown, 0);
+	sbwindow(ctrl.chipcommon);
+	cfgwritel(Fn1, ctrl.chipcommon + Gpiopullup, 0);
+	cfgwritel(Fn1, ctrl.chipcommon + Gpiopulldown, 0);
 	if(chipid != 0x4330 && chipid != 43362) {
         return true;
     }
-	cfgwritel(Fn1, chipcommon + Chipctladdr, 1);
-	if(cfgreadl(Fn1, chipcommon + Chipctladdr) != 1) {
+	cfgwritel(Fn1, ctrl.chipcommon + Chipctladdr, 1);
+	if(cfgreadl(Fn1, ctrl.chipcommon + Chipctladdr) != 1) {
         printf("ERROR: ether4330: can't set Chipctladdr\n");
 		return false;
     } else {
-		r = cfgreadl(Fn1, chipcommon + Chipctldata);
-		printf("chipcommon PMU (0x%x) 0x%x", cfgreadl(Fn1, chipcommon + Chipctladdr), r);
+		r = cfgreadl(Fn1, ctrl.chipcommon + Chipctldata);
+		printf("chipcommon PMU (0x%x) 0x%x", cfgreadl(Fn1, ctrl.chipcommon + Chipctladdr), r);
 		/* set SDIO drive strength >= 6mA */
 		r &= ~0x3800;
 		if(chipid == 0x4330) {
@@ -930,8 +937,8 @@ static bool sb_init() {
         } else {
             r |= 7<<11;
         }
-		cfgwritel(Fn1, chipcommon + Chipctldata, r);
-		printf("-> %lux (= %lux)\n", r, cfgreadl(Fn1, chipcommon + Chipctldata));
+		cfgwritel(Fn1, ctrl.chipcommon + Chipctldata, r);
+		printf("-> %lux (= %lux)\n", r, cfgreadl(Fn1, ctrl.chipcommon + Chipctldata));
 	}
 
     //
@@ -943,26 +950,26 @@ bool startWifi () {
     uint32_t binarysize = (uint32_t)&wifibinary_end - (uint32_t)&wifibinary_start;
     printf("Binary Size: %d \n", binarysize);
     bool is_success = true;
-	if(chipid == 0) {
-		is_success = prepare_sdio();
-    	is_success = sb_init();
+	// if(ctrl.chipid == 0) {
+		is_success = sdioinit();
+    	is_success = sbinit();
 		fwload();
 		sbenable();
-	}
+	// }
     return is_success;
 }
 
 static int sdiord(uint32_t fn, uint32_t addr)
 {
-	bool is_success = sdio_send_command(IX_IO_RW_DIRECT, (0<<31)|((fn&7)<<28) | ((addr&0x1FFFF)<<9), &cmd_resp[0]);
-    if(!is_success) {
-        printf("Could not complete IO_RW_DIRECT: fn :%d addr: 0x%x \n", fn, addr);
-        return 0;
-    }
-	if(cmd_resp[0] & 0xCF00){
-		printf("ERROR: ether4330: sdiord(%x, %x) fail: %2.2x %2.2x\n", fn, addr, (cmd_resp[0]>>8)&0xFF, cmd_resp[0]&0xFF);
+	uint32_t response = sdiocmd_locked(52, (0<<31)|((fn&7)<<28) | ((addr&0x1FFFF)<<9));
+    // if(!is_success) {
+    //     printf("Could not complete IO_RW_DIRECT: fn :%d addr: 0x%x \n", fn, addr);
+    //     return 0;
+    // }
+	if(response & 0xCF00){
+		printf("ERROR: ether4330: sdiord(%x, %x) fail: %2.2x %2.2x\n", fn, addr, (response>>8)&0xFF, response&0xFF);
 	}
-	return cmd_resp[0] & 0xFF;
+	return response & 0xFF;
 }
 
 static void sdiowr(int fn, int addr, int data)
@@ -972,7 +979,7 @@ static void sdiowr(int fn, int addr, int data)
 
 	r = 0;
 	for(retry = 0; retry < 10; retry++){
-		sdio_send_command(IX_IO_RW_DIRECT, (1<<31)|((fn&7)<<28)|((addr&0x1FFFF)<<9)|(data&0xFF), &cmd_resp[0]);
+		emmccmd(52, (1<<31)|((fn&7)<<28)|((addr&0x1FFFF)<<9)|(data&0xFF), &cmd_resp[0]);
         r = cmd_resp[0];
 		if((r & 0xCF00) == 0) {
             return;
@@ -985,46 +992,65 @@ static void sdiowr(int fn, int addr, int data)
 static void sdioset(uint32_t fn, uint32_t addr, uint32_t bits)
 {
 	sdiowr(fn, addr, sdiord(fn, addr) | bits);
+	if((sdiord(fn, addr) & bits) == 0) {
+		printf("Failed to set bits : 0x%x value: 0x%x\n", bits, sdiord(fn, addr));
+	}
 }
 
-static bool prepare_sdio() {
-    bool is_success = initSDIO();
-    is_success = sdio_send_command(IX_GO_IDLE_STATE, 0, &cmd_resp[0]);
+static bool sdioinit() {
+    bool is_success = false;
+
+	for (uint32_t i = 48; i <= 53; i++) {
+        select_alt_func(i, Alt0);
+    }
+
+	// FOllowing lines connect EMMC controller to SD CARD
+    for ( uint32_t i = 34; i <= 39; i++)
+    {
+        select_alt_func(i, Alt3);
+		if(i == 34) {
+			disable_pulling(i);
+		} else {
+			pullup_pin(i);
+		}
+    }
+
+	emmcinit();
+	emmcenable();
+    is_success = emmccmd(0, 0, &cmd_resp[0]);
     if(is_success) {
         printf(" Sent go idle command \n");
     }
 
-    is_success = sdio_send_command(IX_IO_SEND_OP_COND, 0 ,  &cmd_resp[0]);
-    ocr = cmd_resp[0];
-    if(is_success) {
-        printf("Found card OCR : 0x%x\n", ocr);
-        uint32_t i = 0;
-        while((ocr & (1<<31)) == 0) {
-            if(++i > 5){
-                printf("ether4330: no response to sdio access: ocr = %x\n", ocr);
-                return false;
-            }
-            // send op condition 3V_3
-            is_success = sdio_send_command(IX_IO_SEND_OP_COND, 3<<20 ,  &cmd_resp[0]);
-            ocr = cmd_resp[0];
-            MicroDelay(100);
-	    }
-    } else {
-        printf("Failed to get ocr. \n");
-        return false;
-    }
-    printf("NEW OCR : 0x%x\n", ocr);
-    is_success = sdio_send_command(IX_SEND_RELATIVE_ADDR, 0, &cmd_resp[0]);
-    if(is_success) {
-        rca = (cmd_resp[0] >> 16);
-        printf("rca: 0x%x \n",rca);
-        is_success = sdio_send_command(IX_SELECT_CARD, rca << 16, &cmd_resp[0]);
-        if(!is_success) {
-            printf("Could not select card \n");
-            return false;
-        }
-        
-    }
+	emmccmd(5, 0 ,  &cmd_resp[0]);
+    ctrl.ocr = cmd_resp[0];
+    
+	printf("Found card OCR : 0x%x\n", ctrl.ocr);
+	uint32_t i = 0;
+	while((ctrl.ocr & (1<<31)) == 0) {
+		if(++i > 5){
+			printf("ether4330: no response to sdio access: ocr = %x\n", ctrl.ocr);
+			return false;
+		}
+		// send op condition 3V_3
+		is_success = emmccmd(5, 3<<20 ,  &cmd_resp[0]);
+		ctrl.ocr = cmd_resp[0];
+		MicroDelay(100);
+	}
+    printf("NEW OCR : 0x%x\n", ctrl.ocr);
+    emmccmd(3, 0, &cmd_resp[0]);
+    // if(is_success) {
+        ctrl.rca = (cmd_resp[0] >> 16);
+        printf("rca: 0x%x \n",ctrl.rca);
+        emmccmd(7, ctrl.rca << 16, &cmd_resp[0]);
+        // if(!is_success) {
+        //     printf("Could not select card \n");
+        //     return false;
+        // } else
+		// {
+		// 	 printf(" Selected the card successfully.\n");
+		// }
+    // }
 
 	sdioset(Fn0, Highspeed, 2);
 	sdioset(Fn0, Busifc, 2);	/* bus width 4 */
@@ -1033,9 +1059,13 @@ static bool prepare_sdio() {
 	sdiowr(Fn0, Fbr2+Blksize, 512);
 	sdiowr(Fn0, Fbr2+Blksize+1, 512>>8);
 	sdioset(Fn0, Ioenable, 1<<Fn1);
+	printf("IOENABLE FN1: %d \n ", (sdiord(Fn0, Ioready) & 1<<Fn1));
+	sdioset(Fn0, Ioenable, 1<<Fn2);
+	printf("IOENABLE FN1: %d \n ", (sdiord(Fn0, Ioready) & 1<<Fn2));
+	printf("Fn0 Capability: %x \n ", sdiord(Fn0, Capability));
 	sdiowr(Fn0, Intenable, 0);
 
-    uint32_t i = 0;
+    // uint32_t i = 0;
     for(i = 0; !(sdiord(Fn0, Ioready) & 1<<Fn1); i++){
 		if(i == 10){
 			printf("ether4330: can't enable SDIO function\n");

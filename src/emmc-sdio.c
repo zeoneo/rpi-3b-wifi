@@ -732,7 +732,7 @@ static int sdSendCommandP(EMMCCommand cmd, uint32_t arg, uint32_t *resp)
 	/*
 	 * CMD6 may be Setbuswidth or Switchfunc depending on Appcmd prefix = 6
 	 */
-	if(cmd.code.CMD_INDEX == 6 && sdCard.last_cmd_idx == 55) {
+	if(cmd.code.CMD_INDEX == 6 && sdCard.last_cmd_idx != 55) {
 		cmd.code.CMD_ISDATA = 1;
 		cmd.code.TM_DAT_DIR = 1;
 	}
@@ -744,17 +744,12 @@ static int sdSendCommandP(EMMCCommand cmd, uint32_t arg, uint32_t *resp)
 		} else {
 			cmd.code.TM_DAT_DIR = 1; // Card to host. This means read
 		}
+
+		if((EMMC_BLKSIZECNT->Raw32  & 0xFFFF0000) != 0x10000) {
+			cmd.code.TM_BLKCNT_EN = 1;
+			cmd.code.TM_MULTI_BLOCK = 1;
+		}
 	}
-
-	// Set block count flags
-	// & 
-
-	if((EMMC_BLKSIZECNT->Raw32  & 0xFFFF0000) != 0x10000) {
-		cmd.code.TM_BLKCNT_EN = 1;
-		cmd.code.TM_MULTI_BLOCK = 1;
-	}
-			// c |= Multiblock | Blkcnten;
-
 
 	/* Set the argument and the command code, Some commands require a delay before reading the response */
 	*EMMC_ARG1 = arg;		 // Set argument to SD card
@@ -768,6 +763,8 @@ static int sdSendCommandP(EMMCCommand cmd, uint32_t arg, uint32_t *resp)
 	if ((res = sdWaitForInterrupt(INT_CMD_DONE)))
 		return res; // In non zero return result
 
+	// read ready write ready and data done
+	EMMC_INTERRUPT->Raw32 = (EMMC_INTERRUPT->Raw32 & ~(1<<1 | 1<<5|1 << 4));
 	/* Get response from RESP0 */
 	uint32_t resp0 = *EMMC_RESP0; // Fetch SD card response 0 to command
 
@@ -975,7 +972,7 @@ static SDRESULT sdResetCard(void)
 	printf(" Clock setup complete");
 
 	/* Enable interrupts for command completion values */
-	EMMC_IRPT_EN->Raw32 = 0xffffffff;
+	EMMC_IRPT_EN->Raw32 = 0x0; //0xffffffff
 
 	EMMC_IRPT_MASK->Raw32 = 0xffffffff;
 	EMMC_INTERRUPT->Raw32 = 0xffffffff;
@@ -1045,22 +1042,33 @@ void sdio_do_io(bool write, uint8_t *buf, uint32_t len) {
 		EMMC_INTERRUPT->Raw32 = EMMC_INTERRUPT->Raw32;
 		return;
 	}
-	//Clear interrupts by setting ones to already set bits.
-	EMMC_INTERRUPT->Raw32 = EMMC_INTERRUPT->Raw32;
+
+	if(EMMC_INTERRUPT->Raw32 & (~(1 <<8)) ) {
+		//Clear interrupts by setting ones to already set bits.
+		EMMC_INTERRUPT->Raw32 = EMMC_INTERRUPT->Raw32;
+	}
+
 }
 
 bool initSDIO()
 {
 	SDRESULT resp;
 
+
+
+	for (uint32_t i = 48; i <= 53; i++) {
+        select_alt_func(i, Alt0);
+    }
+
 	// FOllowing lines connect EMMC controller to SD CARD
     for ( uint32_t i = 34; i <= 39; i++)
     {
         select_alt_func(i, Alt3);
-    }
-
-	for (uint32_t i = 48; i <= 53; i++) {
-        select_alt_func(i, Alt0);
+		if(i == 34) {
+			disable_pulling(i);
+		} else {
+			pullup_pin(i);
+		}
     }
 
 	// Reset the card.

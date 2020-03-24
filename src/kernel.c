@@ -6,6 +6,7 @@
 #include <device/sd_card.h>
 #include <device/emmc.h>
 #include <device/wifi-io.h>
+#include <device/plan9_ether4330.h>
 #include <device/uart0.h>
 #include <device/dma.h>
 #include <fs/fat.h>
@@ -57,9 +58,10 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 	// 	}
     // }
 
-	if (startWifi()) {
+	etherbcmattach();
+	// if () {
 		printf("<---------------Wifi Started Successfully----------------->\n");
-	}
+	// }
 	while (1)
 	{
 	}
