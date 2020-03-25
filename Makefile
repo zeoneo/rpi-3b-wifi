@@ -39,6 +39,7 @@ src/boot.o \
 src/bss-clear.o \
 src/dma.o \
 src/doprnt.o \
+src/frame_alloc.o \
 src/emmc.o \
 src/fat.o \
 src/fat16.o \

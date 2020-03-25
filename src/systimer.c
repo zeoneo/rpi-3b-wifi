@@ -28,7 +28,6 @@ static void timer_irq_clearer(void)
 void timer_init(void)
 {
     timer_regs = (timer_registers_t *)SYSTEM_TIMER_BASE;
-    printf("timer_regs:%x", timer_regs);
     register_irq_handler(RPI_BASIC_ARM_TIMER_IRQ, timer_irq_handler, timer_irq_clearer);
 }
 

@@ -1,4 +1,5 @@
 #include <mem/kernel_alloc.h>
+#include <mem/frame_alloc.h>
 #include <plibc/stdio.h>
 
 // This is rsta2/circle implementation of mem manager. I hope to write my own
@@ -52,8 +53,12 @@ static alloc_bucket s_BlockBucket[] = {{0x40, 0}, {0x400, 0}, {0x1000, 0}, {0x40
 #define PAGE_SIZE 4096 // page size used by us
 #define PAGE_RESERVE (4 * MEGABYTE)
 
-void mem_alloc_init(uint32_t ulBase, uint32_t ulSize)
+int32_t kernel_alloc_init(uint32_t ulSize)
 {
+    uint32_t ulBase = (uint32_t)alloc_contiguous_frames(ulSize/PAGE_SIZE);
+    if(ulBase == 0) {
+        return -1;
+    }
     uint32_t ulLimit = ulBase + ulSize;
 
     ulSize = ulLimit - ulBase;
@@ -61,9 +66,10 @@ void mem_alloc_init(uint32_t ulBase, uint32_t ulSize)
 
     s_pNextBlock = (uint8_t *)ulBase;
     s_pBlockLimit = (uint8_t *)(ulBase + ulBlockReserve);
+    return 0;
 }
 
-void *mem_allocate(uint32_t size)
+void *kernel_allocate(uint32_t size)
 {
 
     alloc_bucket *pBucket;
@@ -107,7 +113,7 @@ void *mem_allocate(uint32_t size)
     return pResult;
 }
 
-void mem_deallocate(void *pBlock)
+void kernel_deallocate(void *pBlock)
 {
     if (pBlock == 0)
     {

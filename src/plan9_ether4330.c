@@ -17,6 +17,22 @@ extern int sdiocardintr(int);
 
 #define CACHELINESZ 64	/* temp */
 
+/*
+ *  Ethernet specific
+ */
+enum
+{
+	Eaddrlen=	6,
+	ETHERMINTU =	60,		/* minimum transmit size */
+	ETHERMAXTU =	1514,		/* maximum transmit size */
+	ETHERHDRSIZE =	14,		/* size of an ethernet header */
+
+	/* ethernet packet types */
+	ETARP		= 0x0806,
+	ETIP4		= 0x0800,
+	ETIP6		= 0x86DD,
+};
+
 enum{
 	SDIODEBUG = 0,
 	SBDEBUG = 0,
@@ -148,6 +164,20 @@ enum{
 	WMaxKeyLen	= 13,
 };
 
+// typedef struct {
+// 	long	ref;
+// 	Block*	next;
+// 	Block*	list;
+// 	uint8_t*	rp;			/* first unconsumed byte */
+// 	uint8_t*	wp;			/* first empty byte */
+// 	uint8_t*	lim;			/* 1 past the end of the buffer */
+// 	uint8_t*	base;			/* start of the buffer */
+// 	void	(*free)(Block*);
+// 	uint16_t	flag;
+// 	uint16_t	checksum;		/* IP checksum of complete packet (minus media header) */
+// 	uint32_t	magic;
+// } Block;
+
 typedef struct WKey WKey;
 struct WKey
 {
@@ -166,6 +196,8 @@ typedef struct  {
 	int	chanid;
 	char	essid[WNameLen + 1];
 	WKey	keys[WNKeys];
+	// Block	*rsp;
+	// Block	*scanb;
 	int	scansecs;
 	int	status;
 	int	chipid;
@@ -195,7 +227,7 @@ typedef struct  {
 } Ctlr;
 
 static Ctlr ctrl = { 0 };
-
+// static int iodebug = 0;
 enum{
 	CMauth,
 	CMchannel,
@@ -731,7 +763,7 @@ corescan(Ctlr *ctl, uint32_t r)
 	int i, coreid, corerev;
 	uint32_t addr;
 
-	buf = mem_allocate(Corescansz);
+	buf = kernel_allocate(Corescansz);
 	if(buf == 0) {
 		// error(Enomem);
 		printf("Error no memory for buf \n");
@@ -744,7 +776,7 @@ corescan(Ctlr *ctl, uint32_t r)
 	for(i = 0; i < Corescansz; i += 4){
 		switch(buf[i]&0xF){
 		case 0xF:	/* end */
-			mem_deallocate(buf);
+			kernel_deallocate(buf);
 			return;
 		case 0x1:	/* core info */
 			if((buf[i+4]&0xF) != 0x1)
@@ -793,7 +825,7 @@ corescan(Ctlr *ctl, uint32_t r)
 			}
 		}
 	}
-	mem_deallocate(buf);
+	kernel_deallocate(buf);
 }
 
 static void
@@ -1075,7 +1107,7 @@ static int upload(Ctlr *ctl, char *file, int isconfig)
 		return -1;
 	}
 
-	buf = mem_allocate(Uploadsz);
+	buf = kernel_allocate(Uploadsz);
 
 	if(buf == NULL) {
 		printf("Could not allocate memory for buffer. \n");
@@ -1083,7 +1115,7 @@ static int upload(Ctlr *ctl, char *file, int isconfig)
 	}
 
 	if(Firmwarecmp){
-		cbuf = mem_allocate(Uploadsz);
+		cbuf = kernel_allocate(Uploadsz);
 		if(buf == NULL) {
 			printf("Could not allocate memory for compare buffer. \n");
 			return -1;
@@ -1147,8 +1179,8 @@ static int upload(Ctlr *ctl, char *file, int isconfig)
 		printf("Successful comparison. \n");
 	}
 	printf("\n");
-	mem_deallocate(buf);
-	mem_deallocate(cbuf);
+	kernel_deallocate(buf);
+	kernel_deallocate(cbuf);
 	return n;
 }
 
@@ -1195,15 +1227,17 @@ fwload(Ctlr *ctl)
 }
 
 
+
 void etherbcmattach()
 {
 	Ctlr *ctlr1 = (Ctlr *)&ctrl;
 
-		if(ctlr1->chipid == 0){
-			sdioinit();
-			sbinit(ctlr1);
-		}
-		fwload(ctlr1);
-		sbenable(ctlr1);
-		
+	if(ctlr1->chipid == 0){
+		sdioinit();
+		sbinit(ctlr1);
+	}
+	fwload(ctlr1);
+	sbenable(ctlr1);
+	// kproc("wifireader", rproc, edev);
+	// kproc("wifitimer", lproc, edev);
 }

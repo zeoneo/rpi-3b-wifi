@@ -334,7 +334,7 @@ static void init_channel(volatile dma_ctrl *ctrl, uint32_t chan)
     // Control Block's needs 32 Byte alignment (256 Bits as mentioned in Manual)
     // So we allocate 64 Bytes because even if I allocate memory at 32 Bytes alignment
     // memory allocator header info like size, and magic comes first which will break the alignment.
-    void *p = mem_allocate(2 * CB_ALIGN);
+    void *p = kernel_allocate(2 * CB_ALIGN);
     ctrl->cb = (bcm2835_dma_cb *)(((uint32_t)p + CB_ALIGN) & ~CB_ALIGN_MASK);
     ctrl->cb_alloc_ptr = (uint8_t *)p; // If we ever want to return memory, call mem_deallocate using this.
     ctrl->channel_header = (void *)channel_header;
