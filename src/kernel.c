@@ -97,14 +97,14 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 	}
 	schedule();
 
-    // etherbcmattach();
+    etherbcmattach();
     // if () {
         // printf("<---------------Wifi Started Successfully----------------->\n");
     // }
-    char abc[] = "@#$%^&*()";
+    // char abc[] = "@#$%^&*()";
 	while (1){
 		for (int i = 0; i < 5; i++){
-			uart_putc(abc[i]);
+			uart_putc('.');
 			MicroDelay(100000);
 		}
 	}
