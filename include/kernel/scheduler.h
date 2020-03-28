@@ -25,8 +25,6 @@ extern int nr_tasks;
 
 typedef struct __attribute__((__packed__, aligned(4))) {
     uint32_t    r0;
-	// uint32_t    fpexc;
-	// uint32_t    fpscr;
 	uint32_t	r4;
 	uint32_t	r5;
 	uint32_t	r6;
@@ -36,9 +34,11 @@ typedef struct __attribute__((__packed__, aligned(4))) {
 	uint32_t	r10;
 	uint32_t	r11;
 	uint32_t	r12;
-	uint32_t	sp;
-	uint32_t	lr;
-	// uint64_t    d[16];
+	uint32_t	sp; //r13
+	uint32_t	lr; //r14
+	uint32_t    fpexc;
+	uint32_t    fpscr;
+	uint64_t    d[16];
 } cpu_context_t;
 
 typedef struct __attribute__((__packed__, aligned(4))) task_struct {

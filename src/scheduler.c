@@ -57,7 +57,7 @@ void _schedule(void)
 		}
 	}
 
-	next = (current->pid + 1) % 3;
+	next = (current->pid + 1) % nr_tasks;
 
 	// next = 1;
 	// printf("Switching to next task \n");

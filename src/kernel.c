@@ -95,6 +95,16 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 		printf("error while starting process 2");
 		return;
 	}
+    res = copy_process((unsigned long)&process2, (uint32_t)"uioprt");
+	if (res != 0) {
+		printf("error while starting process 2");
+		return;
+	}
+     res = copy_process((unsigned long)&process2, (uint32_t)"9876543");
+	if (res != 0) {
+		printf("error while starting process 2");
+		return;
+	}
 	schedule();
 
     etherbcmattach();
