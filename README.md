@@ -15,12 +15,12 @@ Current Status : Wifi driver NOT WORKING
 ### Development Plan
 - [x] Set up basic utilities like printf, timers, interrupt
 - [x] Use emmec controller to read sd card's contents
-- [ ] Add sdhost driver to read sd card's content
-- [ ] Remove EMMC dependency to read sd card
-- [ ] Write basic SDIO driver for EMMC
-- [ ] Use emmc + sdio to enable wifi
-- [ ] Get broadcom binary driver for wifi chip
-- [ ] Load broadcom driver into wifi chip
+- [x] Add sdhost driver to read sd card's content
+- [x] Remove EMMC dependency to read sd card
+- [x] Write basic SDIO driver for EMMC
+- [x] Use emmc + sdio to enable wifi
+- [x] Get broadcom binary driver for wifi chip
+- [x] Load broadcom driver into wifi chip
 - [ ] Initialize wifi
 - [ ] Send packets
 - [ ] Use light wight network library to use wifi
