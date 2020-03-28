@@ -122,6 +122,7 @@ void irq_handler(void)
         {
             clearers[j]();
             ENABLE_INTERRUPTS();
+            // printf("Calling handler");
             handlers[j]();
             DISABLE_INTERRUPTS();
             return;

@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include<kernel/rpi-interrupts.h>
 #include <kernel/rpi-base.h>
 #ifndef TIMER_H
 #define TIMER_H
@@ -15,6 +16,7 @@ void udelay(uint32_t usecs);
 uint32_t timer_getTickCount32(void);
 uint64_t timer_getTickCount64(void);
 uint64_t tick_difference (uint64_t us1, uint64_t us2);
+void repeat_on_time_out(interrupt_handler_f handler, uint32_t timeout_us);
 
 typedef struct
 {

@@ -62,6 +62,9 @@ src/printf.o \
 src/strlen.o \
 src/plan9_ether4330.o \
 src/plan9_emmc.o \
+src/fork.o \
+src/scheduler.o \
+src/task_switch.o \
 src/kernel.o
 
 OBJS= $(KERNEL_OBJS)

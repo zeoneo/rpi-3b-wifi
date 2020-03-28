@@ -1,35 +1,39 @@
 #include <kernel/systimer.h>
-#include <kernel/rpi-interrupts.h>
 #include <device/uart0.h>
 #include <plibc/stdio.h>
 #include <device/gpio.h>
 
 static timer_registers_t *timer_regs; // = (timer_registers_t *)SYSTEM_TIMER_BASE;
-
+static uint32_t repeat_timeout_us = 0;
 extern void dmb(void);
-static void timer_irq_handler(void)
-{
-    // uart_puts("\n *** timer irq handler called");
+// static void timer_irq_handler(void)
+// {
+//     // uart_puts("\n *** timer irq handler called");
 
-    timer_set(345000);
+//     timer_set(345000);
     
-}
+// }
 
 static void timer_irq_clearer(void)
 {
     timer_regs->control.timer1_matched = 1;
-    // uart_puts("\n *** timer irq clearer called");
-    set_activity_led(0);
-    MicroDelay( 1000 * 1000);
-    set_activity_led(1);
-    
+    if(repeat_timeout_us != 0) {
+        timer_set(repeat_timeout_us);
+    }
 }
 
 void timer_init(void)
 {
     timer_regs = (timer_registers_t *)SYSTEM_TIMER_BASE;
-    register_irq_handler(RPI_BASIC_ARM_TIMER_IRQ, timer_irq_handler, timer_irq_clearer);
+    // register_irq_handler(RPI_BASIC_ARM_TIMER_IRQ, timer_irq_handler, timer_irq_clearer);
 }
+
+void repeat_on_time_out(interrupt_handler_f handler, uint32_t timeout_us) {
+    register_irq_handler(RPI_BASIC_ARM_TIMER_IRQ, handler, timer_irq_clearer);
+    timer_set(timeout_us);
+    repeat_timeout_us = timeout_us;
+}
+
 
 void timer_set(uint32_t usecs)
 {

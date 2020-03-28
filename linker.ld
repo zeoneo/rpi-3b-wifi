@@ -42,6 +42,9 @@ SECTIONS
     . = . + 131072; /* 128KB for svc stack */
     __svc_stack_base = .;
 
+    . = . + 1024; /* 1024 Bytes for undef stack */
+    __undef_stack_base = .;
+
     . = . + 1024; /* 1024 Bytes for irq stack */
     __irq_stack_base = .;
 

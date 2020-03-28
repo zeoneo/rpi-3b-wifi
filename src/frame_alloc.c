@@ -55,6 +55,7 @@ void init_frame_manager()
     current_state.frame_bits_array = (uint32_t *)&__kernel_end;
     page_array_len = current_state.total_frames / 32;
 
+    printf("Kernel End: 0x%x \n", (uint32_t)&__kernel_end);
 
     current_state.frame_manager_usage = page_array_len / PAGE_SIZE;
 
@@ -79,7 +80,6 @@ void init_frame_manager()
     {
         mark_as_used(frame_idx);
     }
-    current_state.available_frames = 20;
     current_state.next_idx = FRAME_BYTE_IDX(kernel_pages) + 1;
     current_state.is_initialized = 1;
 }

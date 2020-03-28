@@ -57,6 +57,7 @@ int32_t kernel_alloc_init(uint32_t ulSize)
 {
     uint32_t ulBase = (uint32_t)alloc_contiguous_frames(ulSize/PAGE_SIZE);
     if(ulBase == 0) {
+        printf("Couldnot allocate continuous memory. 0x%x \n", ulBase);
         return -1;
     }
     uint32_t ulLimit = ulBase + ulSize;
@@ -66,6 +67,7 @@ int32_t kernel_alloc_init(uint32_t ulSize)
 
     s_pNextBlock = (uint8_t *)ulBase;
     s_pBlockLimit = (uint8_t *)(ulBase + ulBlockReserve);
+    printf("Kalloc start: 0x%x end:0x%x \n", ulBase, ulLimit);
     return 0;
 }
 
