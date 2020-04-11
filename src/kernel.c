@@ -5,7 +5,11 @@
 
 #include <device/sd_card.h>
 #include <device/wifi-io.h>
-#include <device/plan9_ether4330.h>
+
+#ifdef __enable_exp_
+    #include <device/plan9_ether4330.h>
+#endif
+
 #include <device/uart0.h>
 #include <device/dma.h>
 #include <fs/fat.h>
@@ -14,6 +18,8 @@
 #include <kernel/systimer.h>
 #include <kernel/scheduler.h>
 #include <kernel/fork.h>
+#include <kernel/list.h>
+
 #include <mem/frame_alloc.h>
 #include <mem/virtmem.h>
 #include <mem/kernel_alloc.h>
@@ -36,6 +42,12 @@ void process2(char *array)
 			MicroDelay(100000);
 		}
 	}
+}
+
+bool print_node(void * node) {
+    l_node * linked_node = (l_node *) node;
+    printf(" node: %u  ", *((uint32_t *)(linked_node->data)));
+    return true;
 }
 
 void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
@@ -107,7 +119,49 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 	// }
 	schedule();
 
-    etherbcmattach();
+    uint32_t list_nodes[] = { 12,134,345,456,788,67};
+
+    list * lst = new_list(sizeof(uint32_t));
+
+    printf("list size: %u \n", list_size(lst));
+
+    for(int ui = 0 ; ui < 6; ui++) {
+        list_push_back(lst, &list_nodes[ui]);
+    }
+    l_node *tail = list_tail(lst);
+    list_for_each(lst, &print_node);
+    printf("\n");
+
+    for(int ui = 0 ; ui < 6; ui++) {
+        list_push_front(lst, &list_nodes[ui]);
+    }
+
+    list_for_each(lst, &print_node);
+    printf("\n");
+
+    list_delete_node(lst, tail);
+    list_for_each(lst, &print_node);
+    printf("\n");
+
+    for(int ui = 0 ; ui < 6; ui++) {
+        list_delete_head(lst);
+        list_delete_tail(lst);
+        list_for_each(lst, &print_node);
+        printf("\n");
+    }
+    list_delete_tail(lst);
+    list_for_each(lst, &print_node);
+    printf("\n");
+    for(int ui = 0 ; ui < 6; ui++) {
+        list_push_front(lst, &list_nodes[ui]);
+    }
+    list_for_each(lst, &print_node);
+    printf("\n");
+    destroy_list(lst);
+
+    #ifdef __enable_exp_
+        etherbcmattach();
+    #endif
     // if () {
         // printf("<---------------Wifi Started Successfully----------------->\n");
     // }

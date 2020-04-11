@@ -23,17 +23,6 @@ CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lm -lgcc
 
-ARCHDIR=arch/$(HOSTARCH)
-MEMDIR=mem
-DEVICEDIR=device
-FSDIR=fs
-GRAPHICSDIR=graphics
-
-CFLAGS:=$(CFLAGS) $(KERNEL_ARCH_CFLAGS)
-CPPFLAGS:=$(CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
-LDFLAGS:=$(LDFLAGS) $(KERNEL_ARCH_LDFLAGS)
-LIBS:=$(LIBS) $(KERNEL_ARCH_LIBS)
-
 KERNEL_OBJS=\
 src/boot.o \
 src/bss-clear.o \
@@ -60,12 +49,25 @@ src/memmove.o \
 src/memset.o \
 src/printf.o \
 src/strlen.o \
-src/plan9_ether4330.o \
 src/plan9_emmc.o \
 src/fork.o \
 src/scheduler.o \
 src/task_switch.o \
+src/list.o \
 src/kernel.o
+
+ifeq ($(DISABLE_EXP), 1)
+	CFLAGS:=$(CFLAGS) $(KERNEL_ARCH_CFLAGS)
+	CPPFLAGS:=$(CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
+	LDFLAGS:=$(LDFLAGS) $(KERNEL_ARCH_LDFLAGS)
+	LIBS:=$(LIBS) $(KERNEL_ARCH_LIBS)
+else
+	CFLAGS:=$(CFLAGS) $(KERNEL_ARCH_CFLAGS) -D__enable_exp_
+	CPPFLAGS:=$(CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS) -D__enable_exp_
+	LDFLAGS:=$(LDFLAGS) $(KERNEL_ARCH_LDFLAGS) -D__enable_exp_
+	LIBS:=$(LIBS) $(KERNEL_ARCH_LIBS) -D__enable_exp_
+	KERNEL_OBJS += src/plan9_ether4330.o
+endif
 
 OBJS= $(KERNEL_OBJS)
 

@@ -1,64 +1,52 @@
-#ifndef LIST_H
-#define LIST_H
+
+#ifndef LIST_H_
+#define LIST_H_
+
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <stdint.h>
+#include <stdbool.h>
 #include <stddef.h>
 
-#define DEFINE_LIST(nodeType)     \
-    typedef struct nodeType##list \
-    {                             \
-        struct nodeType *head;    \
-        struct nodeType *tail;    \
-        uint32_t size;            \
-    } nodeType##_list_t;
+typedef bool (*listIterator)(void *);
 
-#define DEFINE_LINK(nodeType)        \
-    struct nodeType *next##nodeType; \
-    struct nodeType *prev##nodeType;
+typedef struct l_node l_node;
 
-#define INITIALIZE_LIST(list)          \
-    list.head = list.tail = (void *)0; \
-    list.size = 0;
+struct l_node {
+    void *data;
+    l_node *next;
+    l_node *prev;
+};
 
-#define IMPLEMENT_LIST(nodeType)                                                  \
-    void append_##nodeType##_list(nodeType##_list_t *list, struct nodeType *node) \
-    {                                                                             \
-        list->tail->next##nodeType = node;                                        \
-        node->prev##nodeType = list->tail;                                        \
-        list->tail = node;                                                        \
-        node->next##nodeType = NULL;                                              \
-        list->size += 1;                                                          \
-    }                                                                             \
-                                                                                  \
-    void push_##nodeType##_list(nodeType##_list_t *list, struct nodeType *node)   \
-    {                                                                             \
-        node->next##nodeType = list->head;                                        \
-        node->prev##nodeType = NULL;                                              \
-        list->head = node;                                                        \
-        list->size += 1;                                                          \
-    }                                                                             \
-                                                                                  \
-    struct nodeType *peek_##nodeType##_list(nodeType##_list_t *list)              \
-    {                                                                             \
-        return list->head;                                                        \
-    }                                                                             \
-                                                                                  \
-    struct nodeType *pop_##nodeType##_list(nodeType##_list_t *list)               \
-    {                                                                             \
-        struct nodeType *res = list->head;                                        \
-        list->head = list->head->next##nodeType;                                  \
-        list->head->prev##nodeType = NULL;                                        \
-        list->size -= 1;                                                          \
-        return res;                                                               \
-    }                                                                             \
-                                                                                  \
-    uint32_t size_##nodeType##_list(nodeType##_list_t *list)                      \
-    {                                                                             \
-        return list->size;                                                        \
-    }                                                                             \
-                                                                                  \
-    struct nodeType *next_##nodeType##_list(struct nodeType *node)                \
-    {                                                                             \
-        return node->next##nodeType;                                              \
-    }
+typedef struct {
+  int list_size;
+  int data_size;
+  l_node *head;
+  l_node *tail;
+} list;
 
+list * new_list(uint32_t data_size);
+void destroy_list(list *lst);
+uint32_t list_size(list *lst);
+
+l_node * list_head(list *lst);
+l_node * list_tail(list *lst);
+
+void list_push_front(list *lst, void *data);
+void list_push_back(list *lst, void *data);
+
+void list_delete_head(list *lst);
+void list_delete_tail(list *lst);
+void list_delete_node(list *lst, l_node * node);
+
+void list_for_each(list *list, listIterator iterator);
+
+#ifdef __cplusplus
+}
 #endif
+
+#endif // LIST_H_
