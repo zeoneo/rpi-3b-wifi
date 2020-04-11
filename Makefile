@@ -18,7 +18,7 @@ KERNEL_ARCH_CPPFLAGS=
 KERNEL_ARCH_LDFLAGS=
 KERNEL_ARCH_LIBS=
 
-CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra -Werror -std=c17  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member
+CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member
 CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lm -lgcc
