@@ -434,7 +434,7 @@ int emmccmd(uint32_t cmd, uint32_t arg, uint32_t *resp)
 				MicroDelay(1);
 			}
 		}
-	}else if(cmd == IORWdirect && (arg & ~0xFF) == (1<<31|0<<28|7<<9)){
+	}else if(cmd == IORWdirect && (arg & ~0xFF) == (1U<<31|0<<28|7U<<9)){
 		switch(arg & 0x3){
 		case 0:
 			WR(Control0, r[Control0] & ~Dwidth4);

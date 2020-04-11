@@ -15,7 +15,7 @@ int nr_tasks = 1;
 extern void task_switch(task_struct_t *old, task_struct_t *new);
 
 void init_scheduler() {
-	repeat_on_time_out(schedule, 400000);
+	repeat_on_time_out(schedule, 8000);
 	current->priority = 1;
 }
 void preempt_disable(void)
@@ -32,7 +32,7 @@ void preempt_enable(void)
 void _schedule(void)
 {
 	preempt_disable();
-	int next,c;
+	uint32_t next,c;
 	struct task_struct * p;
 	// printf(" nr_tasks: %d \n ", nr_tasks);
 	while (1) {
@@ -76,7 +76,7 @@ void schedule(void)
 void switch_to(struct task_struct * next) 
 {
 	if (current == next) {
-		printf(".");
+		// printf(".");
 		return;
 	}
 		

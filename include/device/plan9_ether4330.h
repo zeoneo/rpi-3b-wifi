@@ -6,6 +6,7 @@
 extern "C"
 {
 #endif
+
 #include<stdint.h>
 
 void etherbcmattach();

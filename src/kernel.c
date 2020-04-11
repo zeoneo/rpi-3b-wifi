@@ -85,26 +85,26 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
     // }
 
     init_scheduler();
-    int res = copy_process((unsigned long)&process1, (uint32_t)"12345");
-	if (res != 0) {
-		printf("error while starting process 1");
-		return;
-	}
-	res = copy_process((unsigned long)&process2, (uint32_t)"abcde");
-	if (res != 0) {
-		printf("error while starting process 2");
-		return;
-	}
-    res = copy_process((unsigned long)&process2, (uint32_t)"uioprt");
-	if (res != 0) {
-		printf("error while starting process 2");
-		return;
-	}
-     res = copy_process((unsigned long)&process2, (uint32_t)"9876543");
-	if (res != 0) {
-		printf("error while starting process 2");
-		return;
-	}
+    // int res = copy_process((unsigned long)&process1, (uint32_t)"12345");
+	// if (res != 0) {
+	// 	printf("error while starting process 1");
+	// 	return;
+	// }
+	// res = copy_process((unsigned long)&process2, (uint32_t)"abcde");
+	// if (res != 0) {
+	// 	printf("error while starting process 2");
+	// 	return;
+	// }
+    // res = copy_process((unsigned long)&process2, (uint32_t)"uioprt");
+	// if (res != 0) {
+	// 	printf("error while starting process 2");
+	// 	return;
+	// }
+    //  res = copy_process((unsigned long)&process2, (uint32_t)"9876543");
+	// if (res != 0) {
+	// 	printf("error while starting process 2");
+	// 	return;
+	// }
 	schedule();
 
     etherbcmattach();
@@ -113,10 +113,7 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
     // }
     // char abc[] = "@#$%^&*()";
 	while (1){
-		for (int i = 0; i < 5; i++){
-			uart_putc('.');
-			MicroDelay(100000);
-		}
+		schedule(); // This is init process which will call schedule when intialization is completed.
 	}
 
 }

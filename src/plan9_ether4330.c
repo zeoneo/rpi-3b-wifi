@@ -676,7 +676,7 @@ sbrw(int fn, int write, uint8_t *buf, int len, uint32_t off)
 static void
 sbmem(int write, uint8_t *buf, int len, uint32_t off)
 {
-	uint32_t n;
+	int32_t n;
 
 	n = ROUNDUP(off, Sbwsize) - off;
 	if(n == 0)
