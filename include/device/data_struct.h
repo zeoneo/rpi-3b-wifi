@@ -96,13 +96,14 @@ struct Queue
 {
 	Lock lock;
 
-	Block*	bfirst;		/* buffer */
-	Block*	blast;
+	Block*	first;		/* buffer */
+	Block*	last;
 
 	int	len;		/* bytes allocated to queue */
 	int	dlen;		/* data bytes in queue */
 	int	limit;		/* max bytes in queue */
 	int	inilim;		/* initial limit */
+	uint32_t nelem;
 	int	state;
 	int	noblock;	/* true if writes return immediately when q full */
 	int	eof;		/* number of eofs read by user */
@@ -128,7 +129,7 @@ struct Block
 	uint8_t*	rp;			/* first unconsumed byte */
 	uint8_t*	wp;			/* first empty byte */
 	uint8_t*	lim;			/* 1 past the end of the buffer */
-	uint8_t*	base;			/* start of the buffer */
+	uint8_t*	buf;			/* start of the buffer */
 	void	(*free)(Block*);
 	uint16_t	flag;
 	uint16_t	checksum;		/* IP checksum of complete packet (minus media header) */

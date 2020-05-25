@@ -8,6 +8,7 @@
 
 #ifdef __enable_exp_
     #include <device/plan9_ether4330.h>
+    #include <device/bcm4343.h>
 #endif
 
 #include <device/uart0.h>
@@ -23,6 +24,10 @@
 #include <mem/frame_alloc.h>
 #include <mem/virtmem.h>
 #include <mem/kernel_alloc.h>
+
+#ifdef __enable_exp_
+static bcm4343_net_device *net_device;
+#endif
 
 void process1(char *array)
 {
@@ -48,6 +53,16 @@ bool print_node(void * node) {
     l_node * linked_node = (l_node *) node;
     printf(" node: %u  ", *((uint32_t *)(linked_node->data)));
     return true;
+}
+
+void dump_wifi_status(void *arg) {
+    if(arg != 0) {
+        printf("Dumping wifi status: \n");
+        #ifdef __enable_exp_
+            bcm4343_net_device *n_device = (bcm4343_net_device *) arg;
+            dump_status(n_device);
+        #endif
+    }
 }
 
 void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
@@ -97,11 +112,6 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
     // }
 
     init_scheduler();
-    // int res = copy_process((unsigned long)&process1, (uint32_t)"12345");
-	// if (res != 0) {
-	// 	printf("error while starting process 1");
-	// 	return;
-	// }
 	// res = copy_process((unsigned long)&process2, (uint32_t)"abcde");
 	// if (res != 0) {
 	// 	printf("error while starting process 2");
@@ -117,56 +127,33 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 	// 	printf("error while starting process 2");
 	// 	return;
 	// }
-	schedule();
+	// schedule();
 
-    uint32_t list_nodes[] = { 12,134,345,456,788,67};
 
-    list * lst = new_list(sizeof(uint32_t));
-
-    printf("list size: %u \n", list_size(lst));
-
-    for(int ui = 0 ; ui < 6; ui++) {
-        list_push_back(lst, &list_nodes[ui]);
-    }
-    l_node *tail = list_tail(lst);
-    list_for_each(lst, &print_node);
-    printf("\n");
-
-    for(int ui = 0 ; ui < 6; ui++) {
-        list_push_front(lst, &list_nodes[ui]);
-    }
-
-    list_for_each(lst, &print_node);
-    printf("\n");
-
-    list_delete_node(lst, tail);
-    list_for_each(lst, &print_node);
-    printf("\n");
-
-    for(int ui = 0 ; ui < 6; ui++) {
-        list_delete_head(lst);
-        list_delete_tail(lst);
-        list_for_each(lst, &print_node);
-        printf("\n");
-    }
-    list_delete_tail(lst);
-    list_for_each(lst, &print_node);
-    printf("\n");
-    for(int ui = 0 ; ui < 6; ui++) {
-        list_push_front(lst, &list_nodes[ui]);
-    }
-    list_for_each(lst, &print_node);
-    printf("\n");
-    destroy_list(lst);
 
     #ifdef __enable_exp_
-        etherbcmattach();
+
+        // etherbcmattach();
+        net_device = allocate_bcm4343_device("/c/prakash/");
+        set_essid(net_device, "ZERONONE");
+        set_auth(net_device, AuthModeNone, "RatKillerCatBlack567");
+        initialize(net_device);
+        // int res = copy_process((unsigned long)&dump_wifi_status, (uint32_t)net_device);
+        // if (res != 0) {
+        //     printf("error while starting process 1");
+        //     return;
+        // }
     #endif
     // if () {
         // printf("<---------------Wifi Started Successfully----------------->\n");
     // }
     // char abc[] = "@#$%^&*()";
 	while (1){
+
+        // printf("Dumping wifi status: \n");
+        // #ifdef __enable_exp_
+        //     dump_status(net_device);
+        // #endif
 		schedule(); // This is init process which will call schedule when intialization is completed.
 	}
 

@@ -1,5 +1,5 @@
-#ifndef _PLAN9_NETIF_H_
-#define _PLAN9_NETIF_H_
+#ifndef __NETIF_H_
+#define __NETIF_H_
 
 
 #ifdef __cplusplus
@@ -8,12 +8,17 @@ extern "C"
 #endif
 
 #include<stdint.h>
+#include<stdbool.h>
+#include<plibc/string.h>
 #include<device/data_struct.h>
+#include<device/etherif.h>
+#include<kernel/queue.h>
 
 
 typedef struct Etherpkt	Etherpkt;
 typedef struct Netaddr	Netaddr;
 typedef struct Netfile	Netfile;
+typedef struct NetDevice NetDevice;
 typedef struct Netif	Netif;
 
 enum
@@ -63,6 +68,34 @@ struct Netfile
 
 	Queue	*in;			/* input buffer */
 };
+
+
+struct NetDevice {
+	uint32_t device_number;
+	uint32_t	inuse;
+	uint32_t	mode;
+	char	owner[KNAMELEN];
+	int	type;			/* multiplexor type */
+	int	prom;			/* promiscuous mode */
+	int	scan;			/* base station scanning interval */
+	int	bridge;			/* bridge mode */
+	int	headersonly;		/* headers only - no data */
+	uint8_t	maddr[8];		/* bitmask of multicast addresses requested */
+	int	nmaddr;			/* number of multicast addresses */
+	queue	*in;
+};
+
+enum NetDeviceSpeed
+{
+	NetDeviceSpeed10Half,
+	NetDeviceSpeed10Full,
+	NetDeviceSpeed100Half,
+	NetDeviceSpeed100Full,
+	NetDeviceSpeed1000Half,
+	NetDeviceSpeed1000Full,
+	NetDeviceSpeedUnknown
+};
+
 
 /*
  *  a network address
@@ -123,37 +156,26 @@ struct Netif
 	void	(*scanbs)(void*, uint32_t);	/* scan for base stations */
 };
 
-    void        netifinit(Netif*, char*, int, uint32_t);
-    Walkqid*    netifwalk(Netif*, Chan*, Chan*, char **, int);
-    Chan*       netifopen(Netif*, Chan*, int);
-    void        netifclose(Netif*, Chan*);
-    long        netifread(Netif*, Chan*, void*, long, uint32_t);
-    Block*      netifbread(Netif*, Chan*, long, uint32_t);
-    long        netifwrite(Netif*, Chan*, void*, long);
-    int         netifwstat(Netif*, Chan*, uint8_t*, int);
-    int         netifstat(Netif*, Chan*, uint8_t*, int);
-    int         activemulti(Netif*, uint8_t*, int);
-
 /*
  *  Ethernet specific
  */
-enum
-{
-	Eaddrlen=	6,
-	ETHERMINTU =	60,		/* minimum transmit size */
-	ETHERMAXTU =	1514,		/* maximum transmit size */
-	ETHERHDRSIZE =	14,		/* size of an ethernet header */
+// enum
+// {
+// 	Eaddrlen=	6,
+// 	ETHERMINTU =	60,		// minimum transmit size 
+// 	ETHERMAXTU =	1514,		// maximum transmit size 
+// 	ETHERHDRSIZE =	14,		// size of an ethernet header //
 
-	/* ethernet packet types */
-	ETARP		= 0x0806,
-	ETIP4		= 0x0800,
-	ETIP6		= 0x86DD,
-};
+// 	// ethernet packet types 
+// 	ETARP		= 0x0806,
+// 	ETIP4		= 0x0800,
+// 	ETIP6		= 0x86DD,
+// };
 
 struct Etherpkt
 {
-	uint8_t	d[Eaddrlen];
-	uint8_t	s[Eaddrlen];
+	uint8_t	d[6];
+	uint8_t	s[6]; //Eaddrlen = 6
 	uint8_t	type[2];
 	uint8_t	data[1500];
 };

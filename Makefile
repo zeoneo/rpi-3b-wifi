@@ -47,13 +47,17 @@ src/memcmp.o \
 src/memcpy.o \
 src/memmove.o \
 src/memset.o \
+src/strstr.o \
+src/string.o \
 src/printf.o \
+src/vsnprintf.o \
 src/strlen.o \
 src/plan9_emmc.o \
 src/fork.o \
 src/scheduler.o \
 src/task_switch.o \
 src/list.o \
+src/queue.o \
 src/kernel.o
 
 ifeq ($(DISABLE_EXP), 1)
@@ -67,6 +71,8 @@ else
 	LDFLAGS:=$(LDFLAGS) $(KERNEL_ARCH_LDFLAGS) -D__enable_exp_
 	LIBS:=$(LIBS) $(KERNEL_ARCH_LIBS) -D__enable_exp_
 	KERNEL_OBJS += src/plan9_ether4330.o
+	KERNEL_OBJS += src/etherif.o
+	KERNEL_OBJS += src/bcm4343.o
 endif
 
 OBJS= $(KERNEL_OBJS)

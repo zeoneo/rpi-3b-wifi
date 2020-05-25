@@ -8,8 +8,10 @@ extern "C"
 #endif
 
 #include<stdint.h>
+#include<device/etherif.h>
 
 void etherbcmattach();
+int etherbcmpnp(Ether* edev);
 
 #ifdef __cplusplus
 }

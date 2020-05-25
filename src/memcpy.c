@@ -1,4 +1,4 @@
-#include <string.h>
+#include <plibc/string.h>
 
 void* memcpy(void* restrict dstptr, const void* restrict srcptr, size_t size) {
 	unsigned char* dst = (unsigned char*) dstptr;
