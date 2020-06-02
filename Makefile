@@ -58,6 +58,7 @@ src/scheduler.o \
 src/task_switch.o \
 src/list.o \
 src/queue.o \
+src/lock.o \
 src/kernel.o
 
 ifeq ($(DISABLE_EXP), 1)
@@ -112,4 +113,7 @@ clean:
 	rm -f $(OBJS:.o=.d) *.d */*.d */*/*.d
 	rm -f *.list *.map *.txt
 
+format:
+	@find . -type f -name "*.c" -exec clang-format -style=file -i {} \;
+	@find . -type f -name "*.h" -exec clang-format -style=file -i {} \;
 -include $(OBJS:.o=.d)

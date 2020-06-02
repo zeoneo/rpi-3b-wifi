@@ -48,3 +48,9 @@ Last Ro value, DFSR, IFSR, LR, instruction, i don't know this
 | Last Ro value 	| DFSR     	| IFSR     	| LR       	| instruction 	| Unkwown  	|
 |---------------	|----------	|----------	|----------	|-------------	|----------	|
 | 00022680      	| 00000001 	| 00001629 	| 00010584 	| E1D400B7    	| 00022220 	|
+
+
+Format source code using:
+
+
+``` make format ```

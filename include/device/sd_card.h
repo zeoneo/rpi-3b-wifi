@@ -2,15 +2,14 @@
 #define _SD_CARD_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-#include<stdint.h>
-#include<stdbool.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 int init_sdcard();
-bool mmc_read_blocks(uint32_t startBlock, uint32_t numBlocks, uint8_t *dest);
+bool mmc_read_blocks(uint32_t startBlock, uint32_t numBlocks, uint8_t* dest);
 
 /**
  * End of all the declarations here.

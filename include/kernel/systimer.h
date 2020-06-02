@@ -1,11 +1,11 @@
-#include <stdint.h>
-#include<kernel/rpi-interrupts.h>
 #include <kernel/rpi-base.h>
+#include <kernel/rpi-interrupts.h>
+#include <stdint.h>
 #ifndef TIMER_H
 #define TIMER_H
 
 #define SYSTEM_TIMER_OFFSET 0x3000
-#define SYSTEM_TIMER_BASE (SYSTEM_TIMER_OFFSET + PERIPHERAL_BASE)
+#define SYSTEM_TIMER_BASE   (SYSTEM_TIMER_OFFSET + PERIPHERAL_BASE)
 
 void timer_init(void);
 
@@ -15,11 +15,10 @@ void MicroDelay(uint64_t delayInUs);
 void udelay(uint32_t usecs);
 uint32_t timer_getTickCount32(void);
 uint64_t timer_getTickCount64(void);
-uint64_t tick_difference (uint64_t us1, uint64_t us2);
+uint64_t tick_difference(uint64_t us1, uint64_t us2);
 void repeat_on_time_out(interrupt_handler_f handler, uint32_t timeout_us);
 
-typedef struct
-{
+typedef struct {
     uint8_t timer0_matched : 1;
     uint8_t timer1_matched : 1;
     uint8_t timer2_matched : 1;
@@ -27,8 +26,7 @@ typedef struct
     uint32_t reserved : 28;
 } timer_control_reg_t;
 
-typedef struct __attribute__((__packed__, aligned(4)))
-{
+typedef struct __attribute__((__packed__, aligned(4))) {
     timer_control_reg_t control;
     uint32_t counter_low;
     uint32_t counter_high;

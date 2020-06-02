@@ -1,14 +1,12 @@
 
 
+#include <kernel/rpi-mailbox.h>
 #include <stdint.h>
 
-#include <kernel/rpi-mailbox.h>
-
 /* Mailbox 0 mapped to it's base address */
-static volatile mailbox_t *rpiMailbox0 = (mailbox_t *)RPI_MAILBOX0_BASE;
+static volatile mailbox_t* rpiMailbox0 = (mailbox_t*) RPI_MAILBOX0_BASE;
 
-void RPI_Mailbox0Write(mailbox0_channel_t channel, int32_t value)
-{
+void RPI_Mailbox0Write(mailbox0_channel_t channel, int32_t value) {
     /* For information about accessing mailboxes, see:
        https://github.com/raspberrypi/firmware/wiki/Accessing-mailboxes */
 
@@ -18,27 +16,23 @@ void RPI_Mailbox0Write(mailbox0_channel_t channel, int32_t value)
 
     /* Wait until the mailbox becomes available and then write to the mailbox
        channel */
-    while ((rpiMailbox0->Status & ARM_MS_FULL) != 0)
-    {
+    while ((rpiMailbox0->Status & ARM_MS_FULL) != 0) {
     }
 
     /* Write the modified value + channel number into the write register */
     rpiMailbox0->Write = value;
 }
 
-int32_t RPI_Mailbox0Read(mailbox0_channel_t channel)
-{
+int32_t RPI_Mailbox0Read(mailbox0_channel_t channel) {
     /* For information about accessing mailboxes, see:
        https://github.com/raspberrypi/firmware/wiki/Accessing-mailboxes */
     int32_t value = -1;
 
     /* Keep reading the register until the desired channel gives us a value */
-    while ((value & 0xF) != channel)
-    {
+    while ((value & 0xF) != channel) {
         /* Wait while the mailbox is empty because otherwise there's no value
            to read! */
-        while (rpiMailbox0->Status & ARM_MS_EMPTY)
-        {
+        while (rpiMailbox0->Status & ARM_MS_EMPTY) {
         }
 
         /* Extract the value from the Read register of the mailbox. The value

@@ -2,14 +2,12 @@
 #define _SD_PRAK_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-#include<stdint.h>
+#include <stdint.h>
 
 void init_sdhost();
-
 
 /**
  * End of all the declarations here.

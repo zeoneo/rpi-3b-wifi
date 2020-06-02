@@ -1,9 +1,8 @@
 
+#include <kernel/rpi-mailbox-interface.h>
+#include <kernel/rpi-mailbox.h>
 #include <stdarg.h>
 #include <stdint.h>
-
-#include <kernel/rpi-mailbox.h>
-#include <kernel/rpi-mailbox-interface.h>
 #include <string.h>
 
 /* Make sure the property tag buffer is aligned to a 16-byte boundary because
@@ -21,8 +20,7 @@ static int32_t pt_index = 0;
 //     return dstptr;
 // }
 
-void RPI_PropertyInit(void)
-{
+void RPI_PropertyInit(void) {
     /* Fill in the size on-the-fly */
     pt[PT_OSIZE] = 12;
 
@@ -40,15 +38,13 @@ void RPI_PropertyInit(void)
     @brief Add a property tag to the current tag list. Data can be included. All data is uint32_t
     @param tag
 */
-void RPI_PropertyAddTag(rpi_mailbox_tag_t tag, ...)
-{
+void RPI_PropertyAddTag(rpi_mailbox_tag_t tag, ...) {
     va_list vl;
     va_start(vl, tag);
 
     pt[pt_index++] = tag;
 
-    switch (tag)
-    {
+    switch (tag) {
     case TAG_GET_FIRMWARE_VERSION:
     case TAG_GET_BOARD_MODEL:
     case TAG_GET_BOARD_REVISION:
@@ -101,17 +97,11 @@ void RPI_PropertyAddTag(rpi_mailbox_tag_t tag, ...)
         pt[pt_index++] = 8;
         pt[pt_index++] = 0; /* Request */
 
-        if ((tag == TAG_SET_PHYSICAL_SIZE) ||
-            (tag == TAG_SET_VIRTUAL_SIZE) ||
-            (tag == TAG_SET_VIRTUAL_OFFSET) ||
-            (tag == TAG_TEST_PHYSICAL_SIZE) ||
-            (tag == TAG_TEST_VIRTUAL_SIZE))
-        {
+        if ((tag == TAG_SET_PHYSICAL_SIZE) || (tag == TAG_SET_VIRTUAL_SIZE) || (tag == TAG_SET_VIRTUAL_OFFSET) ||
+            (tag == TAG_TEST_PHYSICAL_SIZE) || (tag == TAG_TEST_VIRTUAL_SIZE)) {
             pt[pt_index++] = va_arg(vl, int); /* Width */
             pt[pt_index++] = va_arg(vl, int); /* Height */
-        }
-        else
-        {
+        } else {
             pt_index += 2;
         }
         break;
@@ -126,15 +116,10 @@ void RPI_PropertyAddTag(rpi_mailbox_tag_t tag, ...)
         pt[pt_index++] = 4;
         pt[pt_index++] = 0; /* Request */
 
-        if ((tag == TAG_SET_DEPTH) ||
-            (tag == TAG_SET_PIXEL_ORDER) ||
-            (tag == TAG_SET_ALPHA_MODE))
-        {
+        if ((tag == TAG_SET_DEPTH) || (tag == TAG_SET_PIXEL_ORDER) || (tag == TAG_SET_ALPHA_MODE)) {
             /* Colour Depth, bits-per-pixel \ Pixel Order State */
             pt[pt_index++] = va_arg(vl, int);
-        }
-        else
-        {
+        } else {
             pt_index += 1;
         }
         break;
@@ -144,15 +129,12 @@ void RPI_PropertyAddTag(rpi_mailbox_tag_t tag, ...)
         pt[pt_index++] = 16;
         pt[pt_index++] = 0; /* Request */
 
-        if ((tag == TAG_SET_OVERSCAN))
-        {
+        if ((tag == TAG_SET_OVERSCAN)) {
             pt[pt_index++] = va_arg(vl, int); /* Top pixels */
             pt[pt_index++] = va_arg(vl, int); /* Bottom pixels */
             pt[pt_index++] = va_arg(vl, int); /* Left pixels */
             pt[pt_index++] = va_arg(vl, int); /* Right pixels */
-        }
-        else
-        {
+        } else {
             pt_index += 4;
         }
         break;
@@ -160,18 +142,18 @@ void RPI_PropertyAddTag(rpi_mailbox_tag_t tag, ...)
     case TAG_SET_POWER_STATE:
         pt[pt_index++] = 8;
         pt[pt_index++] = 0;
-        pt[pt_index++] = va_arg(vl, unsigned int); //device id
-        pt[pt_index++] = va_arg(vl, unsigned int); //state
+        pt[pt_index++] = va_arg(vl, unsigned int); // device id
+        pt[pt_index++] = va_arg(vl, unsigned int); // state
         break;
 
     case TAG_ENABLE_QPU:
-        pt[pt_index++] = 4; //request length
+        pt[pt_index++] = 4; // request length
         pt[pt_index++] = 0;
         pt[pt_index++] = va_arg(vl, unsigned int); // 0 turn off qpu !0 enable qpu;
         break;
 
     case TAG_EXECUTE_QPU:
-        pt[pt_index++] = 16; //request lenght
+        pt[pt_index++] = 16; // request lenght
         pt[pt_index++] = 0;
         pt[pt_index++] = va_arg(vl, unsigned int); // u32 Jobs
         pt[pt_index++] = va_arg(vl, unsigned int); // u32 Pointer to buffer, 24 words of 32 bits.
@@ -180,8 +162,8 @@ void RPI_PropertyAddTag(rpi_mailbox_tag_t tag, ...)
         break;
 
     case TAG_ALLOCATE_MEMORY:
-        pt[pt_index++] = 12; //request length
-        pt[pt_index++] = 0; //request
+        pt[pt_index++] = 12;                       // request length
+        pt[pt_index++] = 0;                        // request
         pt[pt_index++] = va_arg(vl, unsigned int); // u32 size
         pt[pt_index++] = va_arg(vl, unsigned int); // u32 alignment
         pt[pt_index++] = va_arg(vl, unsigned int); // u32 flags
@@ -199,14 +181,14 @@ void RPI_PropertyAddTag(rpi_mailbox_tag_t tag, ...)
     case TAG_LOCK_MEMORY:
     case TAG_UNLOCK_MEMORY:
     case TAG_RELEASE_MEMORY:
-        pt[pt_index++] = 4; //request length
-        pt[pt_index++] = 0; //request
+        pt[pt_index++] = 4;                        // request length
+        pt[pt_index++] = 0;                        // request
         pt[pt_index++] = va_arg(vl, unsigned int); // u32 handle
         break;
 
     case TAG_EXECUTE_CODE:
-        pt[pt_index++] = 28; //request length
-        pt[pt_index++] = 0; //request
+        pt[pt_index++] = 28;                       // request length
+        pt[pt_index++] = 0;                        // request
         pt[pt_index++] = va_arg(vl, unsigned int); // u32 function pointer
         pt[pt_index++] = va_arg(vl, unsigned int); // u32 r0
         pt[pt_index++] = va_arg(vl, unsigned int); // u32 r1
@@ -228,34 +210,30 @@ void RPI_PropertyAddTag(rpi_mailbox_tag_t tag, ...)
     va_end(vl);
 }
 
-int32_t RPI_PropertyProcess(void)
-{
+int32_t RPI_PropertyProcess(void) {
     int32_t result;
 
     /* Fill in the size of the buffer */
-    pt[PT_OSIZE] = (pt_index + 1) << 2;
+    pt[PT_OSIZE]                = (pt_index + 1) << 2;
     pt[PT_OREQUEST_OR_RESPONSE] = 0;
 
-    RPI_Mailbox0Write(MB0_TAGS_ARM_TO_VC, (uint32_t)pt);
+    RPI_Mailbox0Write(MB0_TAGS_ARM_TO_VC, (uint32_t) pt);
     result = RPI_Mailbox0Read(MB0_TAGS_ARM_TO_VC);
     return result;
 }
 
-rpi_mailbox_property_t *RPI_PropertyGet(rpi_mailbox_tag_t tag)
-{
+rpi_mailbox_property_t* RPI_PropertyGet(rpi_mailbox_tag_t tag) {
     static rpi_mailbox_property_t property;
-    int32_t *tag_buffer = 0;
+    int32_t* tag_buffer = 0;
 
     property.tag = tag;
 
     /* Get the tag from the buffer. Start at the first tag position  */
     int32_t index = 2;
 
-    while (index < (pt[PT_OSIZE] >> 2))
-    {
+    while (index < (pt[PT_OSIZE] >> 2)) {
         /* printf( "Test Tag: [%d] %8.8X\r\n", index, pt[index] ); */
-        if (pt[index] == (int32_t)tag)
-        {
+        if (pt[index] == (int32_t) tag) {
             tag_buffer = &pt[index];
             break;
         }

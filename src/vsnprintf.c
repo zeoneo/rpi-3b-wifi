@@ -1,24 +1,17 @@
 
 #include <plibc/stdio.h>
-#include <string.h>
 #include <stdarg.h>
+#include <string.h>
 
 /* Number of bits in an 'unsigned long'.  */
 #define LONG_BITS (8 * sizeof(unsigned long))
 
-static void ulong_to_string(unsigned long num, char *str,
-                            unsigned int base, int alt_digits);
+static void ulong_to_string(unsigned long num, char* str, unsigned int base, int alt_digits);
 
-#define TRUE 1
+#define TRUE  1
 #define FALSE 0
 
-enum integer_size
-{
-    SHORT_SHORT_SIZE,
-    SHORT_SIZE,
-    REGULAR_SIZE,
-    LONG_SIZE
-};
+enum integer_size { SHORT_SHORT_SIZE, SHORT_SIZE, REGULAR_SIZE, LONG_SIZE };
 
 /**
  * @ingroup libxc
@@ -84,12 +77,11 @@ enum integer_size
  * @return
  *      number of characters written on success, or @c EOF on failure
  */
-int vsprintf(char *buf, const char *fmt, va_list ap)
-{
+int vsprintf(char* buf, const char* fmt, va_list ap) {
     int chars_written = 0; /* Number of characters written so far  */
 
     int i;
-    char *str;                  /* Pointer to characters to output      */
+    char* str;                  /* Pointer to characters to output      */
     char string[LONG_BITS + 1]; /* Buffer for numeric conversions       */
 
     int leftjust;           /* true = left-justified,
@@ -112,12 +104,10 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
                                    output                               */
     int len_padding;    /* No. of padding chars to output       */
 
-    const char *spec_start; /* Start of this format specifier.      */
+    const char* spec_start; /* Start of this format specifier.      */
 
-    while (*fmt != '\0')
-    {
-        if (*fmt == '%' && *++fmt != '%')
-        {
+    while (*fmt != '\0') {
+        if (*fmt == '%' && *++fmt != '%') {
             /* Parsing a conversion specification ---
              * Consists of 5 parts, as noted in comments below  */
 
@@ -129,11 +119,9 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
 
             pad_char = ' ';   /* Default: space padding    */
             leftjust = FALSE; /* Default: right-justified  */
-            for (;; fmt++)
-            {
+            for (;; fmt++) {
                 /* Switch on next potential flag character  */
-                switch (*fmt)
-                {
+                switch (*fmt) {
                 case '-':
                     /* '-' flag: left-justified conversion  */
                     leftjust = TRUE;
@@ -157,22 +145,17 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
              * 2. Optional minimum field width   *
              *************************************/
             fmin = 0;
-            if (*fmt == '*')
-            {
+            if (*fmt == '*') {
                 fmin = va_arg(ap, int);
-                if (fmin < 0)
-                {
+                if (fmin < 0) {
                     /* C99 7.19.6.1:  A negative field width argument is taken
                      * as a '-' flag followed by a positive field width.  */
-                    fmin = -fmin;
+                    fmin     = -fmin;
                     leftjust = TRUE;
                 }
                 fmt++;
-            }
-            else
-            {
-                while ('0' <= *fmt && *fmt <= '9')
-                {
+            } else {
+                while ('0' <= *fmt && *fmt <= '9') {
                     fmin *= 10;
                     fmin += (*fmt - '0');
                     fmt++;
@@ -181,8 +164,7 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
 
             /* C99 7.19.6.1:  If both the '0' and '-' flags appear, the '0'
              * flag is ignored.  */
-            if (leftjust)
-            {
+            if (leftjust) {
                 pad_char = ' ';
             }
 
@@ -190,21 +172,16 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
              * 3. Optional precision             *
              *************************************/
             prec = -1;
-            if (*fmt == '.')
-            {
+            if (*fmt == '.') {
                 fmt++;
-                if (*fmt == '*')
-                {
+                if (*fmt == '*') {
                     prec = va_arg(ap, int);
                     fmt++;
                     /* C99 7.19.6.1:  A negative precision argument is taken as
                      * if the precision were omitted.  */
-                }
-                else
-                {
+                } else {
                     prec = 0;
-                    while ('0' <= *fmt && *fmt <= '9')
-                    {
+                    while ('0' <= *fmt && *fmt <= '9') {
                         prec *= 10;
                         prec += (*fmt - '0');
                         fmt++;
@@ -219,21 +196,15 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
              *************************************/
 
             size = REGULAR_SIZE;
-            if (*fmt == 'l')
-            {
+            if (*fmt == 'l') {
                 size = LONG_SIZE;
                 fmt++;
-            }
-            else if (*fmt == 'h')
-            {
+            } else if (*fmt == 'h') {
                 fmt++;
-                if (*fmt == 'h')
-                {
+                if (*fmt == 'h') {
                     size = SHORT_SHORT_SIZE;
                     fmt++;
-                }
-                else
-                {
+                } else {
                     size = SHORT_SIZE;
                 }
             }
@@ -243,27 +214,25 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
              *************************************/
 
             /* Set defaults  */
-            base = 0;           /* Not numeric          */
-            sign = '\0';        /* No sign              */
-            str = string;       /* Use temporary space  */
-            alt_digits = FALSE; /* Use normal digits    */
+            base       = 0;      /* Not numeric          */
+            sign       = '\0';   /* No sign              */
+            str        = string; /* Use temporary space  */
+            alt_digits = FALSE;  /* Use normal digits    */
 
             /* Switch on the format specifier character.  */
-            switch (*fmt)
-            {
+            switch (*fmt) {
             case 'c':
                 /* Format a character.  */
                 /* Note: 'char' is promoted to 'int' when passed as a variadic
                  * argument.  */
-                string[0] = (unsigned char)va_arg(ap, int);
+                string[0] = (unsigned char) va_arg(ap, int);
                 string[1] = '\0';
                 break;
 
             case 's':
                 /* Format a string.  */
-                str = va_arg(ap, char *);
-                if (str == NULL)
-                {
+                str = va_arg(ap, char*);
+                if (str == NULL) {
                     str = "(null)";
                 }
                 break;
@@ -271,20 +240,16 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
             case 'd':
                 /* Format a signed integer in base 10  */
                 base = 10;
-                if (size == LONG_SIZE)
-                {
+                if (size == LONG_SIZE) {
                     larg = va_arg(ap, long);
-                }
-                else
-                {
+                } else {
                     /* Note: 'signed char' and 'short' are promoted to 'int'
                      * when passed as variadic arguments.  */
                     larg = va_arg(ap, int);
                 }
                 ularg = larg;
-                if (larg < 0)
-                {
-                    sign = '-';
+                if (larg < 0) {
+                    sign  = '-';
                     ularg = -ularg;
                     /* Note: negating the argument while still in signed form
                      * would produce undefined behavior in the case of the most
@@ -309,7 +274,7 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
 
             case 'X':
                 /* Format an unsigned integer in base 16 (upper case)  */
-                base = 16;
+                base       = 16;
                 alt_digits = TRUE;
                 goto handle_unsigned;
 
@@ -319,12 +284,9 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
                 goto handle_unsigned;
 
             handle_unsigned:
-                if (size == LONG_SIZE)
-                {
+                if (size == LONG_SIZE) {
                     ularg = va_arg(ap, unsigned long);
-                }
-                else
-                {
+                } else {
                     /* Note: 'unsigned char' and 'unsigned short' are promoted
                      * to 'unsigned int' when passed as variadic arguments.  */
                     ularg = va_arg(ap, unsigned int);
@@ -345,33 +307,26 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
 
             /* If an integer conversion, convert the absolute value of the
              * number to a string in the temporary buffer.  */
-            if (base != 0)
-            {
+            if (base != 0) {
                 ulong_to_string(ularg, str, base, alt_digits);
             }
 
             /* Do length computations.  */
 
             num_zeroes = 0;
-            len_str = strlen(str);
-            if (prec >= 0)
-            {
+            len_str    = strlen(str);
+            if (prec >= 0) {
                 /* Precision specified.  */
-                if (base == 0)
-                {
+                if (base == 0) {
                     /* String conversions:  Precision specifies *maximum* number
                      * of string characters to output.  */
-                    if (prec < len_str)
-                    {
+                    if (prec < len_str) {
                         len_str = prec;
                     }
-                }
-                else
-                {
+                } else {
                     /* Integer conversions:  Precision specifies *minimum*
                      * number of integer digits to output.  */
-                    if (prec > len_str)
-                    {
+                    if (prec > len_str) {
                         num_zeroes = prec - len_str;
                     }
                     /* C99 7.19.6.1:  For integer conversions, if a precision is
@@ -385,8 +340,7 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
 
             /* Calculate number of padding characters to use.  */
             len_padding = 0;
-            if (len_nonpadding < fmin)
-            {
+            if (len_nonpadding < fmin) {
                 len_padding = fmin - len_nonpadding;
             }
 
@@ -394,56 +348,46 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
              * output is right-justified with zero padding, treat the padding
              * zeroes in the same way as leading zeroes generated from integer
              * precision specifications.  */
-            if (!leftjust && pad_char == '0')
-            {
-                num_zeroes = len_padding;
+            if (!leftjust && pad_char == '0') {
+                num_zeroes  = len_padding;
                 len_padding = 0;
             }
 
             /* If right-justified, pad on left.  */
-            if (!leftjust)
-            {
-                for (i = 0; i < len_padding; i++)
-                {
+            if (!leftjust) {
+                for (i = 0; i < len_padding; i++) {
                     *buf++ = pad_char;
                     chars_written++;
                 }
             }
 
             /* Output sign if needed.  */
-            if (sign != '\0')
-            {
+            if (sign != '\0') {
                 *buf++ = sign;
                 chars_written++;
             }
 
             /* Output any zeroes needed because of precision specified in
              * integer conversions.  */
-            for (i = 0; i < num_zeroes; i++)
-            {
+            for (i = 0; i < num_zeroes; i++) {
                 *buf++ = '0';
                 chars_written++;
             }
 
             /* Output any needed characters from str.  */
-            for (i = 0; i < len_str; i++)
-            {
+            for (i = 0; i < len_str; i++) {
                 *buf++ = str[i];
                 chars_written++;
             }
 
             /* If left-justified, pad on right.  */
-            if (leftjust)
-            {
-                for (i = 0; i < len_padding; i++)
-                {
+            if (leftjust) {
+                for (i = 0; i < len_padding; i++) {
                     *buf++ = pad_char;
                     chars_written++;
                 }
             }
-        }
-        else
-        {
+        } else {
         literal:
             /* Literal character.  */
             *buf++ = *fmt;
@@ -454,12 +398,12 @@ int vsprintf(char *buf, const char *fmt, va_list ap)
     return chars_written;
 }
 
-static const char digits_lc[16] = "0123456789abcdef";
-static const char digits_uc[16] = "0123456789ABCDEF";
+static const char digits_lc[16]              = "0123456789abcdef";
+static const char digits_uc[16]              = "0123456789ABCDEF";
 static const unsigned char base_to_nbits[17] = {
-    [2] = 1,
-    [4] = 2,
-    [8] = 3,
+    [2]  = 1,
+    [4]  = 2,
+    [8]  = 3,
     [16] = 4,
 };
 
@@ -479,18 +423,16 @@ static const unsigned char base_to_nbits[17] = {
  * @param alt_digits
  *      TRUE if hex digits should be upper case rather than lowercase.
  */
-static void ulong_to_string(unsigned long num, char *str,
-                            unsigned int base, int alt_digits)
-{
-    const char *digits = digits_lc;
+static void ulong_to_string(unsigned long num, char* str, unsigned int base, int alt_digits) {
+    const char* digits = digits_lc;
     char temp[LONG_BITS + 1];
     int i;
 
     /* Print the string to a temporary buffer in
      * reverse order before copying it to @str.  */
-    digits = (alt_digits) ? digits_uc : digits_lc;
+    digits  = (alt_digits) ? digits_uc : digits_lc;
     temp[0] = '\0';
-    i = 1;
+    i       = 1;
 #if ALWAYS_USE_DIVISION
     if (TRUE)
 #else
@@ -498,28 +440,22 @@ static void ulong_to_string(unsigned long num, char *str,
 #endif
     {
         /* Use modulo operation and integral division.  */
-        for (;;)
-        {
+        for (;;) {
             temp[i] = digits[num % base];
             num /= base;
-            if (num == 0)
-            {
+            if (num == 0) {
                 break;
             }
             i++;
         }
-    }
-    else
-    {
+    } else {
         /* Use masking and shifting (works when base is a power of 2) */
         unsigned char shift = base_to_nbits[base];
-        unsigned long mask = (1UL << shift) - 1;
-        for (;;)
-        {
+        unsigned long mask  = (1UL << shift) - 1;
+        for (;;) {
             temp[i] = digits[num & mask];
             num >>= shift;
-            if (num == 0)
-            {
+            if (num == 0) {
                 break;
             }
             i++;
@@ -527,19 +463,18 @@ static void ulong_to_string(unsigned long num, char *str,
     }
 
     /* Reverse string and copy it to @str.  */
-    do
-    {
+    do {
         *str++ = temp[i--];
     } while (i >= 0);
 }
 
-char * format_str (char *buf, char *fmt, ...) {
+char* format_str(char* buf, char* fmt, ...) {
     va_list args;
- 	int i;
- 
- 	va_start(args, fmt);
- 	i = vsprintf(buf,fmt,args);
- 	va_end(args);
+    int i;
 
- 	return &buf[i];
+    va_start(args, fmt);
+    i = vsprintf(buf, fmt, args);
+    va_end(args);
+
+    return &buf[i];
 }

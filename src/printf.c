@@ -3,9 +3,9 @@
  */
 /* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
+#include <device/uart0.h>
 #include <plibc/stdio.h>
 #include <stdarg.h>
-#include <device/uart0.h>
 
 /**
  * @ingroup libxc
@@ -23,20 +23,17 @@
  *      On success, returns the number of characters written.  On write error,
  *      returns a negative value.
  */
-#define UNUSED(x) (void)(x)
+#define UNUSED(x) (void) (x)
 
-int fputc(int c, int dev)
-{
+int fputc(int c, int dev) {
     UNUSED(dev);
     uart_putc(c);
     return 1;
 }
 
-extern int _doprnt(const char *fmt, va_list ap,
-                   int (*putc_func)(int, int), int putc_arg);
+extern int _doprnt(const char* fmt, va_list ap, int (*putc_func)(int, int), int putc_arg);
 
-int printf(const char *format, ...)
-{
+int printf(const char* format, ...) {
     va_list ap;
     int ret;
 

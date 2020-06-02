@@ -245,7 +245,6 @@ invalidate_tlbs:
 .globl read_cpu_id
 read_cpu_id:
     // read cpu id, stop slave cores
-    // mrc p15, 0, r0, c0, c0, 0
     mrc p15, 0, r0,c0,c0,5
     bx lr
 
