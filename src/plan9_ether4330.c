@@ -220,6 +220,7 @@ typedef struct {
     uint8_t rxseq;
 
     uint32_t joinr;
+    uint32_t cmdr;
 
     mutex_t cmdlock;
     mutex_t pktlock;
@@ -1789,6 +1790,10 @@ static int parsehex(char* buf, int buflen, char* a) {
     return k;
 }
 
+static int cmddone(void* a) {
+    return ((Ctlr*) a)->rsp != 0;
+}
+
 static void wlcmd(Ctlr* ctl, int write, int op, void* data, int dlen, void* res, int rlen) {
     Block* b;
     Sdpcm* p;
@@ -1843,10 +1848,13 @@ static void wlcmd(Ctlr* ctl, int write, int op, void* data, int dlen, void* res,
     freeb(b);
     b = 0;
     USED(b);
-    // sleep(&ctl->cmdr, cmddone, ctl);
-    MicroDelay(1000);
+    sleep(&ctl->cmdr, cmddone, ctl);
+    // MicroDelay(1000);
     b        = ctl->rsp;
     ctl->rsp = 0;
+    if (b == 0) {
+        printf("error in command nb == 0 \n");
+    }
     // assert(b != nil);
     p = (Sdpcm*) b->rp;
     q = (Cmd*) (b->rp + p->doffset);

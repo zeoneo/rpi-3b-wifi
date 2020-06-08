@@ -204,14 +204,14 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
 
     // etherbcmattach();
     net_device = allocate_bcm4343_device("/c/prakash/");
-    set_essid(net_device, "BlackCat");
-    set_auth(net_device, AuthModeWPA2, "RatKillerCatBlack567");
+    // set_essid(net_device, "BlackCat");
+    // set_auth(net_device, AuthModeWPA2, "RatKillerCatBlack567");
 
     // set_essid(net_device, "ZER1");
     // set_auth(net_device, AuthModeWPA2, "RatKiller");
 
-    // set_essid(net_device, "ZER");
-    // set_auth(net_device, AuthModeNone, "");
+    set_essid(net_device, "ZER");
+    set_auth(net_device, AuthModeNone, "");
     initialize(net_device);
     // int res = copy_process((unsigned long)&dump_wifi_status, (uint32_t)net_device);
     // if (res != 0) {
