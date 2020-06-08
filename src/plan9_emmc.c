@@ -163,6 +163,7 @@ struct Ctlr {
     uint32_t extclk;
     int appcmd;
     uint32_t cardr;
+    uint32_t r;
 };
 
 static Ctlr emmc;
@@ -272,7 +273,16 @@ int emmcinquiry(char* inquiry, int inqlen) {
 }
 
 static void mmc_interrupt_handler() {
-    printf(" ");
+    volatile uint32_t* r;
+    int i;
+
+    r = (uint32_t*) EMMCREGS;
+    i = r[Interrupt];
+    if (i & (Datadone | Err))
+        wakeup(&emmc.r);
+    if (i & Cardintr)
+        wakeup(&emmc.cardr);
+    WR(Irpten, r[Irpten] & ~i);
 }
 
 void emmcenable(void) {

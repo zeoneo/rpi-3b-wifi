@@ -20,6 +20,7 @@ int strcasecmp(const char* pString1, const char* pString2);
 int strncasecmp(const char* pString1, const char* pString2, size_t nMaxLen);
 char* strncpy(char* pDest, const char* pSrc, size_t nMaxLen);
 char* strtok_r(char* pString, const char* pDelim, char** ppSavePtr);
+char* strchr(const char* pString, int chChar);
 int atoi(const char* pString);
 
 #ifdef __cplusplus

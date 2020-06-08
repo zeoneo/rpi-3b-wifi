@@ -34,12 +34,16 @@ void set_auth(bcm4343_net_device* net_device, TAuthMode auth_mode, char* auth_ke
         return;
     }
 
-    size_t key_len = strlen(auth_key);
-    char* str      = format_str(net_device->auth_cmd, "auth %02X%02X", auth_mode == AuthModeWPA ? 0xDD : 0x30, key_len);
+    uint8_t x[] = "30140100000FAC040100000FAC040100000FAC020000";
+    memcpy(net_device->auth_cmd, x, sizeof(x));
+    strlen(auth_key);
+    // size_t key_len = strlen(auth_key);
+    // char* str      = format_str(net_device->auth_cmd, "auth %02X%02X", auth_mode == AuthModeWPA ? 0xDD : 0x30,
+    // key_len);
 
-    while (key_len-- > 0) {
-        format_str(str, "%02X", (uint8_t) *auth_key++);
-    }
+    // while (key_len-- > 0) {
+    //     format_str(str, "%02X", (uint8_t) *auth_key++);
+    // }
 }
 
 bool initialize(bcm4343_net_device* net_device) {
@@ -60,7 +64,9 @@ bool initialize(bcm4343_net_device* net_device) {
 }
 
 const uint8_t* get_mac_address(bcm4343_net_device* net_device) {
-    return net_device->net_device->maddr;
+    // return net_device->net_device->maddr;
+    printf("addr: %x \n", net_device);
+    return 0;
 }
 
 bool send_frame(bcm4343_net_device* net_device, const void* frame_buffer, uint32_t length) {

@@ -4,17 +4,30 @@
 #include <plibc/string.h>
 #include <stdint.h>
 
-#ifdef __GNUC__
+static inline unsigned short bswap16(unsigned short v) {
+    return ((v & 0xff) << 8) | (v >> 8);
+}
 
-#define bswap16 __builtin_bswap16
-#define bswap32 __builtin_bswap32
+static inline unsigned int bswap32(const void* v) {
+    uint8_t* b = (uint8_t*) v;
+    uint8_t b1 = *b;
+    uint8_t b2 = *(b + 1);
+    uint8_t b3 = *(b + 2);
+    uint8_t b4 = *(b + 3);
 
-#else
+    unsigned int x = b1 << 24 | b2 << 16 | b3 << 8 | b4;
 
-uint16_t bswap16(uint16_t usValue);
-uint32_t bswap32(uint32_t ulValue);
-
-#endif
+    // printf("element: %x \n", v);
+    // uint32_t first = (v & 0xff) << 24;
+    // printf("first : %x \n", first);
+    // uint32_t second = (v & 0xff00) << 8;
+    // printf("second : %x \n", second);
+    // uint32_t third = (v & 0xff0000) >> 8;
+    // printf("third : %x \n", third);
+    // uint32_t fourth = v >> 24;
+    // printf("fourth : %x \n", fourth);
+    return x;
+}
 
 #define le2be16 bswap16
 #define le2be32 bswap32
@@ -27,14 +40,18 @@ Block* allocb(uint32_t size) // TODO: use single new
     uint32_t maxhdrsize = 64;
 
     Block* b = kernel_allocate(sizeof(Block));
-    // assert (b != 0);
+    if (b == 0) {
+        printf("Error allocating block with intial buffer size: %d \n", size);
+        return 0;
+    }
 
     size += maxhdrsize;
 
     b->buf = kernel_allocate(size);
     // assert (b->buf != 0);
+
     if (b->buf == 0) {
-        printf("Error in mem allocate. \n");
+        printf("Error allocating buffer of size: %d \n", size);
         return 0;
     }
 
@@ -42,7 +59,7 @@ Block* allocb(uint32_t size) // TODO: use single new
     b->lim  = b->buf + size;
     b->wp   = b->buf + maxhdrsize;
     b->rp   = b->wp;
-
+    // printf("b:%x wp: %x rp: %x \n", b, b->wp, b->rp);
     return b;
 }
 
@@ -146,7 +163,7 @@ uint16_t nhgets(const void* p) {
 }
 
 uint32_t nhgetl(const void* p) {
-    return be2le32(*(uint32_t*) p);
+    return be2le32(p);
 }
 
 int parseether(uint8_t* addr, const char* str) {

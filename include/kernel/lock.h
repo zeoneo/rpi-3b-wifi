@@ -15,7 +15,7 @@ extern "C" {
 typedef struct {
     int lock;
     int pid;
-    queue* wait_queue;
+    // queue* wait_queue;
 } mutex_t;
 
 void mutex_init(mutex_t* lock);

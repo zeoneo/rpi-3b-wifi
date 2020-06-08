@@ -38,8 +38,7 @@ void schedule_tail(void) {
 static void schedule_tick();
 
 void init_scheduler() {
-    // repeat_on_time_out(schedule_tick, 200000);
-    repeat_on_time_out(schedule_tick, 100000);
+    repeat_on_time_out(schedule_tick, 200000);
     current->priority = 1;
 }
 

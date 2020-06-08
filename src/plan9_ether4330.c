@@ -465,11 +465,6 @@ static Cmdtab cmds[] = {
 // static QLock sdiolock;
 // static int iodebug;
 
-// static void etherbcmintr(void *);
-// static void bcmevent(Ctlr*, uint8_t*, int);
-// static void wlscanresult(uint8_t*, int);
-// static void wlsetvar(Ctlr*, char*, void*, int);
-
 static uint8_t* put2(uint8_t* p, short v) {
     p[0] = v;
     p[1] = v >> 8;
@@ -543,9 +538,11 @@ static int sdiord(int fn, int addr) {
 
     r = sdiocmd(IO_RW_DIRECT, (0 << 31) | ((fn & 7) << 28) | ((addr & 0x1FFFF) << 9));
     if (r & 0xCF00) {
-        printf("ERROR ether4330: sdiord(%x, %x) fail: %2.2ux %2.2ux\n", fn, addr, (r >> 8) & 0xFF, r & 0xFF);
+        printf("ether4330: sdiord(%x, %x) fail: %2.2x %2.2x\n", fn, addr, (r >> 8) & 0xFF, r & 0xFF);
+        // error(Eio);
         return 0;
     }
+    // printf("r: %x \n", r);
     return r & 0xFF;
 }
 
@@ -1345,7 +1342,7 @@ static Block* wlreadpkt(Ctlr* ctl) {
         packetrw(0, b->wp, sizeof(*p));
         len = p->len[0] | p->len[1] << 8;
         if (len == 0) {
-            printf("Packet length 0 returning \n");
+            // printf("Packet length 0 returning \n");
             freeb(b);
             b = 0;
             break;
@@ -1363,11 +1360,11 @@ static Block* wlreadpkt(Ctlr* ctl) {
         if (len > sizeof(*p))
             packetrw(0, b->wp + sizeof(*p), len - sizeof(*p));
         b->wp += len;
-        printf("Breaking packet read process \n");
+        // printf("Breaking packet read process \n");
         break;
     }
     mutex_release(&ctl->pktlock);
-    printf("read packet successful \n");
+    // printf("read packet successful \n");
     return b;
 }
 #define BLEN(b) ((b)->wp - (b)->rp)
@@ -1446,26 +1443,25 @@ struct up_t {
 
 static struct up_t* up = {0};
 
-void intwait(Ctlr* ctlr, int wait) {
-    // USED(wait);
-    uint32_t ints, mbox;
+static void intwait(Ctlr* ctlr, int wait) {
+    unsigned long ints, mbox;
     int i;
 
-    // if(waserror())
-    // 	return;
+    // if (waserror())
+    //     return;
     for (;;) {
         sdiocardintr(wait);
         sbwindow(ctlr->sdregs);
         i = sdiord(Fn0, Intpend);
+        // print(" sdiord i:%x \n");
         if (i == 0) {
-            tsleep(&up->sleep, return0, 0, 10);
-            // MicroDelay(100);
+            // tsleep(&up->sleep, return0, 0, 10);
             continue;
         }
         ints = cfgreadl(Fn1, ctlr->sdregs + Intstatus);
         cfgwritel(Fn1, ctlr->sdregs + Intstatus, ints);
-        // if(0)
-        printf("INTS: (%x) %lux -> %lux\n", i, ints, cfgreadl(Fn1, ctlr->sdregs + Intstatus));
+        // if (0)
+        printf("INTS: (%x) %x -> %x\n", i, ints, cfgreadl(Fn1, ctlr->sdregs + Intstatus));
         if (ints & MailboxInt) {
             mbox = cfgreadl(Fn1, ctlr->sdregs + Hostmboxdata);
             cfgwritel(Fn1, ctlr->sdregs + Sbmbox, 2); /* ack */
@@ -1630,15 +1626,18 @@ static void bcmevent(Ctlr* ctl, uint8_t* p, int len) {
         return;
     p += ETHERHDRSIZE + 10; /* skip bcm_ether header */
     len -= ETHERHDRSIZE + 10;
-    flags  = nhgets(p + 2);
-    event  = nhgets(p + 6);
-    status = nhgetl(p + 8);
-    reason = nhgetl(p + 12);
-    // if(EVENTDEBUG) {
-    printf("ether4330: status %ld flags %#x reason %ld\n", status, flags, reason);
-    printf("ether4330: [%s] status %ld flags %#x reason %ld\n", evstring(event), status, flags, reason);
-    // }
 
+    // printf("p:%x p+2: %x p+6: %x p+8: %x p+12: %x \n", p, p + 2, p + 6, p + 8, p + 12);
+    flags = nhgets(p + 2);
+    // printf("p+2 passed \n");
+    event = nhgets(p + 6);
+    // printf("p+6 passed \n");
+    status = nhgetl(p + 8);
+    // printf("p+8 passed \n");
+    reason = nhgetl(p + 12);
+    // printf("p+12 passed \n");
+    if (EVENTDEBUG)
+        printf("ether4330: [%s] status %ld flags %#x reason %ld\n", evstring(event), status, flags, reason);
     switch (event) {
     case 19: /* E_ROAM */
         if (status == 0)
@@ -1646,7 +1645,7 @@ static void bcmevent(Ctlr* ctl, uint8_t* p, int len) {
     /* fall through */
     case 0: /* E_SET_SSID */
         ctl->joinstatus = 1 + status;
-        // wakeup(&ctl->joinr);
+        wakeup(&ctl->joinr);
         break;
     case 16:           /* E_LINK */
         if (flags & 1) /* link up */
@@ -1686,6 +1685,7 @@ static void rproc(void* a) {
     flowstart = 0;
     // printf("%s: %d edev: %x \n", __FILE__, __LINE__, edev);
     for (;;) {
+        // printf("In RPROC \n");
         if (flowstart) {
             printf("Flow start calling txstart \n");
             flowstart = 0;
@@ -1693,9 +1693,9 @@ static void rproc(void* a) {
         }
         b = wlreadpkt(ctl);
         if (b == 0) {
-            printf("B == 0 calling intwait \n");
+            // printf("calling intwait \n");
             intwait(ctl, 1);
-            printf("B == 0 calling intwait complete \n");
+            // printf("intwait complete \n");
             continue;
         }
         p = (Sdpcm*) b->rp;
@@ -1715,8 +1715,8 @@ static void rproc(void* a) {
         }
         switch (p->chanflg & 0xF) {
         case 0:
-            // if(iodebug)
-            dump("rsp", b->rp, BLEN(b));
+            // if (iodebug)
+            //     dump("rsp", b->rp, BLEN(b));
             if ((uint32_t) BLEN(b) < sizeof(Sdpcm) + sizeof(Cmd))
                 break;
             q = (Cmd*) (b->rp + sizeof(*p));
@@ -1727,7 +1727,7 @@ static void rproc(void* a) {
             continue;
         case 1:
             // if(iodebug)
-            dump("event", b->rp, BLEN(b));
+            // dump("event", b->rp, BLEN(b));
             if (BLEN(b) > p->doffset + 4) {
                 bdc = 4 + (b->rp[p->doffset + 3] << 2);
                 if (BLEN(b) > p->doffset + bdc) {
@@ -1737,11 +1737,11 @@ static void rproc(void* a) {
                 }
             }
             // if(iodebug && BLEN(b) != p->doffset)
-            printf("short event %ld %d\n", BLEN(b), p->doffset);
+            // printf("short event %ld %d\n", BLEN(b), p->doffset);
             break;
         case 2:
             // if(iodebug)
-            dump("packet", b->rp, BLEN(b));
+            // dump("packet", b->rp, BLEN(b));
             if (BLEN(b) > p->doffset + 4) {
                 bdc = 4 + (b->rp[p->doffset + 3] << 2);
                 if (BLEN(b) >= p->doffset + bdc + ETHERHDRSIZE) {
@@ -1836,7 +1836,7 @@ static void wlcmd(Ctlr* ctl, int write, int op, void* data, int dlen, void* res,
     b->wp += tlen;
 
     // if(iodebug)
-    dump("cmd", b->rp, len);
+    // dump("cmd", b->rp, len);
     packetrw(1, b->rp, len);
     ctl->txseq++;
     mutex_release(&ctl->pktlock);
@@ -1864,9 +1864,9 @@ static void wlcmd(Ctlr* ctl, int write, int op, void* data, int dlen, void* res,
 
 static void wlsetvar(Ctlr* ctl, char* name, void* val, int len) {
     // if(VARDEBUG){
-    char buf[32];
-    snprint(buf, sizeof buf, "wlsetvar %s", name);
-    dump(buf, val, len);
+    // char buf[32];
+    // snprint(buf, sizeof buf, "wlsetvar %s", name);
+    // dump(buf, val, len);
     // }
     wlcmd(ctl, 1, SetVar, name, strlen(name) + 1, val, len);
 }
@@ -1915,8 +1915,9 @@ static void lproc(void* a) {
     secs = 0;
     // printf("%s: %d edev: %x \n", __FILE__, __LINE__, edev);
     for (;;) {
-        // tsleep(&up->sleep, return0, 0, 1000);
-        MicroDelay(1000);
+        // printf("In LPROC \n");
+        tsleep(&up->sleep, return0, 0, 1000);
+        // MicroDelay(1000);
         if (ctlr->scansecs) {
             if (secs == 0) {
                 // if(waserror())
@@ -1937,6 +1938,64 @@ static void lproc(void* a) {
     terminate_this_task();
 }
 
+static void wlgetvar(Ctlr* ctl, char* name, void* val, int len) {
+    wlcmd(ctl, 0, GetVar, name, strlen(name) + 1, val, len);
+}
+
+static void wlinit(Ether* edev, Ctlr* ctlr) {
+    uint8_t ea[Eaddrlen];
+    uint8_t eventmask[16];
+    char version[128];
+    char* p;
+    static uint8_t keepalive[12] = {1, 0, 11, 0, 0xd8, 0xd6, 0, 0, 0, 0, 0, 0};
+
+    wlgetvar(ctlr, "cur_etheraddr", ea, Eaddrlen);
+    memmove(edev->ea, ea, Eaddrlen);
+    memmove(edev->addr, ea, Eaddrlen);
+    printf("ether4330: addr %02X:%02X:%02X:%02X:%02X:%02X\n", ea[0], ea[1], ea[2], ea[3], ea[4], ea[5]);
+    wlsetint(ctlr, "assoc_listen", 10);
+    if (ctlr->chipid == 43430 || ctlr->chipid == 0x4345)
+        wlcmdint(ctlr, 0x56, 0); /* powersave off */
+    else
+        wlcmdint(ctlr, 0x56, 2); /* powersave FAST */
+    wlsetint(ctlr, "bus:txglom", 0);
+    wlsetint(ctlr, "bcn_timeout", 10);
+    wlsetint(ctlr, "assoc_retry_max", 3);
+    if (ctlr->chipid == 0x4330) {
+        wlsetint(ctlr, "btc_wire", 4);
+        wlsetint(ctlr, "btc_mode", 1);
+        wlsetvar(ctlr, "mkeep_alive", keepalive, 11);
+    }
+    memset(eventmask, 0xFF, sizeof eventmask);
+#define ENABLE(n)  eventmask[n / 8] |= 1 << (n % 8)
+#define DISABLE(n) eventmask[n / 8] &= ~(1 << (n % 8))
+    DISABLE(40);  /* E_RADIO */
+    DISABLE(44);  /* E_PROBREQ_MSG */
+    DISABLE(54);  /* E_IF */
+    DISABLE(71);  /* E_PROBRESP_MSG */
+    DISABLE(20);  /* E_TXFAIL */
+    DISABLE(124); /* ? */
+    wlsetvar(ctlr, "event_msgs", eventmask, sizeof eventmask);
+    wlcmdint(ctlr, 0xb9, 0x28);  /* SET_SCAN_CHANNEL_TIME */
+    wlcmdint(ctlr, 0xbb, 0x28);  /* SET_SCAN_UNASSOC_TIME */
+    wlcmdint(ctlr, 0x102, 0x82); /* SET_SCAN_PASSIVE_TIME */
+    wlcmdint(ctlr, 2, 0);        /* UP */
+    memset(version, 0, sizeof version);
+    wlgetvar(ctlr, "ver", version, sizeof version - 1);
+    if ((p = strchr(version, '\n')) != 0)
+        *p = '\0';
+    if (0)
+        printf("ether4330: %s\n", version);
+    wlsetint(ctlr, "roam_off", 1);
+    wlcmdint(ctlr, 0x14, 1); /* SET_INFRA 1 */
+    wlcmdint(ctlr, 10, 0);   /* SET_PROMISC */
+    // wlcmdint(ctlr, 0x8e, 0);	/* SET_BAND 0 */
+    // wlsetint(ctlr, "wsec", 1);
+    wlcmdint(ctlr, 2, 1); /* UP */
+    ctlr->keys[0].len = WMinKeyLen;
+    // wlwepkey(ctlr, 0);
+}
+
 void etherbcmattach(Ether* edev) {
     Ctlr* ctlr1 = edev->ctlr;
     mutex_acquire(&ctlr1->alock);
@@ -1950,6 +2009,8 @@ void etherbcmattach(Ether* edev) {
     printf("lproc : %x \n", (uint32_t) &lproc);
     create_task("wfread", (uint32_t) &rproc, (uint32_t) edev);  //"wifireader",
     create_task("wftimer", (uint32_t) &lproc, (uint32_t) edev); // wifitimer
+    wlinit(edev, ctlr1);
+    ctlr1->edev = edev;
     mutex_release(&ctlr1->alock);
 }
 
@@ -2069,6 +2130,8 @@ static void setauth(Ctlr* ctlr, Cmdbuf* cb, char* a) {
     int i;
 
     i = parsehex((char*) wpaie, sizeof wpaie, a);
+    printf(" i : %d a:%s \n", i, a);
+
     if (i < 2 || i != wpaie[1] + 2) {
         printf("bad wpa ie syntax \n");
     }
@@ -2397,6 +2460,7 @@ static void wljoin(Ctlr* ctl, char* ssid, int chan) {
     switch (res1) {
     case 0:
         ctl->status = Connected;
+        printf("Connected to %s \n", ctl->essid);
         break;
     case 3:
         ctl->status = Disconnected;
