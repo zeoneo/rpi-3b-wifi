@@ -295,8 +295,8 @@ enum {
     extern const uint8_t __variable##_start;                                                                           \
     extern const uint8_t __variable##_end;
 
-INCLUDE_BINARY_FILE(wifibinary, "lib/brcmfmac43430-sdio.bin", ".rodata.brcmfmac43430_sdio_bin");
-INCLUDE_BINARY_FILE(wifitext, "lib/brcmfmac43430-sdio.txt", ".rodata.brcmfmac43430_sdio_txt");
+INCLUDE_BINARY_FILE(wifibinary, "wifi_firmware/brcmfmac43430-sdio.bin", ".rodata.brcmfmac43430_sdio_bin");
+INCLUDE_BINARY_FILE(wifitext, "wifi_firmware/brcmfmac43430-sdio.txt", ".rodata.brcmfmac43430_sdio_txt");
 
 typedef struct Sdpcm Sdpcm;
 typedef struct Cmd Cmd;

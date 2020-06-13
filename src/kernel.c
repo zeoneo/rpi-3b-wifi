@@ -1,6 +1,7 @@
 #include <device/sd_card.h>
 #include <device/wifi-io.h>
 #include <plibc/stdio.h>
+#include <plibc/cstring.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -26,6 +27,7 @@
 
 #ifdef __enable_exp_
 static bcm4343_net_device* net_device;
+// extern int wpa_supplicant_main(int argc, char* argv[]);
 #endif
 
 uint32_t x = 0;
@@ -140,6 +142,19 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
     } else {
         printf("Kernel allocation init success \n");
     }
+
+    c_string_t *cstr = get_new_cstring("Prakash str= %s hex=%x long hex=%llx float=%f char=%c ");
+
+    printf("cstr %s \n", cstr->buffer);
+    cstring_format(cstr, "Prakash str= %s hex=%x long hex=%llx float=%f char=%c ", "new string", 0x12341234, 0x1234567812345678, 0.123324, 'b');
+    printf("formatted cstr %s \n", cstr->buffer);
+
+    append_to_cstring(cstr, " this is appended string \n");
+    printf("appened cstr %s \n", cstr->buffer);
+
+    replace_in_cstring(cstr, "Prakash", "MyName");
+    printf("replaced cstr %s \n", cstr->buffer);
+
     // show_current_memory_states();
 
     // show_dma_demo();
@@ -161,7 +176,7 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
     // 	}
     // }
 
-    init_scheduler();
+    // init_scheduler();
     // queue* q = new_queue(sizeof(task_struct_t*));
     // int pid  = create_task("proc1", (unsigned long) &process1, (uint32_t) "abcde");
     // if (pid == 0) {
@@ -213,13 +228,14 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
     set_essid(net_device, "ZER");
     set_auth(net_device, AuthModeNone, "");
     initialize(net_device);
+    // wpa_supplicant_main(0,0);
     // int res = copy_process((unsigned long)&dump_wifi_status, (uint32_t)net_device);
     // if (res != 0) {
     //     printf("error while starting process 1");
     //     return;
     // }
 #endif
-    schedule();
+    // schedule();
     // if () {
     // printf("<---------------Wifi Started Successfully----------------->\n");
     // }
@@ -230,6 +246,6 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
         // #ifdef __enable_exp_
         //     dump_status(net_device);
         // #endif
-        schedule(); // This is init process which will call schedule when intialization is completed.
+        // schedule(); // This is init process which will call schedule when intialization is completed.
     }
 }

@@ -15,6 +15,7 @@ void* memmove(void*, const void*, size_t);
 void* memset(void*, int32_t, size_t);
 size_t strlen(const char*);
 char* strstr(char* str, char* substr);
+char* strcat(char* pDest, const char* pSrc);
 int strcmp(const char* pString1, const char* pString2);
 int strcasecmp(const char* pString1, const char* pString2);
 int strncasecmp(const char* pString1, const char* pString2, size_t nMaxLen);
@@ -22,6 +23,9 @@ char* strncpy(char* pDest, const char* pSrc, size_t nMaxLen);
 char* strtok_r(char* pString, const char* pDelim, char** ppSavePtr);
 char* strchr(const char* pString, int chChar);
 int atoi(const char* pString);
+long strtol(const char *nptr, char **endptr, int base);
+int strncmp(const char* pString1, const char* pString2, size_t nMaxLen);
+char* strcpy(char* pDest, const char* pSrc);
 
 #ifdef __cplusplus
 }
