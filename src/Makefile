@@ -35,6 +35,7 @@ fat16.o \
 fat32.o \
 sd_card.o \
 gpio.o \
+bcm_random.o \
 kernel_alloc.o \
 rpi-armtimer.o \
 rpi-interrupts.o \

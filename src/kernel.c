@@ -1,5 +1,6 @@
 #include <device/sd_card.h>
 #include <device/wifi-io.h>
+#include <device/bcm_random.h>
 #include <plibc/stdio.h>
 #include <plibc/cstring.h>
 #include <stddef.h>
@@ -134,6 +135,7 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
     timer_init();
     // This will flash activity led
     // timer_set(5000);
+    initialize_random_generator();
 
     init_frame_manager();
     // show_current_memory_states();
@@ -146,9 +148,10 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
     c_string_t *cstr = get_new_cstring("Prakash str= %s hex=%x long hex=%llx float=%f char=%c ");
 
     printf("cstr %s \n", cstr->buffer);
-    cstring_format(cstr, "Prakash str= %s hex=%x long hex=%llx float=%f char=%c ", "new string", 0x12341234, 0x1234567812345678, 0.123324, 'b');
+    cstring_format(cstr, "Prakash str= %s hex=%x long hex=%llx float=%f char=%c ", "new string", get_random_int(), 0x1234567812345678, 0.123324, 'b');
     printf("formatted cstr %s \n", cstr->buffer);
-
+    cstring_format(cstr, "Prakash str= %s hex=%x long hex=%llx float=%f char=%c ", "new string", get_random_int(), 0x1234567812345678, 0.123324, 'b');
+    printf("formatted cstr %s \n", cstr->buffer);
     append_to_cstring(cstr, " this is appended string \n");
     printf("appened cstr %s \n", cstr->buffer);
 

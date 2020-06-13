@@ -136,6 +136,11 @@ _reset_:
 _inf_loop:
     b       _inf_loop
 
+.globl GET32
+GET32:
+    ldr r0,[r0]
+    bx lr
+
 .globl PUT32
 PUT32:
     str r1,[r0]
