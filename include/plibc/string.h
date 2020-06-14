@@ -24,6 +24,7 @@ char* strtok_r(char* pString, const char* pDelim, char** ppSavePtr);
 char* strchr(const char* pString, int chChar);
 int atoi(const char* pString);
 long strtol(const char *nptr, char **endptr, int base);
+unsigned long strtoul(const char* pString, char** ppEndPtr, int nBase);
 int strncmp(const char* pString1, const char* pString2, size_t nMaxLen);
 char* strcpy(char* pDest, const char* pSrc);
 

@@ -1,0 +1,85 @@
+# Configure the cross-compiler to use the desired system root.
+CC :=arm-none-eabi-gcc
+AR :=arm-none-eabi-ar
+
+CFLAGS?=-O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles
+
+
+DEFINE	+= -D__rpi3b__ -DCONFIG_DRIVER_RPI3B -DIEEE8021X_EAPOL
+
+KERNEL_ARCH_CFLAGS= -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding
+
+CFLAGS:=$(CFLAGS) $(KERNEL_ARCH_CFLAGS) -ffreestanding -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -Wno-format
+
+INCLUDEFLAGS:=-D__is_kernel $(DEFINE) -I ../../include -I ../src -I ../src/common  -I ../src/crypto -I ../src/rsn_supp -I ../src/utils
+
+
+OBJS	= \
+	  blacklist.o \
+	  config.o \
+	  config_file_rpi3b.o \
+	  events.o \
+	  main_rpi3b.o \
+	  notify.o \
+	  scan.o \
+	  wpa_supplicant.o \
+	  wpas_glue.o
+
+OBJS2	= \
+	  ../src/common/wpa_common.o \
+	  ../src/common/ieee802_11_common.o \
+	  ../src/crypto/aes-internal-dec.o \
+	  ../src/crypto/aes-internal.o \
+	  ../src/crypto/aes-unwrap.o \
+	  ../src/crypto/md5-internal.o \
+	  ../src/crypto/md5.o \
+	  ../src/crypto/rc4.o \
+	  ../src/crypto/sha1-internal.o \
+	  ../src/crypto/sha1-pbkdf2.o \
+	  ../src/crypto/sha1.o \
+	  ../src/crypto/tls_none.o \
+	  ../src/drivers/drivers.o \
+	  ../src/drivers/scan_helpers.o \
+	  ../src/drivers/driver_rpi3b.o \
+	  ../src/l2_packet/l2_packet_rpi3b.o \
+	  ../src/eapol_supp/eapol_supp_sm.o \
+	  ../src/eap_common/eap_common.o \
+	  ../src/eap_peer/eap.o \
+	  ../src/eap_peer/eap_methods.o \
+	  ../src/rsn_supp/pmksa_cache.o \
+	  ../src/rsn_supp/preauth.o \
+	  ../src/rsn_supp/wpa.o \
+	  ../src/rsn_supp/wpa_ie.o \
+	  ../src/utils/base64.o \
+	  ../src/utils/common.o \
+	  ../src/utils/eloop_rpi3b.o \
+	  ../src/utils/os_rpi3b.o \
+	  ../src/utils/wpa_debug.o \
+	  ../src/utils/wpabuf.o
+
+OBJS	+= $(OBJS2)
+
+.PHONY: all clean
+.SUFFIXES: .o .c .S
+
+all: libwpa_supplicant.a
+
+libwpa_supplicant.a: $(OBJS)
+	@echo "  AR    $@"
+	@rm -f $@
+	@$(AR) cr $@ $(OBJS)
+
+.c.o:
+	@echo "  CC    $@"
+	@$(CC) -MD -c $< -o $@ -std=c11 $(CFLAGS) $(INCLUDEFLAGS)
+
+.S.o:
+	@echo "  CC    $@"
+	@$(CC) -MD -c $< -o $@ $(CFLAGS) $(INCLUDEFLAGS)
+
+clean:
+	rm -f $(OBJS) *.o */*.o */*/*.o
+	rm -f $(OBJS:.o=.d) *.d */*.d */*/*.d
+	rm -f *.list *.map *.txt
+
+-include $(OBJS:.o=.d)

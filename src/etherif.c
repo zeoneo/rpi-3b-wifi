@@ -2,32 +2,8 @@
 #include <mem/kernel_alloc.h>
 #include <plibc/stdio.h>
 #include <plibc/string.h>
+#include <plibc/util.h>
 #include <stdint.h>
-
-static inline unsigned short bswap16(unsigned short v) {
-    return ((v & 0xff) << 8) | (v >> 8);
-}
-
-static inline unsigned int bswap32(const void* v) {
-    uint8_t* b = (uint8_t*) v;
-    uint8_t b1 = *b;
-    uint8_t b2 = *(b + 1);
-    uint8_t b3 = *(b + 2);
-    uint8_t b4 = *(b + 3);
-
-    unsigned int x = b1 << 24 | b2 << 16 | b3 << 8 | b4;
-
-    // printf("element: %x \n", v);
-    // uint32_t first = (v & 0xff) << 24;
-    // printf("first : %x \n", first);
-    // uint32_t second = (v & 0xff00) << 8;
-    // printf("second : %x \n", second);
-    // uint32_t third = (v & 0xff0000) >> 8;
-    // printf("third : %x \n", third);
-    // uint32_t fourth = v >> 24;
-    // printf("fourth : %x \n", fourth);
-    return x;
-}
 
 #define le2be16 bswap16
 #define le2be32 bswap32
@@ -154,8 +130,7 @@ void qpass(Queue* q, Block* b) {
 }
 
 void qwrite(Queue* q, uint32_t x, uint32_t y) {
-    // assert (0);			// TODO
-    printf("TODO : %x %x %x \n", q, x, y);
+    printf("TODO qwrite called: %x %x %x \n", q, x, y);
 }
 
 uint16_t nhgets(const void* p) {
@@ -167,7 +142,35 @@ uint32_t nhgetl(const void* p) {
 }
 
 int parseether(uint8_t* addr, const char* str) {
-    // assert (0);			// TODO
-    printf("TODO: addr %x str: %x", addr, str);
-    return 0;
+for (unsigned i = 1; i <= 6; i++)
+	{
+		char buf[3], *p = buf;
+
+		if (*str == '\0')
+		{
+			return -1;
+		}
+		*p++ = *str++;
+
+		if (*str == '\0')
+		{
+			return -1;
+		}
+		*p++ = *str++;
+
+		if (i < 6 && *str == ':')
+		{
+			str++;
+		}
+		*p = '\0';
+
+		char *end = 0;
+		*addr++ = (unsigned char) strtoul (buf, &end, 16); //strtoul ??
+		if (end != 0 && *end != '\0')
+		{
+			return -1;
+		}
+	}
+
+	return *str == '\0' ? 0 : -1;
 }

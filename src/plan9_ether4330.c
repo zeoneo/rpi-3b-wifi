@@ -227,6 +227,8 @@ typedef struct {
     mutex_t tlock;
     mutex_t alock;
     Lock txwinlock;
+    ether_event_handler_t* evhndlr;
+    void* evcontext;
 } Ctlr;
 
 static mutex_t sdiolock;
@@ -465,6 +467,7 @@ static Cmdtab cmds[] = {
 
 // static QLock sdiolock;
 // static int iodebug;
+static void callevhndlr(Ctlr*, ether_event_type_t, const ether_event_params_t*);
 
 static uint8_t* put2(uint8_t* p, short v) {
     p[0] = v;
@@ -1622,9 +1625,14 @@ static void wlscanresult(Ether* edev, uint8_t* p, uint32_t len) {
 static void bcmevent(Ctlr* ctl, uint8_t* p, int len) {
     int flags;
     long event, status, reason;
+    ether_event_params_t params;
 
-    if (len < ETHERHDRSIZE + 10 + 46)
+    if (len < ETHERHDRSIZE + 10 + 46) {
         return;
+    }
+
+    memset(&params, 0, sizeof params);
+
     p += ETHERHDRSIZE + 10; /* skip bcm_ether header */
     len -= ETHERHDRSIZE + 10;
 
@@ -1648,15 +1656,23 @@ static void bcmevent(Ctlr* ctl, uint8_t* p, int len) {
         ctl->joinstatus = 1 + status;
         wakeup(&ctl->joinr);
         break;
+    case 5: /* E_DEAUTH */
+    case 6: /* E_DEAUTH_IND */
+        linkdown(ctl);
+        callevhndlr(ctl, ether_event_deauth, 0);
+        break;
     case 16:           /* E_LINK */
         if (flags & 1) /* link up */
             break;
-    /* fall through */
-    case 5:  /* E_DEAUTH */
-    case 6:  /* E_DEAUTH_IND */
+        /* fall through */
     case 12: /* E_DISASSOC_IND */
         linkdown(ctl);
+        callevhndlr(ctl, ether_event_deauth, 0);
         break;
+    case 17: /* E_MIC_ERROR */
+        params.mic_error.group = !!(flags & 4);
+        memcpy(params.mic_error.addr, p + 24, Eaddrlen);
+        callevhndlr(ctl, ether_event_mic_error, &params);
     case 26: /* E_SCAN_COMPLETE */
         break;
     case 69: /* E_ESCAN_RESULT */
@@ -2628,6 +2644,20 @@ static void etherbcmshutdown(Ether* edev) {
     sdiowr(Fn0, Ioabort, 1 << 3); /* reset */
 }
 
+static void etherbcmsetevhndlr(struct Ether* edev, ether_event_handler_t* hndlr, void* context) {
+    Ctlr* ctlr;
+
+    ctlr            = edev->ctlr;
+    ctlr->evcontext = context;
+    ctlr->evhndlr   = hndlr;
+}
+
+static void callevhndlr(Ctlr* ctlr, ether_event_type_t type, const ether_event_params_t* params) {
+    if (ctlr->evhndlr != 0) {
+        (*ctlr->evhndlr)(type, params, ctlr->evcontext);
+    }
+}
+
 int etherbcmpnp(Ether* edev) {
     Ctlr* ctlr = kernel_allocate(sizeof(Ctlr));
 
@@ -2637,18 +2667,16 @@ int etherbcmpnp(Ether* edev) {
     mutex_init(&(ctlr->pktlock));
     mutex_init(&(ctlr->tlock));
     mutex_init(&(ctlr->alock));
-    // spinlock_init(&(ctlr->txwinlock));
     mutex_init(&sdiolock);
 
-    // printf("%s: %d edev: %x \n", __FILE__, __LINE__, edev);
-    edev->ctlr     = ctlr;
-    edev->attach   = etherbcmattach;
-    edev->transmit = etherbcmtransmit;
-    edev->ifstat   = etherbcmifstat;
-    edev->ctl      = etherbcmctl;
-    edev->scanbs   = etherbcmscan;
-    edev->shutdown = etherbcmshutdown;
-    edev->arg      = edev;
-
+    edev->ctlr       = ctlr;
+    edev->attach     = etherbcmattach;
+    edev->transmit   = etherbcmtransmit;
+    edev->setevhndlr = etherbcmsetevhndlr;
+    edev->ifstat     = etherbcmifstat;
+    edev->ctl        = etherbcmctl;
+    edev->scanbs     = etherbcmscan;
+    edev->shutdown   = etherbcmshutdown;
+    edev->arg        = edev;
     return 0;
 }

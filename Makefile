@@ -1,5 +1,5 @@
 all:
-	cd src && $(MAKE) DISABLE_EXP=1
+	cd src && $(MAKE)
 
 wpa_supplicant.a:
 	cd hostap/wpa_supplicant && make -f Makefile.rpi3b
@@ -7,5 +7,5 @@ wpa_supplicant.a:
 
 clean:
 	cd src && $(MAKE) clean
-	cd hostap/wpa_supplicant && $(MAKE) clean
+	# cd hostap/wpa_supplicant && $(MAKE) clean
 	

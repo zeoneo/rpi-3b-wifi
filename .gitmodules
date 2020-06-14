@@ -1,0 +1,3 @@
+[submodule "hostap"]
+	path = hostap
+	url = https://github.com/zeoneo/hostapd.git

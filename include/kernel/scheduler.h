@@ -69,6 +69,10 @@ void tsleep(void* rendez, sleephandler_t* handler, void* param, unsigned msecs);
 void wakeup(void* rendez);
 int return0(void* param);
 
+void task_ms_sleep(uint32_t nMilliSeconds);
+void task_sleep(uint32_t nSeconds);
+void task_us_sleep(uint32_t nMicroSeconds);
+
 #ifdef __cplusplus
 }
 #endif

@@ -49,12 +49,14 @@ memcpy.o \
 memmove.o \
 memset.o \
 strstr.o \
+util.o \
 cstring.o \
 string.o \
 printf.o \
 vsnprintf.o \
 strlen.o \
 plan9_emmc.o \
+link_layer.o \
 fork.o \
 scheduler.o \
 task_switch.o \

@@ -28,7 +28,11 @@
 
 #ifdef __enable_exp_
 static bcm4343_net_device* net_device;
-// extern int wpa_supplicant_main(int argc, char* argv[]);
+void ether_event_handler (ether_event_type_t		 type,
+				    const ether_event_params_t	*params,
+				    void			*context) {
+                        printf("Bcm event handler called %x %x %x\n ", &type, params, context);
+                    }
 #endif
 
 uint32_t x = 0;
@@ -179,7 +183,7 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
     // 	}
     // }
 
-    // init_scheduler();
+    init_scheduler();
     // queue* q = new_queue(sizeof(task_struct_t*));
     // int pid  = create_task("proc1", (unsigned long) &process1, (uint32_t) "abcde");
     // if (pid == 0) {
@@ -220,7 +224,6 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
 
 #ifdef __enable_exp_
 
-    // etherbcmattach();
     net_device = allocate_bcm4343_device("/c/prakash/");
     // set_essid(net_device, "BlackCat");
     // set_auth(net_device, AuthModeWPA2, "RatKillerCatBlack567");
@@ -231,7 +234,7 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
     set_essid(net_device, "ZER");
     set_auth(net_device, AuthModeNone, "");
     initialize(net_device);
-    // wpa_supplicant_main(0,0);
+    register_event_handler(net_device, ether_event_handler, (void *)0);
     // int res = copy_process((unsigned long)&dump_wifi_status, (uint32_t)net_device);
     // if (res != 0) {
     //     printf("error while starting process 1");

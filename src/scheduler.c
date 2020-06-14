@@ -220,7 +220,7 @@ void _schedule(void) {
     // printf("Preempt enable. Returning after switch to func \n");
 }
 
-void us_sleep(uint32_t nMicroSeconds) {
+void task_us_sleep(uint32_t nMicroSeconds) {
     if (nMicroSeconds > 0) {
         uint32_t nTicks = nMicroSeconds * (CLOCKHZ / 1000000);
 
@@ -236,20 +236,20 @@ void us_sleep(uint32_t nMicroSeconds) {
     }
 }
 
-// void sleep(uint32_t nSeconds) {
-//     // be sure the clock does not run over taken as signed int
-//     const unsigned nSleepMax = 1800; // normally 2147 but to be sure
-//     while (nSeconds > nSleepMax) {
-//         us_sleep(nSleepMax * 1000000);
+void task_sleep(uint32_t nSeconds) {
+    // be sure the clock does not run over taken as signed int
+    const unsigned nSleepMax = 1800; // normally 2147 but to be sure
+    while (nSeconds > nSleepMax) {
+        task_us_sleep(nSleepMax * 1000000);
 
-//         nSeconds -= nSleepMax;
-//     }
-//     us_sleep(nSeconds * 1000000);
-// }
+        nSeconds -= nSleepMax;
+    }
+    task_us_sleep(nSeconds * 1000000);
+}
 
-void ms_sleep(uint32_t nMilliSeconds) {
+void task_ms_sleep(uint32_t nMilliSeconds) {
     if (nMilliSeconds > 0) {
-        us_sleep(nMilliSeconds * 1000);
+        task_us_sleep(nMilliSeconds * 1000);
     }
 }
 

@@ -7,6 +7,7 @@ extern "C" {
 
 #include <device/data_struct.h>
 #include <device/netif.h>
+#include <device/etherevent.h>
 #include <stdint.h>
 
 /*
@@ -78,6 +79,8 @@ typedef struct Ether {
     void (*attach)(struct Ether* edev);
     void (*transmit)(struct Ether* edev);
     long (*ifstat)(struct Ether* edev, void* buf, long size, uint32_t offset);
+   	void (*setevhndlr) (struct Ether *edev, ether_event_handler_t *hndlr, void *context);
+
     long (*ctl)(struct Ether* edev, void* buf, long n);
     void (*scanbs)(void* arg, uint32_t secs);
     void (*shutdown)(struct Ether* edev);
