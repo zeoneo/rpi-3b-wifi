@@ -1,6 +1,7 @@
 #include <mem/frame_alloc.h>
 #include <mem/kernel_alloc.h>
 #include <plibc/stdio.h>
+#include <plibc/string.h>
 
 // This is rsta2/circle implementation of mem manager. I hope to write my own
 // but till then all credits to rsta2 github
@@ -67,7 +68,7 @@ int32_t kernel_alloc_init(uint32_t ulSize) {
     return 0;
 }
 
-void* kernel_allocate(uint32_t size) {
+void* kernel_allocate(size_t size) {
 
     alloc_bucket* pBucket;
     for (pBucket = s_BlockBucket; pBucket->size > 0; pBucket++) {
@@ -122,4 +123,58 @@ void kernel_deallocate(void* pBlock) {
             return;
         }
     }
+}
+
+
+void *calloc (size_t nBlocks, size_t nSize)
+{
+	nSize *= nBlocks;
+	if (nSize == 0)
+	{
+		nSize = 1;
+	}
+
+	void *pNewBlock = kernel_allocate (nSize);
+	if (pNewBlock != 0)
+	{
+		memset (pNewBlock, 0, nSize);
+	}
+
+	return pNewBlock;
+}
+
+void *realloc (void *pBlock, size_t nSize)
+{
+	if (pBlock == 0)
+	{
+		return kernel_allocate (nSize);
+	}
+
+	if (nSize == 0)
+	{
+		kernel_deallocate (pBlock);
+
+		return 0;
+	}
+
+	struct alloc_header *pBlockHeader = (struct alloc_header *) ((unsigned int *) pBlock - sizeof (struct alloc_header));
+    if(pBlockHeader->magic != BLOCK_MAGIC) {
+        return 0;
+    }
+	if (pBlockHeader->size >= nSize )
+	{
+		return pBlock;
+	}
+
+	void *pNewBlock = kernel_allocate (nSize);
+	if (pNewBlock == 0)
+	{
+		return 0;
+	}
+
+	memcpy (pNewBlock, pBlock, pBlockHeader->size);
+
+	kernel_deallocate (pBlock);
+
+	return pNewBlock;
 }

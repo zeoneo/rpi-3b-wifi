@@ -22,6 +22,15 @@ inline unsigned int bswap32(const void* v) {
     return (b1 << 24 | b2 << 16 | b3 << 8 | b4);
 }
 
+#define BE(value)	((((value) & 0xFF00) >> 8) | (((value) & 0x00FF) << 8))
+
+
+#define le2be16 bswap16
+#define le2be32 bswap32
+
+#define be2le16 bswap16
+#define be2le32 bswap32
+
 void hexdump(void* pStart, uint32_t nBytes);
 
 #ifdef __cplusplus

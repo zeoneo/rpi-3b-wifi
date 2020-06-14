@@ -1,4 +1,5 @@
 #include <device/sd_card.h>
+#include <net/link_layer.h>
 #include <device/wifi-io.h>
 #include <device/bcm_random.h>
 #include <plibc/stdio.h>
@@ -33,6 +34,7 @@ void ether_event_handler (ether_event_type_t		 type,
 				    void			*context) {
                         printf("Bcm event handler called %x %x %x\n ", &type, params, context);
                     }
+extern int wpa_supplicant_main(void);
 #endif
 
 uint32_t x = 0;
@@ -143,24 +145,12 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
 
     init_frame_manager();
     // show_current_memory_states();
-    if (kernel_alloc_init(4096 * 100)) { // 16 MB
+    if (kernel_alloc_init(4096 * 200)) { // 16 MB
         printf(" Failed to initialize kernel alloc.");
     } else {
         printf("Kernel allocation init success \n");
     }
 
-    c_string_t *cstr = get_new_cstring("Prakash str= %s hex=%x long hex=%llx float=%f char=%c ");
-
-    printf("cstr %s \n", cstr->buffer);
-    cstring_format(cstr, "Prakash str= %s hex=%x long hex=%llx float=%f char=%c ", "new string", get_random_int(), 0x1234567812345678, 0.123324, 'b');
-    printf("formatted cstr %s \n", cstr->buffer);
-    cstring_format(cstr, "Prakash str= %s hex=%x long hex=%llx float=%f char=%c ", "new string", get_random_int(), 0x1234567812345678, 0.123324, 'b');
-    printf("formatted cstr %s \n", cstr->buffer);
-    append_to_cstring(cstr, " this is appended string \n");
-    printf("appened cstr %s \n", cstr->buffer);
-
-    replace_in_cstring(cstr, "Prakash", "MyName");
-    printf("replaced cstr %s \n", cstr->buffer);
 
     // show_current_memory_states();
 
@@ -231,17 +221,18 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
     // set_essid(net_device, "ZER1");
     // set_auth(net_device, AuthModeWPA2, "RatKiller");
 
-    set_essid(net_device, "ZER");
-    set_auth(net_device, AuthModeNone, "");
+    // set_essid(net_device, "ZER");
+    // set_auth(net_device, AuthModeNone, "");
     initialize(net_device);
+    initialize_link_layer(net_device);
     register_event_handler(net_device, ether_event_handler, (void *)0);
-    // int res = copy_process((unsigned long)&dump_wifi_status, (uint32_t)net_device);
-    // if (res != 0) {
-    //     printf("error while starting process 1");
-    //     return;
-    // }
+    int pid2 = create_task("wifi", (unsigned long) &wpa_supplicant_main, 0);
+    if (pid2 == 0) {
+        printf("error while starting process 3");
+        return;
+    }
 #endif
-    // schedule();
+    schedule();
     // if () {
     // printf("<---------------Wifi Started Successfully----------------->\n");
     // }
@@ -252,6 +243,6 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
         // #ifdef __enable_exp_
         //     dump_status(net_device);
         // #endif
-        // schedule(); // This is init process which will call schedule when intialization is completed.
+        schedule(); // This is init process which will call schedule when intialization is completed.
     }
 }

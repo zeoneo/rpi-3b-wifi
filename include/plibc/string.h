@@ -9,10 +9,10 @@
 extern "C" {
 #endif
 
-int32_t memcmp(const void*, const void*, size_t);
+int memcmp(const void *s1, const void *s2, size_t n);
 void* memcpy(void* __restrict, const void* __restrict, size_t);
 void* memmove(void*, const void*, size_t);
-void* memset(void*, int32_t, size_t);
+void* memset(void*, int, size_t);
 size_t strlen(const char*);
 char* strstr(char* str, char* substr);
 char* strcat(char* pDest, const char* pSrc);

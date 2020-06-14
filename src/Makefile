@@ -24,6 +24,7 @@ LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lm -lgcc
 
 KERNEL_OBJS=\
+assert.o \
 boot.o \
 bss-clear.o \
 dma.o \
@@ -50,6 +51,7 @@ memmove.o \
 memset.o \
 strstr.o \
 util.o \
+net_queue.o \
 cstring.o \
 string.o \
 printf.o \
@@ -99,7 +101,7 @@ kernel8-32.img:kernel8-32.elf
 
 kernel8-32.elf: librpi3b.a kernel.o ../linker.ld
 	@echo "  LD    $@"
-	@$(CC) -T ../linker.ld -o $@  $(LDFLAGS)  kernel.o -L . -lrpi3b $(LIBS)
+	@$(CC) -T ../linker.ld -o $@  $(LDFLAGS)  kernel.o -L . -lrpi3b -lwpa_supplicant $(LIBS)
 	
 librpi3b.a: $(OBJS)
 	@echo "  AR    $@"

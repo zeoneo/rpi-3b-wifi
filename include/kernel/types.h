@@ -1,6 +1,6 @@
 
-#ifndef _TYPES_H
-#define _TYPES_H
+#ifndef _RPI3B_TYPES_H
+#define _RPI3B_TYPES_H
 
 #include <stdint.h>
 
@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 #define UNUSED(x) x
-#define NULL      ((void*) 0)
+// #define NULL      ((void*) 0)
 /**
 \brief Result of a method call.
 
@@ -147,5 +147,16 @@ static inline uint32_t SizeToNumber(UsbPacketSize size) {
         type __y = (y);                                                                                                \
         __x < __y ? __y : __x;                                                                                         \
     })
+
+typedef unsigned char		u8;
+typedef unsigned short		u16;
+typedef unsigned int		u32;
+
+typedef signed char		s8;
+typedef signed short		s16;
+typedef signed int		s32;
+
+typedef unsigned long long	u64;
+typedef signed long long	s64;
 
 #endif // _TYPES_H

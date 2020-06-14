@@ -5,11 +5,7 @@
 #include <plibc/util.h>
 #include <stdint.h>
 
-#define le2be16 bswap16
-#define le2be32 bswap32
 
-#define be2le16 bswap16
-#define be2le32 bswap32
 
 Block* allocb(uint32_t size) // TODO: use single new
 {

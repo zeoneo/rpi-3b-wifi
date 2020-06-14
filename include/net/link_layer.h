@@ -7,6 +7,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <device/bcm4343.h>
 
 #define FRAME_BUFFER_SIZE 1600
 #define MAC_ADDRESS_SIZE	6
@@ -20,15 +21,12 @@ struct TEthernetHeader {
 } __attribute__((packed));
 
 
-bool initialize_link_layer(void);
-void attache_nw_layer(void *network_layer);
-void process_link_layer(void);
-// bool send_linklayer_packet(const CIPAddress &rReceiver, const void *pIPPacket, unsigned nLength);
-	// pBuffer must have size FRAME_BUFFER_SIZE
-bool recieve_linklayer_packet(void *pBuffer, unsigned *pResultLength);
+bool initialize_link_layer(bcm4343_net_device *net_device);
+
+// pBuffer must have size FRAME_BUFFER_SIZE
+bool receive_raw_l2_packet(void *pBuffer, unsigned *pResultLength, uint8_t *sender_mac);
+
 bool send_raw_l2_packet(const void *pFrame, unsigned nLength);
-	// pBuffer must have size FRAME_BUFFER_SIZE
-// bool receive_raw_l2_packet(void *pBuffer, unsigned *pResultLength, CMACAddress *pSender = 0);
 // nProtocolType is in host byte order
 bool enable_receive_raw_l2(uint16_t nProtocolType);
 

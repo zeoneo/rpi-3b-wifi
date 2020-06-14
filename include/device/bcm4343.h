@@ -31,9 +31,12 @@ void set_auth(bcm4343_net_device* net_device, TAuthMode Mode, char* pKey);
 bool initialize(bcm4343_net_device* net_device);
 const uint8_t* get_mac_address(bcm4343_net_device* net_device);
 bool send_frame(bcm4343_net_device* net_device, const void* frame_buffer, uint32_t length);
-
 bool wifi_control(bcm4343_net_device* net_device, const char *pFormat, ...);
 void register_event_handler(bcm4343_net_device* net_device, ether_event_handler_t *pHandler, void *pContext);
+
+void scan_result_received(const void *pBuffer, unsigned nLength);
+bool receive_scan_results(void *pBuffer, unsigned *pResultLength);
+
 
 
 // pBuffer must have size FRAME_BUFFER_SIZE
