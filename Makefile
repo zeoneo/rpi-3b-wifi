@@ -1,4 +1,5 @@
 all: wpa_supplicant.a
+	git submodule update --init hostap
 	cd src && $(MAKE)
 
 wpa_supplicant.a:
