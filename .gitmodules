@@ -1,3 +1,4 @@
 [submodule "hostap"]
 	path = hostap
 	url = https://github.com/zeoneo/hostap.git
+	branch = rpi-os-3b-wifi
