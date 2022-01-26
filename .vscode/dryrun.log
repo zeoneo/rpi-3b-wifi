@@ -1,0 +1,13 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/Users/prakashborkar/development/projects/rpi-3b-wifi'
+# git submodule update --init hostap
+cd hostap/wpa_supplicant && make -f Makefile.rpi3b
+cp hostap/wpa_supplicant/libwpa_supplicant.a src/
+cd src && make
+ 
+make[1]: Entering directory '/Users/prakashborkar/development/projects/rpi-3b-wifi/src'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/Users/prakashborkar/development/projects/rpi-3b-wifi/src'
+ 
+make: Leaving directory '/Users/prakashborkar/development/projects/rpi-3b-wifi'
+ 

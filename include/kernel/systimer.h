@@ -17,6 +17,7 @@ uint32_t timer_getTickCount32(void);
 uint64_t timer_getTickCount64(void);
 uint64_t tick_difference(uint64_t us1, uint64_t us2);
 void repeat_on_time_out(interrupt_handler_f handler, uint32_t timeout_us);
+void get_local_time(unsigned int* pSeconds, unsigned int* pMicroSeconds);
 
 typedef struct {
     uint8_t timer0_matched : 1;

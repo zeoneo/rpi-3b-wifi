@@ -14,11 +14,24 @@ extern void dmb(void);
 
 // }
 
+static volatile unsigned int m_nTicks  = 0;
+static volatile unsigned int m_nUptime = 0;
+static volatile unsigned int m_nTime   = 0;
+
 static void timer_irq_clearer(void) {
     timer_regs->control.timer1_matched = 1;
     if (repeat_timeout_us != 0) {
         timer_set(repeat_timeout_us);
     }
+}
+
+void get_local_time(unsigned int* pSeconds, unsigned int* pMicroSeconds) {
+
+    unsigned int nTime  = m_nTime;
+    unsigned int nTicks = m_nTicks;
+
+    *pSeconds      = nTime;
+    *pMicroSeconds = nTicks % 100 * (10000);
 }
 
 void timer_init(void) {
@@ -34,6 +47,10 @@ void repeat_on_time_out(interrupt_handler_f handler, uint32_t timeout_us) {
 
 void timer_set(uint32_t usecs) {
     timer_regs->timer1 = timer_regs->counter_low + usecs;
+    if (++m_nTicks % 100 == 0) {
+        m_nUptime++;
+        m_nTime++;
+    }
 }
 
 __attribute__((optimize(0))) void udelay(uint32_t usecs) {
@@ -66,7 +83,7 @@ uint64_t timer_getTickCount64(void) {
         resVal   = timer_regs->counter_high;                 // Read Arm system timer high count
         lowCount = timer_regs->counter_low;                  // Read Arm system timer low count
     } while (resVal != (uint64_t) timer_regs->counter_high); // Check hi counter hasn't rolled in that time
-    resVal = (uint64_t)(resVal << 32 | lowCount);            // Join the 32 bit values to a full 64 bit
+    resVal = (uint64_t) (resVal << 32 | lowCount);           // Join the 32 bit values to a full 64 bit
     return (resVal);                                         // Return the uint64_t timer tick count
 }
 
