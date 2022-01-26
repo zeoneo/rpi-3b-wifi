@@ -30,7 +30,7 @@ extern int sdiocardintr(int);
 enum {
     SDIODEBUG  = 0,
     SBDEBUG    = 0,
-    EVENTDEBUG = 0,
+    EVENTDEBUG = 1,
     VARDEBUG   = 0,
     FWDEBUG    = 0,
 
@@ -232,7 +232,7 @@ typedef struct {
 } Ctlr;
 
 static mutex_t sdiolock;
-
+void etherbcmscan(void* a, uint32_t secs);
 // static int iodebug = 0;
 enum {
     CMauth,
@@ -251,6 +251,10 @@ enum {
     CMtxkey,
     CMdebug,
     CMjoin,
+    CMdisassoc,
+    CMescan,
+    CMcountry,
+    CMcreate,
 };
 
 // static Cmdtab cmds[] = {
@@ -459,11 +463,15 @@ typedef struct {
 } Cmdbuf;
 
 static Cmdtab cmds[] = {
-    {CMauth, "auth", 2},     {CMchannel, "channel", 2}, {CMcrypt, "crypt", 2},   {CMessid, "essid", 2},
-    {CMkey1, "key1", 2},     {CMkey2, "key1", 2},       {CMkey3, "key1", 2},     {CMkey4, "key1", 2},
-    {CMrxkey, "rxkey", 3},   {CMrxkey0, "rxkey0", 3},   {CMrxkey1, "rxkey1", 3}, {CMrxkey2, "rxkey2", 3},
-    {CMrxkey3, "rxkey3", 3}, {CMtxkey, "txkey", 3},     {CMdebug, "debug", 2},   {CMjoin, "join", 5},
-};
+    // {CMauth, "auth", 2},     {CMchannel, "channel", 2}, {CMcrypt, "crypt", 2},   {CMessid, "essid", 2},
+    // {CMkey1, "key1", 2},     {CMkey2, "key1", 2},       {CMkey3, "key1", 2},     {CMkey4, "key1", 2},
+    // {CMrxkey, "rxkey", 3},   {CMrxkey0, "rxkey0", 3},   {CMrxkey1, "rxkey1", 3}, {CMrxkey2, "rxkey2", 3},
+    // {CMrxkey3, "rxkey3", 3}, {CMtxkey, "txkey", 3},     {CMdebug, "debug", 2},   {CMjoin, "join", 5},
+    {CMauth, "auth", 2},         {CMchannel, "channel", 2}, {CMcrypt, "crypt", 2},     {CMessid, "essid", 2},
+    {CMkey1, "key1", 2},         {CMkey2, "key2", 2},       {CMkey3, "key3", 2},       {CMkey4, "key4", 2},
+    {CMrxkey, "rxkey", 3},       {CMrxkey0, "rxkey0", 3},   {CMrxkey1, "rxkey1", 3},   {CMrxkey2, "rxkey2", 3},
+    {CMrxkey3, "rxkey3", 3},     {CMtxkey, "txkey", 3},     {CMdebug, "debug", 2},     {CMjoin, "join", 5},
+    {CMdisassoc, "disassoc", 2}, {CMescan, "escan", 2},     {CMcountry, "country", 2}, {CMcreate, "create", 4}};
 
 // static QLock sdiolock;
 // static int iodebug;
@@ -1405,7 +1413,7 @@ static void txstart(Ether* edev) {
             break;
         }
 
-        off = ((uint32_t)((uint32_t*) b->rp) & 3) + sizeof(Sdpcm);
+        off = ((uint32_t) ((uint32_t*) b->rp) & 3) + sizeof(Sdpcm);
         b   = padblock(b, off + 4);
         len = BLEN(b);
         p   = (Sdpcm*) b->rp;
@@ -1528,8 +1536,7 @@ char* seprint(char* str, char* end, const char* fmt, ...) {
     *(end - 1) = '\0';
     return &str[i + 1];
 }
-
-static uint8_t* gettlv(uint8_t* p, uint8_t* ep, int tag) {
+uint8_t* gettlv(uint8_t* p, uint8_t* ep, int tag) {
     int len;
 
     while (p + 1 < ep) {
@@ -1543,7 +1550,7 @@ static uint8_t* gettlv(uint8_t* p, uint8_t* ep, int tag) {
     return NULL;
 }
 
-static void addscan(Block* bp, uint8_t* p, int len) {
+void addscan(Block* bp, uint8_t* p, int len) {
     char bssid[24];
     char *auth, *auth2;
     uint8_t *t, *et;
@@ -1583,233 +1590,17 @@ static void addscan(Block* bp, uint8_t* p, int len) {
     bp->wp = (uint8_t*) seprint((char*) bp->wp, (char*) bp->lim, "%s%s\n", auth, auth2);
 }
 
-static void wlscanresult(Ether* edev, uint8_t* p, uint32_t len) {
-    Ctlr* ctlr;
-    Netfile **ep, *f, **fp;
-    Block* bp;
-    int nbss, i;
-
-    ctlr = edev->ctlr;
-    if (get4(p) > len)
-        return;
-    /* TODO: more syntax checking */
-    bp = ctlr->scanb;
-    if (bp == 0)
-        ctlr->scanb = bp = allocb(8192);
-    nbss = get2(p + 10);
-    p += 12;
-    len -= 12;
-    // if(0)
-    dump("SCAN", p, len);
-    if (nbss) {
-        addscan(bp, p, len);
-        return;
-    }
-    i  = edev->scan;
-    ep = &edev->f[Ntypes];
-    for (fp = edev->f; fp < ep && i > 0; fp++) {
-        f = *fp;
-        if (f == 0 || f->scan == 0)
-            continue;
-        if (i == 1)
-            qpass(f->in, bp);
-        else
-            qpass(f->in, copyblock(bp, BLEN(bp)));
-        i--;
-    }
-    if (i)
-        freeb(bp);
-    ctlr->scanb = 0;
-}
-
-static void bcmevent(Ctlr* ctl, uint8_t* p, int len) {
-    int flags;
-    long event, status, reason;
-    ether_event_params_t params;
-
-    if (len < ETHERHDRSIZE + 10 + 46) {
-        return;
-    }
-
-    memset(&params, 0, sizeof params);
-
-    p += ETHERHDRSIZE + 10; /* skip bcm_ether header */
-    len -= ETHERHDRSIZE + 10;
-
-    // printf("p:%x p+2: %x p+6: %x p+8: %x p+12: %x \n", p, p + 2, p + 6, p + 8, p + 12);
-    flags = nhgets(p + 2);
-    // printf("p+2 passed \n");
-    event = nhgets(p + 6);
-    // printf("p+6 passed \n");
-    status = nhgetl(p + 8);
-    // printf("p+8 passed \n");
-    reason = nhgetl(p + 12);
-    // printf("p+12 passed \n");
-    if (EVENTDEBUG)
-        printf("ether4330: [%s] status %ld flags %#x reason %ld\n", evstring(event), status, flags, reason);
-    switch (event) {
-    case 19: /* E_ROAM */
-        if (status == 0)
-            break;
-    /* fall through */
-    case 0: /* E_SET_SSID */
-        ctl->joinstatus = 1 + status;
-        wakeup(&ctl->joinr);
-        break;
-    case 5: /* E_DEAUTH */
-    case 6: /* E_DEAUTH_IND */
-        linkdown(ctl);
-        callevhndlr(ctl, ether_event_deauth, 0);
-        break;
-    case 16:           /* E_LINK */
-        if (flags & 1) /* link up */
-            break;
-        /* fall through */
-    case 12: /* E_DISASSOC_IND */
-        linkdown(ctl);
-        callevhndlr(ctl, ether_event_deauth, 0);
-        break;
-    case 17: /* E_MIC_ERROR */
-        params.mic_error.group = !!(flags & 4);
-        memcpy(params.mic_error.addr, p + 24, Eaddrlen);
-        callevhndlr(ctl, ether_event_mic_error, &params);
-    case 26: /* E_SCAN_COMPLETE */
-        break;
-    case 69: /* E_ESCAN_RESULT */
-        wlscanresult(ctl->edev, p + 48, len - 48);
-        break;
-    default:
-        if (status) {
-            if (!EVENTDEBUG)
-                printf("ether4330: [%s] error status %ld flags %#x reason %ld\n", evstring(event), status, flags,
-                       reason);
-            dump("event", p, len);
-        }
-    }
-}
-
-static void rproc(void* a) {
-    Ether* edev;
-    Ctlr* ctl;
-    Block* b;
-    Sdpcm* p;
-    Cmd* q;
-    int flowstart;
-    int bdc;
-
-    edev      = a;
-    ctl       = edev->ctlr;
-    flowstart = 0;
-    // printf("%s: %d edev: %x \n", __FILE__, __LINE__, edev);
-    for (;;) {
-        // printf("In RPROC \n");
-        if (flowstart) {
-            printf("Flow start calling txstart \n");
-            flowstart = 0;
-            txstart(edev);
-        }
-        b = wlreadpkt(ctl);
-        if (b == 0) {
-            // printf("calling intwait \n");
-            intwait(ctl, 1);
-            // printf("intwait complete \n");
-            continue;
-        }
-        p = (Sdpcm*) b->rp;
-        if (p->window != ctl->txwindow || p->fcmask != ctl->fcmask) {
-            lock(&ctl->txwinlock);
-            if (p->window != ctl->txwindow) {
-                if (ctl->txseq == ctl->txwindow)
-                    flowstart = 1;
-                ctl->txwindow = p->window;
-            }
-            if (p->fcmask != ctl->fcmask) {
-                if ((p->fcmask & 1 << 2) == 0)
-                    flowstart = 1;
-                ctl->fcmask = p->fcmask;
-            }
-            unlock(&ctl->txwinlock);
-        }
-        switch (p->chanflg & 0xF) {
-        case 0:
-            // if (iodebug)
-            //     dump("rsp", b->rp, BLEN(b));
-            if ((uint32_t) BLEN(b) < sizeof(Sdpcm) + sizeof(Cmd))
-                break;
-            q = (Cmd*) (b->rp + sizeof(*p));
-            if ((q->id[0] | q->id[1] << 8) != ctl->reqid)
-                break;
-            ctl->rsp = b;
-            // wakeup(&ctl->cmdr);
-            continue;
-        case 1:
-            // if(iodebug)
-            // dump("event", b->rp, BLEN(b));
-            if (BLEN(b) > p->doffset + 4) {
-                bdc = 4 + (b->rp[p->doffset + 3] << 2);
-                if (BLEN(b) > p->doffset + bdc) {
-                    b->rp += p->doffset + bdc; /* skip BDC header */
-                    bcmevent(ctl, b->rp, BLEN(b));
-                    break;
-                }
-            }
-            // if(iodebug && BLEN(b) != p->doffset)
-            // printf("short event %ld %d\n", BLEN(b), p->doffset);
-            break;
-        case 2:
-            // if(iodebug)
-            // dump("packet", b->rp, BLEN(b));
-            if (BLEN(b) > p->doffset + 4) {
-                bdc = 4 + (b->rp[p->doffset + 3] << 2);
-                if (BLEN(b) >= p->doffset + bdc + ETHERHDRSIZE) {
-                    b->rp += p->doffset + bdc; /* skip BDC header */
-                    etheriq(edev, b, 1);
-                    continue;
-                }
-            }
-            break;
-        default:
-            dump("ether4330: bad packet", b->rp, BLEN(b));
-            break;
-        }
-        freeb(b);
-    }
-    terminate_this_task();
-}
-
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-static int parsehex(char* buf, int buflen, char* a) {
-    int i, k, n;
-
-    k = 0;
-    for (i = 0; k < buflen && *a; i++) {
-        if (*a >= '0' && *a <= '9')
-            n = *a++ - '0';
-        else if (*a >= 'a' && *a <= 'f')
-            n = *a++ - 'a' + 10;
-        else if (*a >= 'A' && *a <= 'F')
-            n = *a++ - 'A' + 10;
-        else
-            break;
-
-        if (i & 1) {
-            buf[k] |= n;
-            k++;
-        } else
-            buf[k] = n << 4;
-    }
-    if (i & 1)
-        return -1;
-    return k;
+static void wlscanresult(Ether* edev, uint8_t* p, uint32_t len) {
+    USED(edev);
+    scan_result_received(p, len);
 }
-
 static int cmddone(void* a) {
     return ((Ctlr*) a)->rsp != 0;
 }
-
 static void wlcmd(Ctlr* ctl, int write, int op, void* data, int dlen, void* res, int rlen) {
     Block* b;
     Sdpcm* p;
@@ -1893,6 +1684,208 @@ static void wlsetvar(Ctlr* ctl, char* name, void* val, int len) {
     // dump(buf, val, len);
     // }
     wlcmd(ctl, 1, SetVar, name, strlen(name) + 1, val, len);
+}
+
+static void wlsetcountry(Ctlr* ctlr, const char* ccode) {
+    struct {
+        char country_ie[4];
+        unsigned int revision;
+        char country_code[4];
+    } params;
+
+    if (!('A' <= ccode[0] && ccode[0] <= 'Z') || !('A' <= ccode[1] && ccode[1] <= 'Z') || ccode[2] != '\0') {
+        printf("Invalid country code \n");
+        return;
+        // error();
+    }
+
+    strcpy(params.country_ie, ccode);
+    strcpy(params.country_code, ccode);
+    params.revision = (unsigned int) -1;
+
+    wlsetvar(ctlr, (char*) "country", (void*) &params, (int) sizeof(params));
+}
+
+static void bcmevent(Ctlr* ctl, uint8_t* p, int len) {
+    int flags;
+    long event, status, reason;
+    ether_event_params_t params;
+
+    if (len < ETHERHDRSIZE + 10 + 46) {
+        return;
+    }
+
+    memset(&params, 0, sizeof params);
+
+    p += ETHERHDRSIZE + 10; /* skip bcm_ether header */
+    len -= ETHERHDRSIZE + 10;
+
+    // printf("p:%x p+2: %x p+6: %x p+8: %x p+12: %x \n", p, p + 2, p + 6, p + 8, p + 12);
+    flags = nhgets(p + 2);
+    // printf("p+2 passed \n");
+    event = nhgets(p + 6);
+    // printf("p+6 passed \n");
+    status = nhgetl(p + 8);
+    // printf("p+8 passed \n");
+    reason = nhgetl(p + 12);
+    // printf("p+12 passed \n");
+
+    printf("ether4330: [%s] status %ld flags %#x reason %ld\n", evstring(event), status, flags, reason);
+    switch (event) {
+    case 19: /* E_ROAM */
+        if (status == 0)
+            break;
+    /* fall through */
+    case 0: /* E_SET_SSID */
+        ctl->joinstatus = 1 + status;
+        wakeup(&ctl->joinr);
+        break;
+    case 5: /* E_DEAUTH */
+    case 6: /* E_DEAUTH_IND */
+        linkdown(ctl);
+        callevhndlr(ctl, ether_event_deauth, 0);
+        break;
+    case 16:           /* E_LINK */
+        if (flags & 1) /* link up */
+            break;
+        /* fall through */
+    case 12: /* E_DISASSOC_IND */
+        linkdown(ctl);
+        callevhndlr(ctl, ether_event_deauth, 0);
+        break;
+    case 17: /* E_MIC_ERROR */
+        params.mic_error.group = !!(flags & 4);
+        memcpy(params.mic_error.addr, p + 24, Eaddrlen);
+        callevhndlr(ctl, ether_event_mic_error, &params);
+    case 26: /* E_SCAN_COMPLETE */
+        break;
+    case 69: /* E_ESCAN_RESULT */
+        printf(" plan9_ether : E_SCAN_RESULT received. calling wlscan result now\n");
+        wlscanresult(ctl->edev, p + 48, len - 48);
+        break;
+    default:
+        if (status) {
+            if (!EVENTDEBUG)
+                printf("ether4330: [%s] error status %ld flags %#x reason %ld\n", evstring(event), status, flags,
+                       reason);
+            dump("event", p, len);
+        }
+    }
+}
+
+static void rproc(void* a) {
+    Ether* edev;
+    Ctlr* ctl;
+    Block* b;
+    Sdpcm* p;
+    Cmd* q;
+    int flowstart;
+    int bdc;
+
+    edev      = a;
+    ctl       = edev->ctlr;
+    flowstart = 0;
+    // printf("%s: %d edev: %x \n", __FILE__, __LINE__, edev);
+    for (;;) {
+        // printf("In RPROC \n");
+        if (flowstart) {
+            printf("Flow start calling txstart \n");
+            flowstart = 0;
+            txstart(edev);
+        }
+        b = wlreadpkt(ctl);
+        if (b == 0) {
+            // printf("calling intwait \n");
+            intwait(ctl, 1);
+            // printf("intwait complete \n");
+            continue;
+        }
+        p = (Sdpcm*) b->rp;
+        if (p->window != ctl->txwindow || p->fcmask != ctl->fcmask) {
+            lock(&ctl->txwinlock);
+            if (p->window != ctl->txwindow) {
+                if (ctl->txseq == ctl->txwindow)
+                    flowstart = 1;
+                ctl->txwindow = p->window;
+            }
+            if (p->fcmask != ctl->fcmask) {
+                if ((p->fcmask & 1 << 2) == 0)
+                    flowstart = 1;
+                ctl->fcmask = p->fcmask;
+            }
+            unlock(&ctl->txwinlock);
+        }
+        printf("rproc method: %d \n", (p->chanflg & 0xF));
+        switch (p->chanflg & 0xF) {
+        case 0:
+            // if (iodebug)
+            //     dump("rsp", b->rp, BLEN(b));
+            if ((uint32_t) BLEN(b) < sizeof(Sdpcm) + sizeof(Cmd))
+                break;
+            q = (Cmd*) (b->rp + sizeof(*p));
+            if ((q->id[0] | q->id[1] << 8) != ctl->reqid)
+                break;
+            ctl->rsp = b;
+            // wakeup(&ctl->cmdr);
+            continue;
+        case 1:
+            // if(iodebug)
+            dump("event", b->rp, BLEN(b));
+            if (BLEN(b) > p->doffset + 4) {
+                bdc = 4 + (b->rp[p->doffset + 3] << 2);
+                if (BLEN(b) > p->doffset + bdc) {
+                    b->rp += p->doffset + bdc; /* skip BDC header */
+                    bcmevent(ctl, b->rp, BLEN(b));
+                    break;
+                }
+            }
+            // if(iodebug && BLEN(b) != p->doffset)
+            // printf("short event %ld %d\n", BLEN(b), p->doffset);
+            break;
+        case 2:
+            // if(iodebug)
+            dump("packet", b->rp, BLEN(b));
+            if (BLEN(b) > p->doffset + 4) {
+                bdc = 4 + (b->rp[p->doffset + 3] << 2);
+                if (BLEN(b) >= p->doffset + bdc + ETHERHDRSIZE) {
+                    b->rp += p->doffset + bdc; /* skip BDC header */
+                    etheriq(edev, b, 1);
+                    continue;
+                }
+            }
+            break;
+        default:
+            dump("ether4330: bad packet", b->rp, BLEN(b));
+            break;
+        }
+        freeb(b);
+    }
+    terminate_this_task();
+}
+
+static int parsehex(char* buf, int buflen, char* a) {
+    int i, k, n;
+
+    k = 0;
+    for (i = 0; k < buflen && *a; i++) {
+        if (*a >= '0' && *a <= '9')
+            n = *a++ - '0';
+        else if (*a >= 'a' && *a <= 'f')
+            n = *a++ - 'a' + 10;
+        else if (*a >= 'A' && *a <= 'F')
+            n = *a++ - 'A' + 10;
+        else
+            break;
+
+        if (i & 1) {
+            buf[k] |= n;
+            k++;
+        } else
+            buf[k] = n << 4;
+    }
+    if (i & 1)
+        return -1;
+    return k;
 }
 
 static void wlsetint(Ctlr* ctl, char* name, int val) {
@@ -2620,6 +2613,12 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
         wlwpakey(ctlr, ct->index, iv, ea);
         printf("CMRXKEY123 \n");
         break;
+    case CMescan: /* escan seconds */
+        etherbcmscan((void*) edev, (uint32_t) atoi(cb->f[1]));
+        break;
+    case CMcountry: /* country alpha2 */
+        wlsetcountry(ctlr, cb->f[1]);
+        break;
     case CMdebug:
         // iodebug = atoi(cb->f[1]);
         printf("iodebug %d \n", cb->f[1]);
@@ -2629,8 +2628,7 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
     kernel_deallocate(cb);
     return n;
 }
-
-static void etherbcmscan(void* a, uint32_t secs) {
+void etherbcmscan(void* a, uint32_t secs) {
     Ether* edev;
     Ctlr* ctlr;
 

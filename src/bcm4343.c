@@ -161,9 +161,12 @@ bool wifi_control(bcm4343_net_device* net_device, const char* pFormat, ...) {
     cstring_formatv(Command, pFormat, var);
 
     va_end(var);
-    net_device->edev->ctl(net_device->edev, (char*) Command->buffer, 0);
+    printf("Formatted command : %s", Command);
+    return net_device->edev->ctl(net_device->edev, (char*) Command->buffer, 0) != 0l;
+}
 
-    return true;
+bool wifi_control_cmd(bcm4343_net_device* net_device, char* cmd, unsigned int length) {
+    return net_device->edev->ctl(net_device->edev, (char*) cmd, length) != 0l;
 }
 
 bool receive_scan_results(void* pBuffer, unsigned* pResultLength) {
@@ -184,5 +187,6 @@ bool receive_scan_results(void* pBuffer, unsigned* pResultLength) {
 void scan_result_received(const void* pBuffer, unsigned nLength) {
     //   // assert(s_pThis != 0);
     //   m_ScanResultQueue.Enqueue();
+    printf("bcm4343 : Driver received scan results \n");
     enqueue_nqueue(scan_results_queue, pBuffer, nLength, 0);
 }
