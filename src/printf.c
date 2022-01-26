@@ -43,3 +43,8 @@ int printf(const char* format, ...) {
 
     return ret;
 }
+
+int vprintf(const char* format, va_list ap) {
+    int ret = _doprnt(format, ap, fputc, 1);
+    return ret;
+}

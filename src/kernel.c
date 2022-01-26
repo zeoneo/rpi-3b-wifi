@@ -1,9 +1,9 @@
-#include <device/sd_card.h>
-#include <net/link_layer.h>
-#include <device/wifi-io.h>
 #include <device/bcm_random.h>
-#include <plibc/stdio.h>
+#include <device/sd_card.h>
+#include <device/wifi-io.h>
+#include <net/link_layer.h>
 #include <plibc/cstring.h>
+#include <plibc/stdio.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -29,13 +29,14 @@
 
 #ifdef __enable_exp_
 static bcm4343_net_device* net_device;
-void ether_event_handler (ether_event_type_t		 type,
-				    const ether_event_params_t	*params,
-				    void			*context) {
-                        printf("Bcm event handler called %x %x %x\n ", &type, params, context);
-                    }
-extern int wpa_supplicant_main(void);
+void ether_event_handler(ether_event_type_t type, const ether_event_params_t* params, void* context) {
+    printf("Bcm event handler called %x %x %x\n ", &type, params, context);
+}
+
 #endif
+
+extern int wpa_supplicant_main(void);
+extern int prakash_main(void);
 
 uint32_t x = 0;
 
@@ -151,7 +152,6 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
         printf("Kernel allocation init success \n");
     }
 
-
     // show_current_memory_states();
 
     // show_dma_demo();
@@ -223,9 +223,15 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
 
     // set_essid(net_device, "ZER");
     // set_auth(net_device, AuthModeNone, "");
+
+    printf("initialize: 0x%x \n", initialize);
+    prakash_main();
+    printf("initialize_link_layer: 0x%x \n", initialize_link_layer);
+    printf("wpa_supplicant_main: 0x%x \n", wpa_supplicant_main);
+
     initialize(net_device);
     initialize_link_layer(net_device);
-    register_event_handler(net_device, ether_event_handler, (void *)0);
+    register_event_handler(net_device, ether_event_handler, (void*) 0);
     int pid2 = create_task("wifi", (unsigned long) &wpa_supplicant_main, 0);
     if (pid2 == 0) {
         printf("error while starting process 3");
