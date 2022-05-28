@@ -1830,7 +1830,7 @@ static void rproc(void* a) {
             continue;
         case 1:
             // if(iodebug)
-            dump("event", b->rp, BLEN(b));
+            // dump("event", b->rp, BLEN(b));
             if (BLEN(b) > p->doffset + 4) {
                 bdc = 4 + (b->rp[p->doffset + 3] << 2);
                 if (BLEN(b) > p->doffset + bdc) {
@@ -1844,7 +1844,7 @@ static void rproc(void* a) {
             break;
         case 2:
             // if(iodebug)
-            dump("packet", b->rp, BLEN(b));
+            // dump("packet", b->rp, BLEN(b));
             if (BLEN(b) > p->doffset + 4) {
                 bdc = 4 + (b->rp[p->doffset + 3] << 2);
                 if (BLEN(b) >= p->doffset + bdc + ETHERHDRSIZE) {

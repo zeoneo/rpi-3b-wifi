@@ -5,9 +5,8 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
- 
 
-# Make data base, printed on Wed Jan 26 21:21:29 2022
+# Make data base, printed on Sat May 28 13:17:45 2022
 
 # Variables
 
@@ -18,9 +17,9 @@ TMPDIR = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/
 # environment
 IDF_PATH = /Users/prakashborkar/esp/esp-idf
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.8647435012.8647435018
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.8648657342.8648657348
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/vscode-ipc-3934612d-d75c-4efd-be39-707228ed3a59.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/vscode-ipc-5d0aaf2a-e199-4483-b9e0-b5a6c53bf187.sock
 # environment
 VSCODE_CWD = /
 # default
@@ -46,9 +45,8 @@ VSCODE_LOG_STACK = false
 # automatic
 %F = $(notdir $%)
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/prakashborkar/Library/Application Support/Code/CachedData/899d46d82c4c95423fb7e10e68eba52050e30ba3
+VSCODE_CODE_CACHE_PATH = /Users/prakashborkar/Library/Application Support/Code/CachedData/c722ca6c7eed3d7987c0d5c3df5c45f6b15e77d1
 # environment
- 
 LANG = C
 # default
 .LOADED := 
@@ -71,7 +69,7 @@ APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.NnXKAOy6dg/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.b1aGoEZcZw/Listeners
 # default
 .SHELLFLAGS := -c
 # automatic
@@ -85,7 +83,7 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 2451
+VSCODE_PID = 630
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
@@ -111,7 +109,7 @@ MAKELEVEL := 0
 # default
 MAKE = $(MAKE_COMMAND)
 # environment
-PATH = /usr/local/opt/php@7.3/sbin:/usr/local/opt/php@7.3/bin:/usr/local/opt/php@7.3/sbin:/usr/local/opt/php@7.3/bin:/usr/local/opt/python@3.8/bin:/Users/prakashborkar/.jenv/shims:/Users/prakashborkar/.cargo/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/local/opt/make/libexec/gnubin:/usr/local/opt/python@3.8/bin:/Users/prakashborkar/development/tools:/Users/prakashborkar/development/flutter/bin:/usr/bin:/opt/local/bin:/usr/local/opt/make/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/share/dotnet:/opt/X11/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/Users/prakashborkar/.cargo/bin:/Users/prakashborkar/.rvm/bin:/Users/prakashborkar/.composer/vendor/bin:/usr/local/Cellar/gdb/8.1/bin/:/Users/prakashborkar/esp/xtensa-esp32-elf/bin/:/Users/prakashborkar/Desktop/AndroidStudioProjects/flutter/bin:/Users/prakashborkar/gcc-arm-none-eabi/bin:/Users/prakashborkar/i386-elf-gcc/bin:/Users/prakashborkar/objconv:/Users/prakashborkar:/Users/prakashborkar/gcc-arm-none-eabi/arm-none-eabi/bin:/Users/prakashborkar/flutter/bin:/Applications/microchip/xc8/v1.44/bin:/Applications/microchip/xc8/v2.00/bin
+PATH = /Users/prakashborkar/.jbang/bin:/usr/local/opt/php@7.3/sbin:/usr/local/opt/php@7.3/bin:/usr/local/opt/php@7.3/sbin:/usr/local/opt/php@7.3/bin:/usr/local/opt/python@3.8/bin:/Users/prakashborkar/.jenv/shims:/Users/prakashborkar/.cargo/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/local/opt/make/libexec/gnubin:/usr/local/opt/python@3.8/bin:/Users/prakashborkar/development/tools:/Users/prakashborkar/development/flutter/bin:/usr/bin:/opt/local/bin:/usr/local/opt/make/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/share/dotnet:/opt/X11/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/Users/prakashborkar/.cargo/bin:/Users/prakashborkar/.rvm/bin:/Users/prakashborkar/.composer/vendor/bin:/usr/local/Cellar/gdb/8.1/bin/:/Users/prakashborkar/esp/xtensa-esp32-elf/bin/:/Users/prakashborkar/Desktop/AndroidStudioProjects/flutter/bin:/Users/prakashborkar/gcc-arm-none-eabi/bin:/Users/prakashborkar/i386-elf-gcc/bin:/Users/prakashborkar/objconv:/Users/prakashborkar:/Users/prakashborkar/gcc-arm-none-eabi/arm-none-eabi/bin:/Users/prakashborkar/flutter/bin:/Applications/microchip/xc8/v1.44/bin:/Applications/microchip/xc8/v2.00/bin
 # default
 MAKEFILES := 
 # automatic
@@ -135,7 +133,7 @@ XPC_FLAGS = 0x0
 # makefile
 .DEFAULT_GOAL := all
 # environment
-DISPLAY = /private/tmp/com.apple.launchd.99IOKab14g/org.macosforge.xquartz:0
+DISPLAY = /private/tmp/com.apple.launchd.HjCRTtaiuU/org.macosforge.xquartz:0
 # environment
 USER = prakashborkar
 # default
@@ -149,14 +147,13 @@ _ = /usr/local/opt/make/libexec/gnubin/make
 # environment
 GOOGLE_APPLICATION_CREDENTIALS = /Users/prakashborkar/question-cms-20211108.json
 # environment
-VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
 HOME = /Users/prakashborkar
- 
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-VSCODE_IPC_HOOK = /Users/prakashborkar/Library/Application Support/Code/1.63.2-main.sock
+VSCODE_IPC_HOOK = /Users/prakashborkar/Library/Application Support/Code/1.65.2-main.sock
 # default
 .RECIPEPREFIX := 
 # automatic
@@ -265,8 +262,7 @@ all: wpa_supplicant.a
 
 # strcache performance: lookups = 37 / hit rate = 24%
 # hash-table stats:
- 
 # Load=28/8192=0%, Rehash=0, Collisions=0/37=0%
-# Finished Make data base on Wed Jan 26 21:21:29 2022
+# Finished Make data base on Sat May 28 13:17:45 2022
 
  

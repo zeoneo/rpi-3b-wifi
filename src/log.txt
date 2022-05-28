@@ -1,0 +1,12 @@
+####################
+Inside Bootloader
+Boot Atags Addr: 2EFF9900 
+####################
+Requesting kernel
+00001018 Raspbootcom V1.0
+sending size in hex: 9310c 602380 
+sending size: c 31 9 0 
+receiving size: 1 2 3 4 5 6 7 8
+receiving size: 0 0 0 9 3 1 0 C
+
+Sending Kernel: 10.88 % Sending Kernel: 21.76 % Sending Kernel: 32.64 % Sending Kernel: 43.52 % Sending Kernel: 54.40 % Sending Kernel: 65.28 % 
