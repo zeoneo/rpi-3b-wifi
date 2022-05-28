@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat May 28 13:17:45 2022
+# Make data base, printed on Sat May 28 16:41:05 2022
 
 # Variables
 
@@ -19,7 +19,7 @@ IDF_PATH = /Users/prakashborkar/esp/esp-idf
 # environment
 XPC_SERVICE_NAME = application.com.microsoft.VSCode.8648657342.8648657348
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/vscode-ipc-5d0aaf2a-e199-4483-b9e0-b5a6c53bf187.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/vscode-ipc-7838e361-f429-42db-8f50-3a1cf0795578.sock
 # environment
 VSCODE_CWD = /
 # default
@@ -63,7 +63,7 @@ CURDIR := /Users/prakashborkar/development/projects/rpi-3b-wifi
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
@@ -263,6 +263,6 @@ all: wpa_supplicant.a
 # strcache performance: lookups = 37 / hit rate = 24%
 # hash-table stats:
 # Load=28/8192=0%, Rehash=0, Collisions=0/37=0%
-# Finished Make data base on Sat May 28 13:17:45 2022
+# Finished Make data base on Sat May 28 16:41:05 2022
 
  

@@ -153,19 +153,25 @@ void etheriq(Ether* pEther, Block* pBlock, uint32_t nFlag) {
 
 bool wifi_control(bcm4343_net_device* net_device, const char* pFormat, ...) {
     // assert(pFormat != 0);
-
+    printf("Inside wifi_control \n");
     va_list var;
     va_start(var, pFormat);
 
     c_string_t* Command = get_new_cstring("");
-    cstring_formatv(Command, pFormat, var);
-
+    // cstring_formatv(Command, pFormat, var);
+    char *new_buf = kernel_allocate(512);
+    int i = vsprintf(new_buf, pFormat, var);
+    new_buf[i] = '\0';
     va_end(var);
-    printf("Formatted command : %s", Command);
-    return net_device->edev->ctl(net_device->edev, (char*) Command->buffer, 0) != 0l;
+    printf("Formatted command : %s %x \n ", &new_buf[0], Command->buffer);
+
+    bool x = net_device->edev->ctl(net_device->edev, (char*) &new_buf[0], i) != 0l;
+    kernel_deallocate(new_buf);
+    return x;
 }
 
 bool wifi_control_cmd(bcm4343_net_device* net_device, char* cmd, unsigned int length) {
+    printf("Inside wifi_control_cmd \n");
     return net_device->edev->ctl(net_device->edev, (char*) cmd, length) != 0l;
 }
 

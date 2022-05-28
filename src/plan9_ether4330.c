@@ -2514,11 +2514,12 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
     ct = lookupcmd(cb, cmds, nelem(cmds));
     switch (ct->index) {
     case CMauth:
+        printf("CMAUTH \n");
         setauth(ctlr, cb, cb->f[1]);
         if (ctlr->essid[0]) {
             wljoin(ctlr, ctlr->essid, ctlr->chanid);
         }
-        printf("CMAUTH \n");
+        
         break;
     case CMchannel:
         if ((i = atoi(cb->f[1])) < 0 || i > 16) {
@@ -2555,6 +2556,7 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
         printf("CMESSID \n");
         break;
     case CMjoin:                         /* join essid channel wep|on|off|wpakey */
+        printf("CMJOIN command \n");
         if (strcmp(cb->f[1], "") != 0) { /* empty string for no change */
             if (cistrcmp(cb->f[1], "default") != 0) {
                 strncpy(ctlr->essid, cb->f[1], sizeof(ctlr->essid) - 1);
@@ -2574,8 +2576,11 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
             return 0;
         }
 
-        if (!setcrypt(ctlr, cb, cb->f[3]))
+        if (!setcrypt(ctlr, cb, cb->f[3])) {
+            printf("Called setauth from !setcrypt(ctlr, cb, cb->f[3]) \n");
             setauth(ctlr, cb, cb->f[3]);
+        }
+            
         if (ctlr->essid[0])
             wljoin(ctlr, ctlr->essid, ctlr->chanid);
 

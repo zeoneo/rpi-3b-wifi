@@ -163,28 +163,28 @@ static uint32_t get_next_task() {
         }
 
         switch (pTask->state) {
-        case TaskStateReady:
-            return nTask;
+            case TaskStateReady:
+                return nTask;
 
-        case TaskStateBlocked:
-            continue;
-
-        case TaskStateSleeping:
-            if ((int) (pTask->wake_ticks - nTicks) > 0) {
+            case TaskStateBlocked:
                 continue;
-            }
-            pTask->state = TaskStateReady;
-            return nTask;
 
-        case TaskStateTerminated:
-            // call the task terminal handler here.
-            remove_task(pTask);
-            // return NR_TASKS;
-            break;
+            case TaskStateSleeping:
+                if ((int) (pTask->wake_ticks - nTicks) > 0) {
+                    continue;
+                }
+                pTask->state = TaskStateReady;
+                return nTask;
 
-        default:
-            printf(" Error in schedular alogirithm \n");
-            break;
+            case TaskStateTerminated:
+                // call the task terminal handler here.
+                remove_task(pTask);
+                // return NR_TASKS;
+                break;
+
+            default:
+                printf(" Error in schedular alogirithm \n");
+                break;
         }
     }
 
