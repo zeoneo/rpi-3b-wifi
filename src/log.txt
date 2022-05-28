@@ -4,20 +4,20 @@ Boot Atags Addr: 2EFF9900
 ####################
 Requesting kernel
 00001018 Raspbootcom V1.0
-sending size in hex: 9410c 606476 
-sending size: c 41 9 0 
+sending size in hex: 92f0c 601868 
+sending size: c 2f 9 0 
 receiving size: 1 2 3 4 5 6 7 8
-receiving size: 0 0 0 9 4 1 0 C
+receiving size: 0 0 0 9 2 F 0 C
 
-Sending Kernel: 10.81 % Sending Kernel: 21.61 % Sending Kernel: 32.42 % Sending Kernel: 43.22 % Sending Kernel: 54.03 % Sending Kernel: 64.84 % Sending Kernel: 75.64 % Sending Kernel: 86.45 % Sending Kernel: 97.25 % Sending Kernel: 100.00 % 
--------18 ----------Kernel Started Dude........................
+Sending Kernel: 10.89 % Sending Kernel: 21.78 % Sending Kernel: 32.67 % Sending Kernel: 43.56 % Sending Kernel: 54.44 % Sending Kernel: 65.33 % Sending Kernel: 76.22 % Sending Kernel: 87.11 % Sending Kernel: 98.00 % Sending Kernel: 100.00 % 
+01018 -----------------Kernel Started Dude........................
 Kernel End: 0x20a000 
 Kalloc start: 0x220000 end:0x2e8000 
 Kernel allocation init success 
 initialize: 0xab08 
 In praakash main 
 initialize_link_layer: 0xa06c 
-wpa_supplicant_main: 0x136c4 
+wpa_supplicant_main: 0x13690 
  clk_id: 1 clk_rate: 200000000 Chip Id : 0xa9a6 43430 
 ether4330: chip   rev 1 type 1
 brcmfmac43430-sdio.bin Firmware file found. 
@@ -35,8 +35,8 @@ compare...
 Successful comparison. 
 
 HTCLOCK: 0xd0 
-rproc : 10410 
-lproc : de90 
+rproc : e9c8 
+lproc : de70 
 rproc method: 1 
 Flow start calling txstart 
 rproc method: 1 
@@ -79,6 +79,7 @@ in the main_rpi3b
 in the main_rpi3b 2 
 Initializing interface 'wlan0' conf 'in_memory' driver 'rpi3b' ctrl_interface 'N/A' bridge 'N/A'
 PRAKASH_DEBUG reading conf file name.
+PRAKASH_DEBUG: passphrase: Borksam@#1230.
 PRAKASH_DEBUG: Adding ssid to priority list.
 addr: b8 27 eb b7 b3 d9 
 Own MAC address: b8:27:eb:b7:b3:d9
@@ -99,7 +100,6 @@ EAPOL: Supplicant port status: Unauthorized
 EAPOL: Supplicant port status: Unauthorized
 Added interface wlan0
 rproc method: 1 
-ether4330: [country code changed] status 0 flags %#x reason 24
 Trying to get current scan results first without requesting a new scan to speed up initial association
 PRAK_DEBUG Calling get scan results.
 Checking results now
@@ -120,761 +120,534 @@ WPA Driver scan started
 Stating scans: 
 INTS: (2) 800040 -> 800000
 rproc method: 0 
-INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800040
 rproc method: 0 
 scan ended: 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 Stating scans: 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 0 
-INTS: (2) 800040 -> 800000
-rproc method: 0 
-scan ended: 
 rproc method: 1 
-ether4330: [escan result] status 9 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-Stating scans: 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
+rproc method: 1 
 rproc method: 0 
-INTS: (2) 800040 -> 800000
-rproc method: 0 
-scan ended: 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
 EAPOL: disable timer tick
 EAPOL: Supplicant port status: Unauthorized
 rproc method: 1 
-ether4330: [escan result] status 9 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-Stating scans: 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 0 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
 rproc method: 0 
 scan ended: 
 rproc method: 1 
-ether4330: [escan result] status 9 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 Stating scans: 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc mmthod: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
 rproc method: 0 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
+rproc method: 0 
+scan ended: 
+Stating scans: 
+INTS: (2) 40 -> 800040
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
+rproc method: 0 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
 rproc method: 0 
 scan ended: 
 rproc method: 1 
-ether4330: [escan result] status 9 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 Stating scans: 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
 rproc method: 0 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 0 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 0 
 scan ended: 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 Stating scans: 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 0 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 0 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
+rproc method: 1 
+rproc method: 1 
 rproc method: 0 
 scan ended: 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 Stating scans: 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
 rproc method: 0 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
-rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 WPA Driver scan timeout, stopping scan 
 Inside wifi_control_cmd 
 PRAK_DEBUG Calling get scan results.
 Checking results now
-Inside scan result loop
-scanned SSID : Indguard Engineers
-Inside scan result loop
-scanned SSID : Artmac_2.4ghz
-Inside scan result loop
-Inside scan result loop
-scanned SSID : Indguard Engineers
-Inside scan result loop
-Insirproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. callide scan result loop
-scanned SSID : Indguard Engineers
-Inside scan result loop
-scanned SSID : Artmac_2.4ghz
-Inside sng wlscan result now
-bcm4343 : Driver received scan results 
-can result loop
-scanned SSID : Artmac_2.4ghz
-Inside scan result loop
-scanned SSID : ZTE_2.4G_J7NqHZ
-Inside scan result loop
-scanned SSID : Room's
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-Inside scan result loop
-scanned SSID : Indguard Engineers
-Inside scan result loop
-scanned SSID : Artmac_2.4ghz
-Inside scan result loop
-scanned SSID : Room's
-Inside scan result loop
-scanned SSID : Room's
-Inside scan result loop
-scanned SSID : Room's
-Inside scan result loop
 scanned SSID : Design apt
-Inside scan result loop
-scanned SSID : TECHVINT
-Inside scan result loop
-Inside scan result loop
+scanned SSID : Indguard Engineers
 scanned SSID : Artmac_2.4ghz
-Inside scan result loop
 scanned SSID : Artmac_2.4ghz
-Inside scan result loop
-scanned SSID : Artmac_2.4ghz
-Inside scan result loop
-scanned SSID : Artmac_2.4ghz
-Inside scan result loop
 scanned SSID : ECHOES
-Inside scan result loop
+scanned SSID : ECHOES
 scanned SSID : ZTE_2.4G_J7NqHZ
-Inside scan result loop
+scanned SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : ZTE_2.4G_J7NqHZ
 scanned SSID : Room's
-Inside scan result loop
-scanned SSID : Design apt
-Inside scan result loop
-scanned SSID : SecTeamNortan
-Inside scan result loop
-scanned SSID : SecTeamNortan
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
 scanned SSID : Cit
-Inside scan rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calliresult loop
 scanned SSID : Cit
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cing wlscan result now
-bcm4343 : Driver received scan results 
-t
-Inside scan result loop
-scanned SSID : SecTeamNortan
-Inside scan result loop
-scanned SSID : SecTeamNortan
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
-scanned SSID : SecTeamNortan
-Inside scan result loop
-scanned SSID : SecTeamNortan
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-Inside scan result loop
+scanned SSID : Room's
 scanned SSID : Indguard Engineers
-Inside scan result loop
 scanned SSID : Artmac_2.4ghz
-Inside scan result loop
 scanned SSID : Artmac_2.4ghz
-Inside scan result loop
 scanned SSID : Artmac_2.4ghz
-Inside scan result loop
 scanned SSID : Artmac_2.4ghz
-Inside scan result loop
 scanned SSID : Artmac_2.4ghz
-Inside scan result loop
 scanned SSID : Artmac_2.4ghz
-Inside scan result loop
-scanned SSID : Room's
-Inside scan result loop
-scanned SSID : Design apt
-Inside srproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. callican result loop
-scanned SSID : Room's
-Inside scan result loop
+scanned SSID : CINTHOL ORIGINAL
+scanned SSID : CINTHOL ORIGINAL
+scanned SSID : CINTHOL ORIGINAL
+scanned SSID : ECHOES
+scannerproc method: 1 
+d SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : ZTE_2.4G_J7NqHZ
 scanned SSID : Cit
-Inside scan result loop
-scanned SSng wlscan result now
-bcm4343 : Driver received scan results 
-ID : Cit
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
 scanned SSID : Cit
-Inside scan result loop
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
 scanned SSID : SecTeamNortan
-Inside scan result loop
 scanned SSID : SecTeamNortan
-Inside scan result loop
+scanned SSID : Artmac_2.4ghz
+scanned SSID : Artmac_2.4ghz
+scanned SSID : Artmac_2.4ghz
+scanned SSID : Artmac_2.4ghz
+scanned SSID : Artmac_2.4ghz
+scanned SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : ZTE_2.4G_J7NqHZ
 scanned SSID : Cit
-Inside scan result loop
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Artmac_2.4ghz
+scanned SSID : Artmac_2.4ghz
+scanned SSID : Artmac_2.4ghz
+scanned SSID : Artmac_2.4ghz
+scanned SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID > Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+rproc method: 1 
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
 scanned SSID : SecTeamNortan
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
 scanned SSID : SecTeamNortan
-Inside scan result loop
 scanned SSID : SecTeamNortan
-Inside scan result loop
 scanned SSID : SecTeamNortan
-Inside scan result loop
-Inside scan result loop
 scanned SSID : Indguard Engineers
-Inside scan result loop
+scanned SSID : Indguard Engineers
 scanned SSID : Artmac_2.4ghz
-Inside scan result loop
-scanned SSID : Artmac_rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. callin2.4ghz
-Inside scan result loop
 scanned SSID : Artmac_2.4ghz
-Inside scan result loop
 scanned SSID : Artmac_2.4ghz
-g wlscan result now
-bcm4343 : Driver received scan results 
-Inside scan result loop
 scanned SSID : Artmac_2.4ghz
-Inside scan result loop
-scanned SSID : Room's
-Inside scan result loop
+scanned SSID : Artmac_2.4ghz
+scanned SSID : Artmac_2.4ghz
+scanned SSID : CINTHOL ORIGINAL
+scanned SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : ZTE_2.4G_J7NqHZ
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : hpp
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : Cit
+scanned SSID : SecTeamNortan
+scanned SSID : SecTeamNortan
+scanned SSID : SecTeamNortan
+scanned SSID : SecTeamNortan
+scanned SSID : SecTeamNortan
 scanned SSID : Design apt
-Inside scan result loop
-scanned SSID : Room's
-Inside scan result loop
-scanned SSID : Room's
-Inside scan result loop
-scanned SSID : Room's
-Inside scan result loop
-scanned SSID : TECHVINT
-Inside scan result loop
-scanned SSID : SecTeamNortan
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : SecTeamNortan
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : SecTeamNortan
-Inside scan result loop
-scanned SSID : SecTeamNortan
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : Cit
-Inside scan result loop
-scanned SSID : SecTeamNortan
+scanned SSID : Artmac_2.4ghz
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 rproc method: 1 
-ether4330: [escan result] status 8 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
 PRAK_DEBUG Calling notify bss changes.
 New scan results available
 PRAKASH_DEBUG trying to pick network
 PRAKASH_DEBUG trying to check priority 0 
 Selecting BSS from priority group 0
-Try to find WPA-enabled AP: Num: 103 
-0: 8c:a3:99:bf:09:c0 ssid='SecTeamNortan' wpa_ie_len=0 rsn_ie_len=20 caps=0x1511
+Try to find WPA-enabled AP: Num: 128 
+0: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+1: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_lrproc method: 1 
+en=24 caps=0x1c31
+   skip - SSID mismatch
+2: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+3: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+4: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+5: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+6: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+7: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+8: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+9: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+10: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+11: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+12: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+13: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+14: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26rproc method: 1 
+ rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+15: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+16: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+17: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+18: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+19: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+20: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+21: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+22: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+23: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+24: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+25: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+26: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+27: e8:6e:44:42:90:28 ssid='Citrproc method: 1 
+' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+28: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+29: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+30: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+31: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+32: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+33: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+34: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+35: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+36: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=2rproc method: 1 
+4 caps=0x1c31
+   skip - SSID mismatch
+37: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+38: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+39: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+40: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+41: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+42: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+43: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+44: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+45: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+46: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+47: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+48: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+49: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_lenrproc method: 1 
+=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+50: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+51: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+52: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+53: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+54: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+55: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+56: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+57: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+58: e8:6e:44:42:90:28 ssid='Cit' wpa_ie_len=26 rsn_ie_len=24 caps=0x1c31
+   skip - SSID mismatch
+59: 8c:a3:99:bf:09:c0 ssid='SecTeamNortan' wpa_ie_len=0 rsn_ie_len=20 caps=0x1511
    selected based on RSN IE
    selected WPA AP 8c:a3:99:bf:09:c0 ssid='SecTeamNortan'
 PRAKASH_DEBUG out of prio loop 
-†*
- Š*
+^-
+ b-
 WPA: clearing own WPA/RSN IE
 Automatic auth_alg selection: 0x1
-ÀŠ*
-WPA: Selected cipher suites: group 16 pairwise 16 key_mgmt 2 proto 2
+Àb-
+WPA: Selected cipher suites: group 16 pairrproc method: 1 
+wise 16 key_mgmt 2 proto 2
 WPA: clearing AP WPA IE
-°‹*
-PŒ*
-ðŒ*
+°c-
+Pd-
+ðd-
 No keys have been configured - skip key clearing
 State: SCANNING -> ASSOCIATING
 PRAK_DEBUG Trying to associate.
-_____________ 22 
-30
-14
-01
-00
-00
-0F
-AC
-04
-01
-00
-00
-0F
-AC
-04
-01
-00
-00
-0F
-AC
-02
-00
-00
-_____________
-SSID->buffer: SecTeamNortan __ BSSID->buffer: 8CA399BF09C0 __ chan: 0 __ Auth->buffrproc method: 0 
-er: 30140100000FAC040100000FAC040100000FAC020000 __
-Inside wifi_control_cmd 
-CMJOIN command 
-Callescan ended: 
-d setauth from !setcrypt(ctlr, cb, cb->f[3]) 
- i : -1 a:0 
-bad wpa ie syntax 
-bad wpa ie 
+SSID->buffer: SecTeamNortan __ BSSID->buffer: 8CA399BF09C0 __ chan: 0 __ Auth->buffer: 30140100000FAC040100000FAC040100000FAC020000 __
+Inside wifi_control 
+Formatted command : join SecTeamNortan 8CA399BF09C0 0 30140100000FAC040100000FAC040100000FAC020000 2d79e0 
+ CMJOIN command 
+Called setauth from !setcrypt(ctlr, cb, cb->f[3]) 
+ pCmdbuf->buf : join 
+join 	SecTeamNortan 	8CA399BF09C0 	0 	30140100000FAC040100000FAC040100000FAC020000 	(null) 	(null) 	(null) 	(null) 	(null) 	End of cb->f 
+ i : 22 a:30140100000FAC040100000FAC040100000FAC020000 
 rproc method: 1 
-ether4330: [escan result] status 9 flags %#x reason 0
- plan9_ether : E_SCAN_RESULT received. calling wlscan result now
-bcm4343 : Driver received scan results 
- Error in schedular alogirithm 
+rproc method: 1 
+rproc method: 1 
+rproc method: 0 
+scan ended: 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 1 
+rproc method: 0 
+rproc method: 1 
+rproc method: 0 
+INTS: (2) 800040 -> 800000
+rproc method: 0 
+INTS: (2) 800040 -> 800000
+rproc method: 0 
+INTS: (2) 800040 -> 800000
+rproc method: 0 
+Sending wl join to essid: SecTeamNortan 
+Wifi sending join command 
+INTS: (2) 800040 -> 800000
+rproc method: 0 
+ether4330: cmd 263 error status -20
+ether4330: cmd error:
+69 00 96 ff e5 00 00 0c 00 35 00 00 07 01 00 00
+00 00 00 00 01 00 25 00 ec ff ff ff 6a 6f 69 6e
+00 0d 00 00 00 53 65 63 54 65 61 6d 4e 6f 72 74
+61 6e 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 ff 00 00 00 02 00 00 00 78 00 00
+00 86 01 00 00 ff ff ff ff 39 00 00 00 3f ac 00
+00 01 00 00 00 08 2b 00 00
+wlcmd errorjoin_setvar::
+0d 00 00 00 53 65 63 54 65 61 6d 4e 6f 72 74 61
+6e 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 ff 00 00 00 02 00 00 00 78 00 00 00
+86 01 00 00 ff ff ff ff 39 00 00 00 3f ac 00 00
+01 00 00 00 08 2b 00 00
+Wifi sending join command completed 
+Called waitjoin 
+Jumping token: JUMP/

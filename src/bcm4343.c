@@ -193,6 +193,7 @@ bool receive_scan_results(void* pBuffer, unsigned* pResultLength) {
 void scan_result_received(const void* pBuffer, unsigned nLength) {
     //   // assert(s_pThis != 0);
     //   m_ScanResultQueue.Enqueue();
-    printf("bcm4343 : Driver received scan results \n");
+    // printf("bcm4343 : Driver received scan results \n");
+
     enqueue_nqueue(scan_results_queue, pBuffer, nLength, 0);
 }

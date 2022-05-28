@@ -463,10 +463,6 @@ typedef struct {
 } Cmdbuf;
 
 static Cmdtab cmds[] = {
-    // {CMauth, "auth", 2},     {CMchannel, "channel", 2}, {CMcrypt, "crypt", 2},   {CMessid, "essid", 2},
-    // {CMkey1, "key1", 2},     {CMkey2, "key1", 2},       {CMkey3, "key1", 2},     {CMkey4, "key1", 2},
-    // {CMrxkey, "rxkey", 3},   {CMrxkey0, "rxkey0", 3},   {CMrxkey1, "rxkey1", 3}, {CMrxkey2, "rxkey2", 3},
-    // {CMrxkey3, "rxkey3", 3}, {CMtxkey, "txkey", 3},     {CMdebug, "debug", 2},   {CMjoin, "join", 5},
     {CMauth, "auth", 2},         {CMchannel, "channel", 2}, {CMcrypt, "crypt", 2},     {CMessid, "essid", 2},
     {CMkey1, "key1", 2},         {CMkey2, "key2", 2},       {CMkey3, "key3", 2},       {CMkey4, "key4", 2},
     {CMrxkey, "rxkey", 3},       {CMrxkey0, "rxkey0", 3},   {CMrxkey1, "rxkey1", 3},   {CMrxkey2, "rxkey2", 3},
@@ -1730,7 +1726,7 @@ static void bcmevent(Ctlr* ctl, uint8_t* p, int len) {
     reason = nhgetl(p + 12);
     // printf("p+12 passed \n");
 
-    printf("ether4330: [%s] status %ld flags %#x reason %ld\n", evstring(event), status, flags, reason);
+    // printf("ether4330: [%s] status %ld flags %#x reason %ld\n", evstring(event), status, flags, reason);
     switch (event) {
     case 19: /* E_ROAM */
         if (status == 0)
@@ -1760,7 +1756,7 @@ static void bcmevent(Ctlr* ctl, uint8_t* p, int len) {
     case 26: /* E_SCAN_COMPLETE */
         break;
     case 69: /* E_ESCAN_RESULT */
-        printf(" plan9_ether : E_SCAN_RESULT received. calling wlscan result now\n");
+        // printf(" plan9_ether : E_SCAN_RESULT received. calling wlscan result now\n");
         wlscanresult(ctl->edev, p + 48, len - 48);
         break;
     default:
@@ -2423,7 +2419,7 @@ static int waitjoin(Ctlr* ctl) {
     return n - 1;
 }
 
-static void wljoin(Ctlr* ctl, char* ssid, int chan) {
+static void wljoin(Ctlr* ctl, char* ssid, int chan, uint8_t *bssid) {
     uint8_t params[72];
     uint8_t* p;
     int n;
@@ -2448,7 +2444,10 @@ static void wljoin(Ctlr* ctl, char* ssid, int chan) {
         p = put4(p, -1); /* passive time */
     }
     p = put4(p, -1);           /* home time */
-    memset(p, 0xFF, Eaddrlen); /* bssid */
+	if(bssid != 0)
+		memcpy(p, bssid, Eaddrlen);	/* bssid */
+	else
+		memset(p, 0xFF, Eaddrlen);
     p += Eaddrlen;
     p = put2(p, 0); /* pad */
     if (chan != 0) {
@@ -2469,6 +2468,7 @@ static void wljoin(Ctlr* ctl, char* ssid, int chan) {
 
     printf("Wifi sending join command \n");
     wlsetvar(ctl, "join", params, chan ? sizeof params : sizeof params - 4);
+    dump("join_setvar:", params, sizeof params);
     printf("Wifi sending join command completed \n");
     ctl->status = Connecting;
     printf("Called waitjoin \n");
@@ -2517,7 +2517,7 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
         printf("CMAUTH \n");
         setauth(ctlr, cb, cb->f[1]);
         if (ctlr->essid[0]) {
-            wljoin(ctlr, ctlr->essid, ctlr->chanid);
+            wljoin(ctlr, ctlr->essid, ctlr->chanid,0);
         }
         
         break;
@@ -2526,7 +2526,6 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
             printf("bad channel number");
             return 0;
         }
-
         // wlcmdint(ctlr, 30, i);	/* SET_CHANNEL */
         ctlr->chanid = i;
         printf("CHMCHANNEL \n");
@@ -2534,7 +2533,7 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
     case CMcrypt:
         if (setcrypt(ctlr, cb, cb->f[1])) {
             if (ctlr->essid[0]) {
-                wljoin(ctlr, ctlr->essid, ctlr->chanid);
+                wljoin(ctlr, ctlr->essid, ctlr->chanid, 0);
             }
         } else {
             printf("bad crypt type \n");
@@ -2550,7 +2549,7 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
             ctlr->essid[sizeof(ctlr->essid) - 1] = '\0';
         }
         // if(!waserror()){
-        wljoin(ctlr, ctlr->essid, ctlr->chanid);
+        wljoin(ctlr, ctlr->essid, ctlr->chanid, 0);
         // poperror();
         // }
         printf("CMESSID \n");
@@ -2576,13 +2575,18 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
             return 0;
         }
 
-        if (!setcrypt(ctlr, cb, cb->f[3])) {
+        if (!setcrypt(ctlr, cb, cb->f[4])) {
             printf("Called setauth from !setcrypt(ctlr, cb, cb->f[3]) \n");
-            setauth(ctlr, cb, cb->f[3]);
+            printf(" pCmdbuf->buf : %s \n", cb->buf);
+            for(int xy=0; xy < 10; xy++) {
+                printf("%s \t", cb->f[xy]);
+            }
+            printf("End of cb->f \n");
+            setauth(ctlr, cb, cb->f[4]);
         }
             
         if (ctlr->essid[0])
-            wljoin(ctlr, ctlr->essid, ctlr->chanid);
+            wljoin(ctlr, ctlr->essid, ctlr->chanid, ea);
 
         printf("CMJOIN \n");
         break;
