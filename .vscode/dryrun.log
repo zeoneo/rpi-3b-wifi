@@ -4,7 +4,6 @@ make: Entering directory '/Users/prakashborkar/development/projects/rpi-3b-wifi'
 cd hostap/wpa_supplicant && make -f Makefile.rpi3b
 cp hostap/wpa_supplicant/libwpa_supplicant.a src/
 cd src && make
- 
 make[1]: Entering directory '/Users/prakashborkar/development/projects/rpi-3b-wifi/src'
 echo "  CC    assert.o"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c assert.c -o assert.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
@@ -36,8 +35,8 @@ echo "  CC    kernel_alloc.o"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c kernel_alloc.c -o kernel_alloc.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
 echo "  CC    rpi-armtimer.o"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c rpi-armtimer.c -o rpi-armtimer.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
-echo "  CC    rpi-interrupts.o"
  
+echo "  CC    rpi-interrupts.o"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c rpi-interrupts.c -o rpi-interrupts.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
 echo "  CC    rpi-mailbox-interface.o"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c rpi-mailbox-interface.c -o rpi-mailbox-interface.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
@@ -61,7 +60,6 @@ echo "  CC    strstr.o"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c strstr.c -o strstr.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
 echo "  CC    util.o"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c util.c -o util.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
- 
 echo "  CC    net_queue.o"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c net_queue.c -o net_queue.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
 echo "  CC    cstring.o"
@@ -69,6 +67,7 @@ arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c cstring.c -o cstring.o -
 echo "  CC    string.o"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c string.c -o string.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
 echo "  CC    printf.o"
+ 
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c printf.c -o printf.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
 echo "  CC    vsnprintf.o"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c vsnprintf.c -o vsnprintf.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
@@ -77,7 +76,6 @@ arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c strlen.c -o strlen.o -st
 echo "  CC    plan9_emmc.o"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c plan9_emmc.c -o plan9_emmc.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
 echo "  CC    link_layer.o"
- 
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c link_layer.c -o link_layer.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
 echo "  CC    fork.o"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c fork.c -o fork.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
@@ -101,6 +99,7 @@ echo "  AR    librpi3b.a"
 rm -f librpi3b.a
 arm-none-eabi-ar rc librpi3b.a assert.o boot.o bss-clear.o dma.o doprnt.o frame_alloc.o emmc.o fat.o fat16.o fat32.o sd_card.o gpio.o bcm_random.o kernel_alloc.o rpi-armtimer.o rpi-interrupts.o rpi-mailbox-interface.o rpi-mailbox.o systimer.o sdhost.o uart0.o memcmp.o memcpy.o memmove.o memset.o strstr.o util.o net_queue.o cstring.o string.o printf.o vsnprintf.o strlen.o plan9_emmc.o link_layer.o fork.o scheduler.o task_switch.o list.o queue.o lock.o  plan9_ether4330.o etherif.o bcm4343.o
 echo "  CC    kernel.o"
+ 
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c kernel.c -o kernel.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
 echo "  LD    kernel8-32.elf"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -T ../linker.ld -o kernel8-32.elf  -L/usr/local/opt/python@3.8/lib  -D__enable_exp_  kernel.o -L . -lrpi3b -lwpa_supplicant  -nostdlib -lm -lgcc  -D__enable_exp_

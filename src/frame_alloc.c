@@ -93,11 +93,13 @@ void show_current_memory_states() {
 
 void* alloc_frame(void) {
     if (current_state.available_frames == 0) {
+        printf("Error: Available frames 0 \n");
         return 0;
     }
 
     uint32_t free_frame = find_free_frame();
     if (free_frame == 0) {
+        printf("Error: Could not find free frames 0 \n");
         return 0; // We didn;t find a frame
     }
 

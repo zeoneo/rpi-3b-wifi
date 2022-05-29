@@ -159,7 +159,7 @@ bool wifi_control(bcm4343_net_device* net_device, const char* pFormat, ...) {
 
     c_string_t* Command = get_new_cstring("");
     // cstring_formatv(Command, pFormat, var);
-    char *new_buf = kernel_allocate(512);
+    char *new_buf = kernel_allocate(1024);
     int i = vsprintf(new_buf, pFormat, var);
     new_buf[i] = '\0';
     va_end(var);
@@ -171,7 +171,7 @@ bool wifi_control(bcm4343_net_device* net_device, const char* pFormat, ...) {
 }
 
 bool wifi_control_cmd(bcm4343_net_device* net_device, char* cmd, unsigned int length) {
-    printf("Inside wifi_control_cmd \n");
+    // printf("Inside wifi_control_cmd :%s \n", cmd);
     return net_device->edev->ctl(net_device->edev, (char*) cmd, length) != 0l;
 }
 

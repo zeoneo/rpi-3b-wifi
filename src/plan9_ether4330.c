@@ -1811,7 +1811,7 @@ static void rproc(void* a) {
             }
             unlock(&ctl->txwinlock);
         }
-        printf("rproc method: %d \n", (p->chanflg & 0xF));
+        // printf("rproc method: %d \n", (p->chanflg & 0xF));
         switch (p->chanflg & 0xF) {
         case 0:
             // if (iodebug)
@@ -2522,6 +2522,7 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
         
         break;
     case CMchannel:
+     printf("CMChannel \n");
         if ((i = atoi(cb->f[1])) < 0 || i > 16) {
             printf("bad channel number");
             return 0;
@@ -2531,6 +2532,7 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
         printf("CHMCHANNEL \n");
         break;
     case CMcrypt:
+     printf("CMCRYPT \n");
         if (setcrypt(ctlr, cb, cb->f[1])) {
             if (ctlr->essid[0]) {
                 wljoin(ctlr, ctlr->essid, ctlr->chanid, 0);
@@ -2542,6 +2544,7 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
         printf("CMCRYPT \n");
         break;
     case CMessid:
+     printf("CMesside \n");
         if (cistrcmp(cb->f[1], "default") == 0)
             memset(ctlr->essid, 0, sizeof(ctlr->essid));
         else {
@@ -2577,11 +2580,11 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
 
         if (!setcrypt(ctlr, cb, cb->f[4])) {
             printf("Called setauth from !setcrypt(ctlr, cb, cb->f[3]) \n");
-            printf(" pCmdbuf->buf : %s \n", cb->buf);
-            for(int xy=0; xy < 10; xy++) {
-                printf("%s \t", cb->f[xy]);
-            }
-            printf("End of cb->f \n");
+            // // printf(" pCmdbuf->buf : %s \n", cb->buf);
+            // for(int xy=0; xy < 10; xy++) {
+            //     printf("%s \t", cb->f[xy]);
+            // }
+            // printf("End of cb->f \n");
             setauth(ctlr, cb, cb->f[4]);
         }
             
@@ -2594,6 +2597,7 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
     case CMkey2:
     case CMkey3:
     case CMkey4:
+     printf("CMKEy \n");
         i = ct->index - CMkey1;
         if (wepparsekey(&ctlr->keys[i], cb->f[1])) {
             printf("bad WEP key syntax");
@@ -2610,6 +2614,7 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
     case CMrxkey2:
     case CMrxkey3:
     case CMtxkey:
+     printf("CMtxKey s rxKeys \n");
         if (parseether(ea, cb->f[1]) < 0) {
             printf("bad ether addr \n");
             return 0;
@@ -2623,9 +2628,11 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
         printf("CMRXKEY123 \n");
         break;
     case CMescan: /* escan seconds */
+     printf("CMScan \n");
         etherbcmscan((void*) edev, (uint32_t) atoi(cb->f[1]));
         break;
     case CMcountry: /* country alpha2 */
+     printf("CMCOUntry \n");
         wlsetcountry(ctlr, cb->f[1]);
         break;
     case CMdebug:

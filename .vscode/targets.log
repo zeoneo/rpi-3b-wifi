@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat May 28 16:41:05 2022
+# Make data base, printed on Sun May 29 10:40:06 2022
 
 # Variables
 
@@ -17,9 +17,9 @@ TMPDIR = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/
 # environment
 IDF_PATH = /Users/prakashborkar/esp/esp-idf
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.8648657342.8648657348
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.8650075622.8650075628
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/vscode-ipc-7838e361-f429-42db-8f50-3a1cf0795578.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/vscode-ipc-01b9b437-156b-4fb1-bcf0-8423a6cfff57.sock
 # environment
 VSCODE_CWD = /
 # default
@@ -45,7 +45,7 @@ VSCODE_LOG_STACK = false
 # automatic
 %F = $(notdir $%)
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/prakashborkar/Library/Application Support/Code/CachedData/c722ca6c7eed3d7987c0d5c3df5c45f6b15e77d1
+VSCODE_CODE_CACHE_PATH = /Users/prakashborkar/Library/Application Support/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
 # environment
 LANG = C
 # default
@@ -63,13 +63,13 @@ CURDIR := /Users/prakashborkar/development/projects/rpi-3b-wifi
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.b1aGoEZcZw/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.tontDbNjZw/Listeners
 # default
 .SHELLFLAGS := -c
 # automatic
@@ -83,7 +83,7 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 630
+VSCODE_PID = 2875
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
@@ -133,7 +133,7 @@ XPC_FLAGS = 0x0
 # makefile
 .DEFAULT_GOAL := all
 # environment
-DISPLAY = /private/tmp/com.apple.launchd.HjCRTtaiuU/org.macosforge.xquartz:0
+DISPLAY = /private/tmp/com.apple.launchd.o4I5f5nY5k/org.macosforge.xquartz:0
 # environment
 USER = prakashborkar
 # default
@@ -153,7 +153,7 @@ HOME = /Users/prakashborkar
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-VSCODE_IPC_HOOK = /Users/prakashborkar/Library/Application Support/Code/1.65.2-main.sock
+VSCODE_IPC_HOOK = /Users/prakashborkar/Library/Application Support/Code/1.67.2-main.sock
 # default
 .RECIPEPREFIX := 
 # automatic
@@ -263,6 +263,6 @@ all: wpa_supplicant.a
 # strcache performance: lookups = 37 / hit rate = 24%
 # hash-table stats:
 # Load=28/8192=0%, Rehash=0, Collisions=0/37=0%
-# Finished Make data base on Sat May 28 16:41:05 2022
+# Finished Make data base on Sun May 29 10:40:06 2022
 
  
