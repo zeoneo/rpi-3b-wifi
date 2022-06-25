@@ -9,7 +9,7 @@
 #define INIT_TASK                                                                                                      \
     /*cpu_context*/ { {0}, /* state etc */ 0, 0, 1, 0, 0, 0, "init" }
 
-task_struct_t init_task        = INIT_TASK;
+task_struct_t init_task  __attribute__((aligned(4)))  = INIT_TASK;
 task_struct_t* current         = &(init_task);
 task_struct_t* TASKS[NR_TASKS] = {
     &(init_task),
@@ -21,6 +21,14 @@ extern void task_switch(task_struct_t* old, task_struct_t* new);
 extern void delete_task(task_struct_t* task_to_delete);
 
 static void _schedule(void);
+
+void print_task_reg(task_struct_t* task) {
+    cpu_context_t *t = &(task->cpu_context);
+    printf("task_reg:%x pid: %d r0:%x \n", task, task->pid, t->r0);
+    printf("task_reg: pid: %d r4:%x r5:%x r6:%x r7: %x \n", task->pid, t->r4, t->r5, t->r6, t->r7);
+    printf("task_reg: pid: %d r8:%x r9:%x r10:%x r11: %x \n", task->pid, t->r8, t->r9, t->r10, t->r11);
+    printf("task_reg: pid: %d r12:%x sp:%x lr:%x \n", task->pid, t->r12, t->sp, t->lr);
+}
 
 void preempt_disable(void) {
     current->preempt_count++;
@@ -38,19 +46,21 @@ void schedule_tail(void) {
 static void schedule_tick();
 
 void init_scheduler() {
+    // Clear earlier tasks due to restart 
+    for(int i=1;i<NR_TASKS;i++) {
+        TASKS[i] = 0;
+    }
     repeat_on_time_out(schedule_tick, 10000);
+    printf("init task_reg : %x \n", current);
     current->priority = 1;
 }
 
 static void schedule_tick() {
-    --(current->counter);
     if (current->preempt_count > 0) {
         return;
     }
-    current->counter = 0;
     _enable_interrupts();
     _schedule();
-    // printf("__\n");
     DISABLE_INTERRUPTS();
 }
 
@@ -59,9 +69,6 @@ task_struct_t* get_task_by_pid(int pid) {
 }
 
 void schedule(void) {
-    // printf("calling scheduler current pid: %d \n", current->pid);
-    // timer_set(10000U);
-    current->counter = 0;
     _schedule();
 }
 
@@ -71,7 +78,8 @@ static void switch_to(struct task_struct* next) {
     }
     struct task_struct* prev = current;
     current                  = next;
-    // printf("__changing from: %d to %d ___\n", prev->pid, next->pid);
+    // printf("__changing prev: %x to next:%x ___ \n", prev, next);
+    // print_task_reg(next);
     task_switch(prev, next);
 }
 
@@ -99,10 +107,11 @@ int add_task(task_struct_t* pTask) {
         return 0;
     }
     uint32_t i;
-    for (i = 0; i < NR_TASKS; i++) {
+    for (i = 1; i < NR_TASKS; i++) {
         if (TASKS[i] == 0) {
             TASKS[i]        = pTask;
             TASKS[i]->pid   = i;
+            printf("new_task_pid:%d task_reg: %x \n", i, pTask);
             pTask->priority = current->priority;
             pTask->counter  = current->priority;
             nr_tasks++;
@@ -112,6 +121,7 @@ int add_task(task_struct_t* pTask) {
 
     if (i >= NR_TASKS) {
         printf("System limit of tasks exceeded \n");
+        preempt_enable();
         return 0;
     }
     preempt_enable();
@@ -183,7 +193,7 @@ static uint32_t get_next_task() {
                 break;
 
             default:
-                printf(" Error in schedular alogirithm \n");
+                printf(" Error in schedular alogirithm nTask: %d  %s status: %d \n", pTask->name, pTask->state, nTask);
                 break;
         }
     }
@@ -194,14 +204,14 @@ static uint32_t get_next_task() {
 void _schedule(void) {
     preempt_disable();
 
-    uint32_t current_pid;
-    while ((current_pid = get_next_task()) == NR_TASKS) // no TASKS is ready
+    uint32_t next_pid;
+    while ((next_pid = get_next_task()) == NR_TASKS) // no TASKS is ready
     {
         // assert (m_nTasks > 0);
     }
     // printf("New pid to run: %d \n", current->pid);
     // assert (m_nCurrent < MAX_TASKS);
-    task_struct_t* pNext = TASKS[current_pid];
+    task_struct_t* pNext = TASKS[next_pid];
     // assert(pNext != 0);
     if (pNext == 0 || current == pNext) {
         preempt_enable();

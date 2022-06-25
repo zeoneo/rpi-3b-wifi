@@ -1,0 +1,1428 @@
+####################
+Inside Bootloader
+Boot Atags Addr: 2EFF9900 
+####################
+Requesting kernel
+00001018 Raspbootcom V1.0
+sending size in hex: 94f14 610068 
+sending size: 14 4f 9 0 
+receiving size: 1 2 3 4 5 6 7 8
+receiving size: 0 0 0 9 4 F 1 4
+
+Sending Kernel: 10.74 % 
+Sending Kernel: 21.48 % 
+Sending Kernel: 32.23 % 
+Sending Kernel: 42.97 % 
+Sending Kernel: 53.71 % 
+Sending Kernel: 64.45 % 
+Sending Kernel: 75.20 % 
+Sending Kernel: 85.94 % 
+Sending Kernel: 96.68 % 
+Sending Kernel: 100.00 % 
+0001018 -----------------Kernel Started Dude........................
+Kernel End: 0x20a000 
+Kalloc start: 0x220000 end:0x2e8000 
+Kernel allocation init success 
+init task_reg : 9c058 
+new queue: q: 0x220010 head:0 tail: 0 lock: 220018 
+new queue: q: 0x220060 head:0 tail: 0 lock: 220068 
+initialize: 0xabf8 
+In praakash main 
+initialize_link_layer: 0xa08c 
+wpa_supplicant_main: 0x1373c 
+ clk_id: 1 clk_rate: 200000000 Chip Id : 0xa9a6 43430 
+ether4330: chip   rev 1 type 1
+brcmfmac43430-sdio.bin Firmware file found. 
+Breaking due to EOF. 
+EOF reached. 
+Completed transfer now off to compare.
+compare... 
+Breaking due to EOF. 
+Successful comparison. 
+
+brcmfmac43430-sdio.txt Firmware file found. 
+Breaking due to EOF. 
+Completed transfer now off to compare.
+compare... 
+Successful comparison. 
+
+HTCLOCK: 0xd0 
+rproc : ea60 
+lproc : df30 
+new_task_pid:1 task_reg: 2e8000 
+new_task_pid:2 task_reg: 2e9000 
+Flow start calling txstart 
+ether4330: addr B8:27:EB:B7:B3:D9
+INTS: (2) 8200c0 -> 800000
+ether4330: firmware ready
+INTS: (2) 8000c0 -> 800000
+INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800000
+new queue: q: 0x223610 head:0 tail: 0 lock: 223618 
+new queue: q: 0x223660 head:0 tail: 0 lock: 223668 
+new_task_pid:3 task_reg: 2ea000 
+wpa_printf in the main_rpi3b  
+
+in the main_rpi3b  
+in the main_rpi3b 2 
+Initializing interface 'wlan0' conf 'in_memory' driver 'rpi3b' ctrl_interface 'N/A' bridge 'N/A'
+PRAKASH_DEBUG reading conf file name.
+PRAKASH_DEBUG: passphrase: 12345678 5 8 
+PRAKASH_DEBUG: Adding ssid to priority list.
+addr: b8 27 eb b7 b3 d9 
+Own MAC address: b8:27:eb:b7:b3:d9
+RSN: flushing PMKID list in the driver
+0M"
+valid country found 
+Setting country code to 'IN'
+Inside wifi_control 
+Formatted command : country IN 224e20 
+ CMCOUntry 
+INTS: (2) 800040 -> 800000
+EAPOL: SUPP_PAE entering state DISCONNECTED
+EAPOL: Supplicant port status: Unauthorized
+EAPOL: KEY_RX entering state NO_KEY_RECEIVE
+EAPOL: SUPP_BE entering state INITIALIZE
+EAP: EAP entering state DISABLED
+EAPOL: Supplicant port status: Unauthorized
+EAPOL: Supplicant port status: Unauthorized
+Added interface wlan0
+Trying to get current scan results first without requesting a new scan to speed up initial association
+PRAK_DEBUG Calling get scan results.
+Checking results now
+In the receive scan result 
+In the receive scan result, after dequeue nLength:0 
+In the receive scan result, after dequeue returning nLength:0 
+PRAK_DEBUG Calling notify bss changes.
+�["
+PRAKASH_DEBUG trying to pick network
+PRAKASH_DEBUG trying to check priority 0 
+Selecting BSS from priority group 0
+Try to find WPA-enabled AP: Num: 0 
+Try to find non-WPA AP: 0 
+PRAKASH_DEBUG out of prio loop 
+No suitable network found
+�\"
+State: DISCONNECTED -> SCANNING
+Starting AP scan for wildcard SSID
+CMScan 
+WPA Driver scan started 
+INTS: (2) 800040 -> 800000
+INTS: (2) 800040 -> 800040
+EAPOL: disable timer tick
+EAPOL: Supplicant port status: Unauthorized
+WPA Driver scan timeout, stopping scan 
+CMScan 
+PRAK_DEBUG Calling get scan results.
+Checking results now
+In the receive scan result 
+dequeu 1 nqueue->head: 2215a0 nqueue->head->next: 226180 
+In the receive scan result, after dequeue nLength:298 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : prak1 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 226180 nqueue->head->next: 227190 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 227190 nqueue->head->next: 2281a0 
+In the receive scan result, after dequeue nLength:438 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 2281a0 nqueue->head->next: 2291b0 
+In the receive scan result, after dequeue nLength:410 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : GNXS821081BF 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 2291b0 nqueue->head->next: 22a1c0 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 22a1c0 nqueue->head->next: 22b1d0 
+In the receive scan result, after dequeue nLength:306 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : prak1 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 22b1d0 nqueue->head->next: 22c1e0 
+In the receive scan result, after dequeue nLength:298 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : prak1 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 22c1e0 nqueue->head->next: 22d1f0 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 22d1f0 nqueue->head->next: 22e200 
+In the receive scan result, after dequeue nLength:378 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Airtel_8317514147 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 22e200 nqueue->head->next: 22f210 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 22f210 nqueue->head->next: 230220 
+In the receive scan result, after dequeue nLength:298 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : prak1 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 230220 nqueue->head->next: 231230 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 231230 nqueue->head->next: 232240 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 232240 nqueue->head->next: 233250 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 233250 nqueue->head->next: 2225b0 
+In the receive scan result, after dequeue nLength:438 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 2225b0 nqueue->head->next: 235270 
+In the receive scan result, after dequeue nLength:306 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : prak1 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 235270 nqueue->head->next: 236280 
+In the receive scan result, after dequeue nLength:374 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : 201 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 236280 nqueue->head->next: 237290 
+In the receive scan result, after dequeue nLength:374 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : 201 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 237290 nqueue->head->next: 2382a0 
+In the receive scan result, after dequeue nLength:374 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : 201 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 2382a0 nqueue->head->next: 2392b0 
+In the receive scan result, after dequeue nLength:374 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : 201 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 2392b0 nqueue->head->next: 23a2c0 
+In the receive scan result, after dequeue nLength:374 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : 201 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 23a2c0 nqueue->head->next: 23b2d0 
+In the receive scan result, after dequeue nLength:374 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : 201 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 23b2d0 nqueue->head->next: 23c2e0 
+In the receive scan result, after dequeue nLength:338 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Room's 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 23c2e0 nqueue->head->next: 23d2f0 
+In the receive scan result, after dequeue nLength:326 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Mak_wifi 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 23d2f0 nqueue->head->next: 23e300 
+In the receive scan result, after dequeue nLength:326 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Mak_wifi 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 23e300 nqueue->head->next: 23f310 
+In the receive scan result, after dequeue nLength:326 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Mak_wifi 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 23f310 nqueue->head->next: 240320 
+In the receive scan result, after dequeue nLength:326 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Mak_wifi 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 240320 nqueue->head->next: 241330 
+In the receive scan result, after dequeue nLength:338 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Room's 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 241330 nqueue->head->next: 242340 
+In the receive scan result, after dequeue nLength:358 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : AKSHAY2G 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 242340 nqueue->head->next: 243350 
+In the receive scan result, after dequeue nLength:358 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : AKSHAY2G 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 243350 nqueue->head->next: 244360 
+In the receive scan result, after dequeue nLength:358 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : AKSHAY2G 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 244360 nqueue->head->next: 245370 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 245370 nqueue->head->next: 246380 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 246380 nqueue->head->next: 247390 
+In the receive scan result, after dequeue nLength:546 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Vinod_2G 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 247390 nqueue->head->next: 2483a0 
+In the receive scan result, after dequeue nLength:414 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID :  
+
+In the receive scan result 
+dequeu 1 nqueue->head: 2483a0 nqueue->head->next: 2493b0 
+In the receive scan result, after dequeue nLength:402 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Cit.pvt ldt 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 2493b0 nqueue->head->next: 24a3c0 
+In the receive scan result, after dequeue nLength:306 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Zoro 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 24a3c0 nqueue->head->next: 234260 
+In the receive scan result, after dequeue nLength:14 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 0 
+
+total  loop 0 bss:2ea7e4 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 234260 nqueue->head->next: 24c3e0 
+In the receive scan result, after dequeue nLength:298 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : prak1 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 24c3e0 nqueue->head->next: 24d3f0 
+In the receive scan result, after dequeue nLength:422 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Leelammu 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 24d3f0 nqueue->head->next: 24e400 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 24e400 nqueue->head->next: 24f410 
+In the receive scan result, after dequeue nLength:298 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : prak1 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 24f410 nqueue->head->next: 250420 
+In the receive scan result, after dequeue nLength:306 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : prak1 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 250420 nqueue->head->next: 251430 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 251430 nqueue->head->next: 252440 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 252440 nqueue->head->next: 253450 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 253450 nqueue->head->next: 254460 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 254460 nqueue->head->next: 255470 
+In the receive scan result, after dequeue nLength:370 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : TP-Link_F570 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 255470 nqueue->head->next: 256480 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 256480 nqueue->head->next: 257490 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 257490 nqueue->head->next: 2584a0 
+In the receive scan result, after dequeue nLength:298 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : prak1 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 2584a0 nqueue->head->next: 2594b0 
+In the receive scan result, after dequeue nLength:306 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : prak1 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 2594b0 nqueue->head->next: 25a4c0 
+In the receive scan result, after dequeue nLength:374 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : 201 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 25a4c0 nqueue->head->next: 25b4d0 
+In the receive scan result, after dequeue nLength:374 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : 201 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 25b4d0 nqueue->head->next: 25c4e0 
+In the receive scan result, after dequeue nLength:374 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : 201 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 25c4e0 nqueue->head->next: 25d4f0 
+In the receive scan result, after dequeue nLength:338 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Room's 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 25d4f0 nqueue->head->next: 25e500 
+In the receive scan result, after dequeue nLength:358 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : AKSHAY2G 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 25e500 nqueue->head->next: 25f510 
+In the receive scan result, after dequeue nLength:358 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : AKSHAY2G 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 25f510 nqueue->head->next: 260520 
+In the receive scan result, after dequeue nLength:358 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : AKSHAY2G 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 260520 nqueue->head->next: 261530 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 261530 nqueue->head->next: 262540 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 262540 nqueue->head->next: 263550 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 263550 nqueue->head->next: 264560 
+In the receive scan result, after dequeue nLength:358 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : AKSHAY2G 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 264560 nqueue->head->next: 265570 
+In the receive scan result, after dequeue nLength:358 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : AKSHAY2G 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 265570 nqueue->head->next: 266580 
+In the receive scan result, after dequeue nLength:358 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : AKSHAY2G 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 266580 nqueue->head->next: 267590 
+In the receive scan result, after dequeue nLength:366 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : AKSHAY2G 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 267590 nqueue->head->next: 2685a0 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 2685a0 nqueue->head->next: 2695b0 
+In the receive scan result, after dequeue nLength:422 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 2695b0 nqueue->head->next: 26a5c0 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 26a5c0 nqueue->head->next: 24b3d0 
+In the receive scan result, after dequeue nLength:462 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_FFwiSx 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 24b3d0 nqueue->head->next: 26c5e0 
+In the receive scan result, after dequeue nLength:390 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_FFwiSx 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 26c5e0 nqueue->head->next: 26d5f0 
+In the receive scan result, after dequeue nLength:462 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_FFwiSx 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 26d5f0 nqueue->head->next: 26e600 
+In the receive scan result, after dequeue nLength:474 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Cit.pvt ldt 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 26e600 nqueue->head->next: 26f610 
+In the receive scan result, after dequeue nLength:306 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : Zoro 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 26f610 nqueue->head->next: 270620 
+In the receive scan result, after dequeue nLength:310 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ABHINAV PARKOUR ACADEMY 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 270620 nqueue->head->next: 271630 
+In the receive scan result, after dequeue nLength:314 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ABHINAV PARKOUR ACADEMY 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 271630 nqueue->head->next: 272640 
+In the receive scan result, after dequeue nLength:310 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ABHINAV PARKOUR ACADEMY 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 272640 nqueue->head->next: 26b5d0 
+In the receive scan result, after dequeue nLength:14 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 0 
+
+total  loop 0 bss:2ea7e4 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 26b5d0 nqueue->head->next: 274660 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 274660 nqueue->head->next: 275670 
+In the receive scan result, after dequeue nLength:298 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : prak1 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 275670 nqueue->head->next: 276680 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 276680 nqueue->head->next: 277690 
+In the receive scan result, after dequeue nLength:298 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : prak1 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 277690 nqueue->head->next: 2786a0 
+In the receive scan result, after dequeue nLength:438 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 2786a0 nqueue->head->next: 2796b0 
+In the receive scan result, after dequeue nLength:306 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : prak1 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 2796b0 nqueue->head->next: 27a6c0 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 27a6c0 nqueue->head->next: 27b6d0 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : SecTeamNortan 
+
+In the receive scan result 
+dequeu 1 nqueue->head: 27b6d0 nqueue->head->next: 27c6e0 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue pResultLength :0X2ea7d4 
+In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
+Inside scan result loop 
+
+total-1 scan_res:2ea7d8 loop 1 
+
+total  loop 1 bss:2ea7e4 
+
+Start of result loop 0 
+
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result 
+dequeu 1 nqueue->hea
+00000000 00000001 00001629 00008198 E5168008 0000818C 

@@ -1822,7 +1822,7 @@ static void rproc(void* a) {
             if ((q->id[0] | q->id[1] << 8) != ctl->reqid)
                 break;
             ctl->rsp = b;
-            // wakeup(&ctl->cmdr);
+            wakeup(&ctl->cmdr);
             continue;
         case 1:
             // if(iodebug)
@@ -1936,9 +1936,9 @@ static void lproc(void* a) {
                 // if(waserror())
                 // 	ctlr->scansecs = 0;
                 // else{
-                printf("Stating scans: \n");
+                // printf("Stating scans: \n");
                 wlscanstart(ctlr);
-                printf("scan ended: \n");
+                // printf("scan ended: \n");
                 // poperror();
                 // }
                 secs = ctlr->scansecs;

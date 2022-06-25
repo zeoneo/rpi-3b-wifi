@@ -102,6 +102,7 @@ void* kernel_allocate(size_t size) {
     pBlockHeader->next = 0;
 
     void* pResult = pBlockHeader->block_data_ptr;
+    // printf("Allocating start add :0X%x \n", pResult);
     return pResult;
 }
 

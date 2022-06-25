@@ -6,6 +6,9 @@
 #include <device/uart0.h>
 #include <plibc/stdio.h>
 #include <stdarg.h>
+#include<kernel/lock.h>
+
+spin_lock_t print_lock = {.lock = 0, .pid= -1};
 
 /**
  * @ingroup libxc
@@ -34,13 +37,14 @@ int fputc(int c, int dev) {
 extern int _doprnt(const char* fmt, va_list ap, int (*putc_func)(int, int), int putc_arg);
 
 int printf(const char* format, ...) {
+    // mutex_acquire(&print_lock);
     va_list ap;
     int ret;
 
     va_start(ap, format);
     ret = _doprnt(format, ap, fputc, 1);
     va_end(ap);
-
+    // mutex_release(&print_lock);
     return ret;
 }
 

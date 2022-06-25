@@ -50,11 +50,11 @@ _start:
     ldr pc, _fast_interrupt_vector_h
 
 	_reset_h:                           .word   _reset_
-	_undefined_instruction_vector_h:    .word   undefined_instruction_vector
-	_software_interrupt_vector_h:       .word   software_interrupt_vector
-	_prefetch_abort_vector_h:           .word   prefetch_abort_vector
+	_undefined_instruction_vector_h:    .word   data_abort_vector_asm
+	_software_interrupt_vector_h:       .word   data_abort_vector_asm
+	_prefetch_abort_vector_h:           .word   data_abort_vector_asm
 	_data_abort_vector_h:               .word   data_abort_vector_asm
-	_unused_handler_h:                  .word   _reset_
+	_unused_handler_h:                  .word   data_abort_vector_asm
 	_interrupt_vector_h:                .word   irq_handler_asm_wrapper
 	_fast_interrupt_vector_h:           .word   fast_interrupt_vector
 

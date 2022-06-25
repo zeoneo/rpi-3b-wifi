@@ -13,3 +13,7 @@ task_switch:					/* r0: pOldRegs, r1: pNewRegs */
 	ldmia 	r1!, {r2-r3}
 	fldmiad	r1, {d0-d15} //Floating-point load multiple and store multiple.
 	bx lr
+
+
+@ .globl	ret_from_fork
+@ ret_from_fork:

@@ -2,7 +2,7 @@
 # Configure the cross-compiler to use the desired system root.
 CC :=arm-none-eabi-gcc --sysroot=. -isystem=./include
 AR :=arm-none-eabi-ar
-CFLAGS?=-O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles
+CFLAGS?=-O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -mno-unaligned-access
 CPPFLAGS?=
 LDFLAGS?=
 LIBS?=

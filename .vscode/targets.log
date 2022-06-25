@@ -5,8 +5,9 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
+ 
 
-# Make data base, printed on Sat Jun 25 12:06:38 2022
+# Make data base, printed on Sat Jun 25 13:07:41 2022
 
 # Variables
 
@@ -19,7 +20,7 @@ IDF_PATH = /Users/prakashborkar/esp/esp-idf
 # environment
 XPC_SERVICE_NAME = application.com.microsoft.VSCode.8650218168.8650218174
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/vscode-ipc-3a4154a5-4b48-4008-bce1-42063652da53.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/vscode-ipc-67f94c0e-bba1-42f1-a1ea-51ca28638365.sock
 # environment
 VSCODE_CWD = /
 # default
@@ -63,7 +64,7 @@ CURDIR := /Users/prakashborkar/Desktop/Projectes/rpi-3b-wifi
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
@@ -171,9 +172,9 @@ SUFFIXES :=
 
 # Directories
 
-# . (device 16777220, inode 8650265143): 21 files, no impossibilities.
+# . (device 16777220, inode 8650265143): 22 files, no impossibilities.
 
-# 21 files, no impossibilities in 1 directories.
+# 22 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -221,6 +222,7 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+ 
 #  recipe to execute (from 'Makefile', line 10):
 	cd src && $(MAKE) clean
 	cd hostap/wpa_supplicant && $(MAKE) clean
@@ -257,12 +259,12 @@ all: wpa_supplicant.a
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 28 / storage = 278 B / avg = 9 B
-# current buf: size = 8162 B / used = 278 B / count = 28 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 29 / storage = 291 B / avg = 10 B
+# current buf: size = 8162 B / used = 291 B / count = 29 / avg = 10 B
 
-# strcache performance: lookups = 37 / hit rate = 24%
+# strcache performance: lookups = 38 / hit rate = 23%
 # hash-table stats:
-# Load=28/8192=0%, Rehash=0, Collisions=0/37=0%
-# Finished Make data base on Sat Jun 25 12:06:38 2022
+# Load=29/8192=0%, Rehash=0, Collisions=0/38=0%
+# Finished Make data base on Sat Jun 25 13:07:41 2022
 
  

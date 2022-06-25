@@ -35,7 +35,7 @@ static uint32_t find_contiguous_frames_in_ranges(uint32_t start_frame_idx, uint3
 static uint32_t find_contiguous_frames(uint32_t num_of_frames, uint32_t align);
 
 // Implementation specifics
-static frame_manager_state_t current_state = {0};
+static frame_manager_state_t current_state  __attribute__((aligned(4)))  = {0};
 
 void init_frame_manager() {
     uint32_t page_array_len, kernel_pages;
