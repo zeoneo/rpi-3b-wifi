@@ -1,10 +1,10 @@
 make --dry-run --always-make --keep-going --print-directory
-make: Entering directory '/Users/prakashborkar/development/projects/rpi-3b-wifi'
+make: Entering directory '/Users/prakashborkar/Desktop/Projectes/rpi-3b-wifi'
 # git submodule update --init hostap
 cd hostap/wpa_supplicant && make -f Makefile.rpi3b
 cp hostap/wpa_supplicant/libwpa_supplicant.a src/
 cd src && make
-make[1]: Entering directory '/Users/prakashborkar/development/projects/rpi-3b-wifi/src'
+make[1]: Entering directory '/Users/prakashborkar/Desktop/Projectes/rpi-3b-wifi/src'
 echo "  CC    assert.o"
 arm-none-eabi-gcc --sysroot=. -isystem=./include -MD -c assert.c -o assert.o -std=c11 -O2 -g -march=armv8-a+crc -mcpu=cortex-a53 -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -nostdlib -nostartfiles -ffreestanding -Wall -Wextra -Werror -std=c11  -mfpu=neon -nostartfiles -mno-unaligned-access -fno-tree-loop-vectorize -fno-tree-slp-vectorize -Wno-address-of-packed-member -march=armv8-a+crc -mfpu=crypto-neon-fp-armv8 -fpic -ffreestanding -D__enable_exp_  -D__is_kernel -Iinclude  -D__enable_exp_
 echo "  CC    boot.o"
@@ -107,6 +107,6 @@ arm-none-eabi-objdump -D kernel8-32.elf > kernel8-32.list
 arm-none-eabi-nm  kernel8-32.elf  > kernel8-32.map
 echo "  OBJCOPY    kernel8-32.img"
 arm-none-eabi-objcopy kernel8-32.elf -O binary kernel8-32.img
-make[1]: Leaving directory '/Users/prakashborkar/development/projects/rpi-3b-wifi/src'
-make: Leaving directory '/Users/prakashborkar/development/projects/rpi-3b-wifi'
+make[1]: Leaving directory '/Users/prakashborkar/Desktop/Projectes/rpi-3b-wifi/src'
+make: Leaving directory '/Users/prakashborkar/Desktop/Projectes/rpi-3b-wifi'
  

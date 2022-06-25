@@ -94,7 +94,7 @@ $(LIBS) \
 all: kernel8-32.img
 
 kernel8-32.img:kernel8-32.elf
-	@arm-none-eabi-objdump -D kernel8-32.elf > kernel8-32.list
+	@arm-none-eabi-objdump -D -S kernel8-32.elf > kernel8-32.list
 	@arm-none-eabi-nm  kernel8-32.elf  > kernel8-32.map
 	@echo "  OBJCOPY    $@"
 	@arm-none-eabi-objcopy kernel8-32.elf -O binary kernel8-32.img
@@ -111,6 +111,8 @@ librpi3b.a: $(OBJS)
 .c.o:
 	@echo "  CC    $@"
 	@$(CC) -MD -c $< -o $@ -std=c11 $(CFLAGS) $(CPPFLAGS)
+	@$(CC) -MD -c $< -o $@.txt -std=c11 $(CFLAGS) $(CPPFLAGS) -S -fverbose-asm -g -marm
+
 
 .S.o:
 	@echo "  CC    $@"
