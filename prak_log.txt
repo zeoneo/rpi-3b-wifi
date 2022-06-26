@@ -4,32 +4,23 @@ Boot Atags Addr: 2EFF9900
 ####################
 Requesting kernel
 00001018 Raspbootcom V1.0
-sending size in hex: 94f14 610068 
-sending size: 14 4f 9 0 
+sending size in hex: 93f0c 605964 
+sending size: c 3f 9 0 
 receiving size: 1 2 3 4 5 6 7 8
-receiving size: 0 0 0 9 4 F 1 4
+receiving size: 0 0 0 9 3 F 0 C
 
-Sending Kernel: 10.74 % 
-Sending Kernel: 21.48 % 
-Sending Kernel: 32.23 % 
-Sending Kernel: 42.97 % 
-Sending Kernel: 53.71 % 
-Sending Kernel: 64.45 % 
-Sending Kernel: 75.20 % 
-Sending Kernel: 85.94 % 
-Sending Kernel: 96.68 % 
-Sending Kernel: 100.00 % 
-0001018 -----------------Kernel Started Dude........................
+Sending Kernel: 10.82 % Sending Kernel: 21.63 % Sending Kernel: 32.45 % Sending Kernel: 43.26 % Sending Kernel: 54.08 % Sending Kernel: 64.89 % Sending Kernel: 75.71 % Sending Kernel: 86.52 % Sending Kernel: 97.34 % Sending Kernel: 100.00 % 
+1018 -----------------Kernel Started Dude........................
 Kernel End: 0x20a000 
 Kalloc start: 0x220000 end:0x2e8000 
 Kernel allocation init success 
-init task_reg : 9c058 
+init task_reg : 9b050 
 new queue: q: 0x220010 head:0 tail: 0 lock: 220018 
 new queue: q: 0x220060 head:0 tail: 0 lock: 220068 
-initialize: 0xabf8 
+initialize: 0xac30 
 In praakash main 
-initialize_link_layer: 0xa08c 
-wpa_supplicant_main: 0x1373c 
+initialize_link_layer: 0xa09c 
+wpa_supplicant_main: 0x136c4 
  clk_id: 1 clk_rate: 200000000 Chip Id : 0xa9a6 43430 
 ether4330: chip   rev 1 type 1
 brcmfmac43430-sdio.bin Firmware file found. 
@@ -47,31 +38,19 @@ compare...
 Successful comparison. 
 
 HTCLOCK: 0xd0 
-rproc : ea60 
-lproc : df30 
+rproc : ea14 
+lproc : dee4 
 new_task_pid:1 task_reg: 2e8000 
-new_task_pid:2 task_reg: 2e9000 
+NEw Task name: wfread base: 2e8000  sp: 2f1000 
+new_task_pid:2 task_reg: 2f2000 
+NEw Task name: wftimer base: 2f2000  sp: 2fb000 
 Flow start calling txstart 
 ether4330: addr B8:27:EB:B7:B3:D9
-INTS: (2) 8200c0 -> 800000
 ether4330: firmware ready
-INTS: (2) 8000c0 -> 800000
-INTS: (2) 800040 -> 800000
-INTS: (2) 800040 -> 800000
-INTS: (2) 800040 -> 800000
-INTS: (2) 800040 -> 800000
-INTS: (2) 800040 -> 800000
-INTS: (2) 800040 -> 800000
-INTS: (2) 800040 -> 800000
-INTS: (2) 800040 -> 800000
-INTS: (2) 800040 -> 800000
-INTS: (2) 800040 -> 800000
-INTS: (2) 800040 -> 800000
-INTS: (2) 800040 -> 800000
-INTS: (2) 800040 -> 800000
 new queue: q: 0x223610 head:0 tail: 0 lock: 223618 
 new queue: q: 0x223660 head:0 tail: 0 lock: 223668 
-new_task_pid:3 task_reg: 2ea000 
+new_task_pid:3 task_reg: 2fc000 
+NEw Task name: wifi base: 2fc000  sp: 305000 
 wpa_printf in the main_rpi3b  
 
 in the main_rpi3b  
@@ -89,7 +68,6 @@ Setting country code to 'IN'
 Inside wifi_control 
 Formatted command : country IN 224e20 
  CMCOUntry 
-INTS: (2) 800040 -> 800000
 EAPOL: SUPP_PAE entering state DISCONNECTED
 EAPOL: Supplicant port status: Unauthorized
 EAPOL: KEY_RX entering state NO_KEY_RECEIVE
@@ -101,11 +79,8 @@ Added interface wlan0
 Trying to get current scan results first without requesting a new scan to speed up initial association
 PRAK_DEBUG Calling get scan results.
 Checking results now
-In the receive scan result 
-In the receive scan result, after dequeue nLength:0 
-In the receive scan result, after dequeue returning nLength:0 
 PRAK_DEBUG Calling notify bss changes.
-ï¿½["
+à["
 PRAKASH_DEBUG trying to pick network
 PRAKASH_DEBUG trying to check priority 0 
 Selecting BSS from priority group 0
@@ -113,1316 +88,1344 @@ Try to find WPA-enabled AP: Num: 0
 Try to find non-WPA AP: 0 
 PRAKASH_DEBUG out of prio loop 
 No suitable network found
-ï¿½\"
+€\"
 State: DISCONNECTED -> SCANNING
 Starting AP scan for wildcard SSID
 CMScan 
 WPA Driver scan started 
-INTS: (2) 800040 -> 800000
-INTS: (2) 800040 -> 800040
 EAPOL: disable timer tick
 EAPOL: Supplicant port status: Unauthorized
 WPA Driver scan timeout, stopping scan 
 CMScan 
 PRAK_DEBUG Calling get scan results.
 Checking results now
-In the receive scan result 
-dequeu 1 nqueue->head: 2215a0 nqueue->head->next: 226180 
-In the receive scan result, after dequeue nLength:298 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : prak1 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 226180 nqueue->head->next: 227190 
-In the receive scan result, after dequeue nLength:610 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : SecTeamNortan 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 227190 nqueue->head->next: 2281a0 
-In the receive scan result, after dequeue nLength:438 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : SecTeamNortan 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 2281a0 nqueue->head->next: 2291b0 
-In the receive scan result, after dequeue nLength:410 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : GNXS821081BF 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 2291b0 nqueue->head->next: 22a1c0 
-In the receive scan result, after dequeue nLength:610 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : SecTeamNortan 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 22a1c0 nqueue->head->next: 22b1d0 
-In the receive scan result, after dequeue nLength:306 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : prak1 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 22b1d0 nqueue->head->next: 22c1e0 
-In the receive scan result, after dequeue nLength:298 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : prak1 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 22c1e0 nqueue->head->next: 22d1f0 
-In the receive scan result, after dequeue nLength:610 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : SecTeamNortan 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 22d1f0 nqueue->head->next: 22e200 
 In the receive scan result, after dequeue nLength:378 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : Airtel_8317514147 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 22e200 nqueue->head->next: 22f210 
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : 201 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : 201 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : 201 
+
+In the receive scan result, after dequeue nLength:422 
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
 In the receive scan result, after dequeue nLength:494 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+scanned SSID : ZTE_2.4G_NMRbbF 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_NMRbbF 
 
-total  loop 1 bss:2ea7e4 
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_NMRbbF 
 
-Start of result loop 0 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
+In the receive scan result, after dequeue nLength:390 
+scanned SSID : Golden rain scotline 
+
+In the receive scan result, after dequeue nLength:438 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:14 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:378 
+scanned SSID : Airtel_8317514147 
+
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:306 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : 201 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : 201 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : 201 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : 201 
+
+In the receive scan result, after dequeue nLength:370 
+scanned SSID : 201 
+
+In the receive scan result, after dequeue nLength:358 
+scanned SSID : AKSHAY2G 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result, after dequeue nLength:358 
+scanned SSID : AKSHAY2G 
+
+In the receive scan result, after dequeue nLength:358 
+scanned SSID : AKSHAY2G 
+
+In the receive scan result, after dequeue nLength:358 
+scanned SSID : AKSHAY2G 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:438 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:422 
 scanned SSID : ZTE_2.4G_J7NqHZ 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 22f210 nqueue->head->next: 230220 
-In the receive scan result, after dequeue nLength:298 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+In the receive scan result, after dequeue nLength:346 
+scanned SSID : hpp 
 
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : prak1 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 230220 nqueue->head->next: 231230 
 In the receive scan result, after dequeue nLength:610 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : SecTeamNortan 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 231230 nqueue->head->next: 232240 
-In the receive scan result, after dequeue nLength:610 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_J7NqHZ 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_J7NqHZ 
 
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : SecTeamNortan 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 232240 nqueue->head->next: 233250 
-In the receive scan result, after dequeue nLength:610 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : SecTeamNortan 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 233250 nqueue->head->next: 2225b0 
 In the receive scan result, after dequeue nLength:438 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : SecTeamNortan 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 2225b0 nqueue->head->next: 235270 
-In the receive scan result, after dequeue nLength:306 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : prak1 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 235270 nqueue->head->next: 236280 
-In the receive scan result, after dequeue nLength:374 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : 201 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 236280 nqueue->head->next: 237290 
-In the receive scan result, after dequeue nLength:374 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : 201 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 237290 nqueue->head->next: 2382a0 
-In the receive scan result, after dequeue nLength:374 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : 201 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 2382a0 nqueue->head->next: 2392b0 
-In the receive scan result, after dequeue nLength:374 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : 201 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 2392b0 nqueue->head->next: 23a2c0 
-In the receive scan result, after dequeue nLength:374 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : 201 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 23a2c0 nqueue->head->next: 23b2d0 
-In the receive scan result, after dequeue nLength:374 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : 201 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 23b2d0 nqueue->head->next: 23c2e0 
-In the receive scan result, after dequeue nLength:338 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : Room's 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 23c2e0 nqueue->head->next: 23d2f0 
-In the receive scan result, after dequeue nLength:326 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : Mak_wifi 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 23d2f0 nqueue->head->next: 23e300 
-In the receive scan result, after dequeue nLength:326 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : Mak_wifi 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 23e300 nqueue->head->next: 23f310 
-In the receive scan result, after dequeue nLength:326 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : Mak_wifi 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 23f310 nqueue->head->next: 240320 
-In the receive scan result, after dequeue nLength:326 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : Mak_wifi 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 240320 nqueue->head->next: 241330 
-In the receive scan result, after dequeue nLength:338 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : Room's 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 241330 nqueue->head->next: 242340 
-In the receive scan result, after dequeue nLength:358 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : AKSHAY2G 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 242340 nqueue->head->next: 243350 
-In the receive scan result, after dequeue nLength:358 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : AKSHAY2G 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 243350 nqueue->head->next: 244360 
-In the receive scan result, after dequeue nLength:358 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : AKSHAY2G 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 244360 nqueue->head->next: 245370 
-In the receive scan result, after dequeue nLength:494 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : ZTE_2.4G_NMRbbF 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 245370 nqueue->head->next: 246380 
-In the receive scan result, after dequeue nLength:494 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : ZTE_2.4G_NMRbbF 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 246380 nqueue->head->next: 247390 
 In the receive scan result, after dequeue nLength:546 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : Vinod_2G 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 247390 nqueue->head->next: 2483a0 
+In the receive scan result, after dequeue nLength:422 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:454 
+scanned SSID : Vinod_2G 
+
 In the receive scan result, after dequeue nLength:414 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID :  
 
-In the receive scan result 
-dequeu 1 nqueue->head: 2483a0 nqueue->head->next: 2493b0 
 In the receive scan result, after dequeue nLength:402 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : Cit.pvt ldt 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 2493b0 nqueue->head->next: 24a3c0 
-In the receive scan result, after dequeue nLength:306 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : Varmafincorp2.4g 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:474 
+scanned SSID : Cit.pvt ldt 
 
-total  loop 1 bss:2ea7e4 
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : mounisha 
 
-Start of result loop 0 
+In the receive scan result, after dequeue nLength:458 
+scanned SSID : mounisha 
 
-scanned SSID : Zoro 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 24a3c0 nqueue->head->next: 234260 
 In the receive scan result, after dequeue nLength:14 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 0 
-
-total  loop 0 bss:2ea7e4 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 234260 nqueue->head->next: 24c3e0 
 In the receive scan result, after dequeue nLength:298 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : prak1 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 24c3e0 nqueue->head->next: 24d3f0 
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:438 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
 In the receive scan result, after dequeue nLength:422 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+scanned SSID : ZTE_2.4G_J7NqHZ 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:474 
+scanned SSID : Cit.pvt ldt 
 
-total  loop 1 bss:2ea7e4 
+In the receive scan result, after dequeue nLength:474 
+scanned SSID : Cit.pvt ldt 
 
-Start of result loop 0 
+In the receive scan result, after dequeue nLength:14 
+In the receive scan result, after dequeue nLength:606 
+scanned SSID : Jio2.4g 
 
-scanned SSID : Leelammu 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 24d3f0 nqueue->head->next: 24e400 
-In the receive scan result, after dequeue nLength:610 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : SecTeamNortan 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 24e400 nqueue->head->next: 24f410 
 In the receive scan result, after dequeue nLength:298 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : prak1 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 24f410 nqueue->head->next: 250420 
+In the receive scan result, after dequeue nLength:414 
+scanned SSID :  
+
+In the receive scan result, after dequeue nLength:606 
+scanned SSID : Jio2.4g 
+
 In the receive scan result, after dequeue nLength:306 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : prak1 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 250420 nqueue->head->next: 251430 
-In the receive scan result, after dequeue nLength:494 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : 201 
 
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : ZTE_2.4G_J7NqHZ 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 251430 nqueue->head->next: 252440 
 In the receive scan result, after dequeue nLength:610 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : SecTeamNortan 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 252440 nqueue->head->next: 253450 
 In the receive scan result, after dequeue nLength:494 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+scanned SSID : ZTE_2.4G_NMRbbF 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
-total  loop 1 bss:2ea7e4 
+In the receive scan result, after dequeue nLength:366 
+scanned SSID : AKSHAY2G 
 
-Start of result loop 0 
+In the receive scan result, after dequeue nLength:358 
+scanned SSID : AKSHAY2G 
 
+In the receive scan result, after dequeue nLength:358 
+scanned SSID : AKSHAY2G 
+
+In the receive scan result, after dequeue nLength:358 
+scanned SSID : AKSHAY2G 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result, after dequeue nLength:438 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:438 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:494 
 scanned SSID : ZTE_2.4G_J7NqHZ 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 253450 nqueue->head->next: 254460 
 In the receive scan result, after dequeue nLength:494 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : ZTE_2.4G_J7NqHZ 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 254460 nqueue->head->next: 255470 
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:454 
+scanned SSID : Vinod_2G 
+
+In the receive scan result, after dequeue nLength:414 
+scanned SSID :  
+
+In the receive scan result, after dequeue nLength:354 
+scanned SSID : Aturi 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : Varmafincorp2.4g 
+
+In the receive scan result, after dequeue nLength:422 
+scanned SSID : ZTE_2.4G_tEemHK 
+
+In the receive scan result, after dequeue nLength:458 
+scanned SSID : mounisha 
+
+In the receive scan result, after dequeue nLength:14 
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:306 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:366 
+scanned SSID : AKSHAY2G 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
 In the receive scan result, after dequeue nLength:370 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+scanned SSID : 201 
 
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : TP-Link_F570 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 255470 nqueue->head->next: 256480 
 In the receive scan result, after dequeue nLength:610 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : SecTeamNortan 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 256480 nqueue->head->next: 257490 
 In the receive scan result, after dequeue nLength:610 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : SecTeamNortan 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 257490 nqueue->head->next: 2584a0 
-In the receive scan result, after dequeue nLength:298 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : prak1 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 2584a0 nqueue->head->next: 2594b0 
-In the receive scan result, after dequeue nLength:306 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : prak1 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 2594b0 nqueue->head->next: 25a4c0 
-In the receive scan result, after dequeue nLength:374 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : 201 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 25a4c0 nqueue->head->next: 25b4d0 
-In the receive scan result, after dequeue nLength:374 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : 201 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 25b4d0 nqueue->head->next: 25c4e0 
-In the receive scan result, after dequeue nLength:374 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : 201 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 25c4e0 nqueue->head->next: 25d4f0 
-In the receive scan result, after dequeue nLength:338 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
+In the receive scan result, after dequeue nLength:322 
 scanned SSID : Room's 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 25d4f0 nqueue->head->next: 25e500 
-In the receive scan result, after dequeue nLength:358 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:438 
+scanned SSID : SecTeamNortan 
 
-total  loop 1 bss:2ea7e4 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
-Start of result loop 0 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
-scanned SSID : AKSHAY2G 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 25e500 nqueue->head->next: 25f510 
-In the receive scan result, after dequeue nLength:358 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : AKSHAY2G 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 25f510 nqueue->head->next: 260520 
-In the receive scan result, after dequeue nLength:358 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : AKSHAY2G 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 260520 nqueue->head->next: 261530 
 In the receive scan result, after dequeue nLength:494 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+scanned SSID : ZTE_2.4G_J7NqHZ 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : ZTE_2.4G_NMRbbF 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 261530 nqueue->head->next: 262540 
 In the receive scan result, after dequeue nLength:494 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+scanned SSID : ZTE_2.4G_J7NqHZ 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : Varmafincorp2.4g 
 
-total  loop 1 bss:2ea7e4 
+In the receive scan result, after dequeue nLength:14 
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
 
-Start of result loop 0 
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
 
-scanned SSID : ZTE_2.4G_NMRbbF 
+In the receive scan result, after dequeue nLength:306 
+scanned SSID : prak1 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 262540 nqueue->head->next: 263550 
-In the receive scan result, after dequeue nLength:494 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : ZTE_2.4G_NMRbbF 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 263550 nqueue->head->next: 264560 
-In the receive scan result, after dequeue nLength:358 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : AKSHAY2G 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 264560 nqueue->head->next: 265570 
-In the receive scan result, after dequeue nLength:358 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : AKSHAY2G 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 265570 nqueue->head->next: 266580 
-In the receive scan result, after dequeue nLength:358 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : AKSHAY2G 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 266580 nqueue->head->next: 267590 
 In the receive scan result, after dequeue nLength:366 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : AKSHAY2G 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 267590 nqueue->head->next: 2685a0 
-In the receive scan result, after dequeue nLength:494 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+In the receive scan result, after dequeue nLength:362 
+scanned SSID : ZTE-RGHxQQ 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
-total  loop 1 bss:2ea7e4 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
-Start of result loop 0 
-
-scanned SSID : ZTE_2.4G_NMRbbF 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 2685a0 nqueue->head->next: 2695b0 
 In the receive scan result, after dequeue nLength:422 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+scanned SSID : ZTE_2.4G_J7NqHZ 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : ZTE_2.4G_NMRbbF 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 2695b0 nqueue->head->next: 26a5c0 
 In the receive scan result, after dequeue nLength:494 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : ZTE_2.4G_NMRbbF 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 26a5c0 nqueue->head->next: 24b3d0 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:438 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue nLength:422 
+In the receive scan result, after dequeue nLength:398 
 In the receive scan result, after dequeue nLength:462 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : ZTE_2.4G_FFwiSx 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 24b3d0 nqueue->head->next: 26c5e0 
+In the receive scan result, after dequeue nLength:462 
+In the receive scan result, after dequeue nLength:462 
+In the receive scan result, after dequeue nLength:14 
+In the receive scan result, after dequeue nLength:298 
+In the receive scan result, after dequeue nLength:306 
+In the receive scan result, after dequeue nLength:366 
+In the receive scan result, after dequeue nLength:358 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue nLength:610 
 In the receive scan result, after dequeue nLength:390 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+In the receive scan result, after dequeue nLength:438 
+In the receive scan result, after dequeue nLength:14 
+In the receive scan result, after dequeue nLength:306 
+In the receive scan result, after dequeue nLength:298 
+In the receive scan result, after dequeue nLength:306 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue nLength:366 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue nLength:610 
+PRAK_DEBUG Calling notify bss changes.
+New scan results available
+PRAKASH_DEBUG trying to pick network
+PRAKASH_DEBUG trying to check priority 0 
+Selecting BSS from priority group 0
+Try to find WPA-enabled AP: Num: 128 
+0: f8:c4:f3:cf:0d:37 ssid='Airtel_8317514147' wpa_ie_len=26 rsn_ie_len=24 caps=0x0
+   skip - SSID mismatch
+1: d6:8a:39:a3:ec:89 ssid='prak1' wpa_ie_len=0 rsn_ie_len=20 caps=0x0
+   selected based on RSN IE
+   selected WPA AP d6:8a:39:a3:ec:89 ssid='prak1'
+PRAKASH_DEBUG out of prio loop 
+ .
+0#.
+WPA: clearing own WPA/RSN IE
+Automatic auth_alg selection: 0x1
+Ð#.
+WPA: Selected cipher suites: group 16 pairwise 16 key_mgmt 2 proto 2
+Proceeding to choose cipher suites.
+WPA: using GTK CCMP
+WPA: using PTK CCMP
+À$.
+WPA: using KEY_MGMT WPA-PSK
+No keys have been configured - skip key clearing
+State: SCANNING -> ASSOCIATING
+Line 1232
+PRAK_DEBUG Trying to associate.
+SSID->buffer: prak1 __ BSSID->buffer: D68A39A3EC89 __ chan: 0 __ Auth->buffer: 30140100000FAC040100000FAC040100000FAC020000 __
+Inside wifi_control 
+Formatted command : join prak1 D68A39A3EC89 0 30140100000FAC040100000FAC040100000FAC020000 2e39b0 
+ CMJOIN command 
+Called setauth from !setcrypt(ctlr, cb, cb->f[3]) 
+ i : 22 a:30140100000FAC040100000FAC040100000FAC020000 
+Sending wl join to essid: prak1 
+Wifi sending join command 
+join_setvar::
+05 00 00 00 70 72 61 6b 31 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 ff 00 00 00 ff ff ff ff ff ff ff ff
+ff ff ff ff ff ff ff ff 39 00 00 00 71 f4 00 00
+00 00 00 00 dc 4b 30 00
+Wifi sending join command completed 
+Called waitjoin 
+Called waitjoin completed resp: 0 
+Connected to prak1 
+CMJOIN 
+inside wpa_supplicant_event_assoc 
 
-total-1 scan_res:2ea7d8 loop 1 
+State: ASSOCIATING -> ASSOCIATED
+ Calling fet mac 
+ addr: b8 27 eb b7 b3 d9 
+Associated to a new BSS: BSSID=b8:27:eb:b7:b3:d9
+No keys have been configured - skip key clearing
+Select network based on association information
+ Calling fet mac 
+ addr: b8 27 eb b7 b3 d9 
+Network configuration found for the current AP
+Calling set suites
+WPA: Using WPA IE from AssocReq to set cipher suites
+WPA: Selected cipher suites: group 16 pairwise 16 key_mgmt 2 proto 2
+Proceeding to choose cipher suites.
+WPA: using GTK CCMP
+WPA: using PTK CCMP
+€F.
+WPA: using KEY_MGMT WPA-PSK
+Completed set suites
+before wpa_supplicant_rsn_supp_set_config
+config->ssid_len : 5 
 
-total  loop 1 bss:2ea7e4 
+after wpa_supplicant_rsn_supp_set_config
+wpa_supplicant_initiate_eapol 
+EAPOL: External notification - EAP success=0
+EAPOL: Supplicant port status: Unauthorized
+EAPOL: External notification - EAP fail=0
+EAPOL: Supplicant port status: Unauthorized
+EAPOL: External notification - portControl=Auto
+EAPOL: Supplicant port etheriq ignore nFlag: 1 
+etheriq: 2e4220 BLEN : 113 pEther:2200b0 
+status: Unauthorized
+after wpa_supplicant_initiate_eapol
+wpas_notify_network_changed 
+returning bss select 
+Fall through 
+Associated with  eb:b7:b3:d9:2f477:b06c
+calling wpa_supplicant_scard_init
+WPA: Association event - clear replay counter
+WPA: Clear old PTK
+line 1012
+line 1023
+EAPOL: External notification - portEnabled=0
+EAPOL: Supplicant port status: Unauthorized
+EAPOL: External notification - portValid=0
+EAPOL: Supplicant port status: Unauthorized
+EAPOL: External notification - EAP success=0
+EAPOL: Supplicant port status: Unauthorized
+notified eap success
+EAPOL: External notification - portEnabled=1
+EAPOL: SUPP_PAE entering state CONNECTING
+EAPOL: enable timer tick
+EAPOL: SUPP_BE entering state IDLE
+calling wpa_supplicant_req_auth_timeout
+ÐK.
+callingwpa_supplicant_cancel_scan
+ÀL.
+outside 1062
+outside 1111
+callin wpa_supplicant_req_auth_timeout
+`M.
+config->ssid_len : 5 
 
-Start of result loop 0 
+wpa_supplicant_initiate_eapol 
+EAPOL: External notification - EAP success=0
+EAPOL: External notification - EAP fail=0
+EAPOL: External notification - portControl=Auto
+line 1301
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+RSN: Ignored PMKID candidate without preauth flag
+EAPOL: startWhen --> 0
+EAPOL: disable timer tick
+EAPOL: SUPP_PAE entering state CONNECTING
+EAPOL: enable timer tick
+EAPOL: txStart
+WPA: drop TX EAPOL in non-IEEE 802.1X mode (type=1 len=0)
+etheriq ignore nFlag: 1 
+etheriq: 2e4b30 BLEN : 113 pEther:2200b0 
+@["
+Added BSSID b8:27:eb:b7:b3:d9 into blacklist
+Inside wifi_control 
+Formatted command : disassoc 3 2e4e50 
+ No keys have been configured - skip key clearing
+State: ASSOCIATED -> DISCONNECTED
+EAPOL: External notification - portEnabled=0
+EAPOL: SUPP_PAE entering state DISCONNECTED
+EAPOL: Supplicant port status: Unauthorized
+EAPOL: SUPP_BE entering state INITIALIZE
+EAPOL: Supplicant port status: Unauthorized
+EAPOL: External notification - portValid=0
+EAPOL: Supplicant port status: Unauthorized
+EAPOL: External notification - EAP success=0
+EAPOL: Supplicant port status: Unauthorized
+ðN.
+EAPOL: Supplicant port status: Unauthorized
+State: DISCONNECTED -> SCANNING
+Starting AP scan for wildcard SSID
+CMScan 
+WPA Driver scan started 
+EAPOL: Supplicant port status: Unauthorized
+EAPOL: Supplicant port status: Unauthorized
+EAPOL: Supplicant port status: Unauthorized
+EAPOL: Supplicant port status: Unauthorized
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: 2f0f60 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+EAPOL: Supplicant port status: Unauthorized
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+EAPOL: Supplic Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ant port status: Unauthorized
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+WPA Driver scan timeout, stopping scan 
+CMScan 
+PRAK_DEBUG Calling get scan results.
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+Checking results now
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
-scanned SSID : ZTE_2.4G_FFwiSx 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 26c5e0 nqueue->head->next: 26d5f0 
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : JioPrivateNe Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+t 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned  Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : Z Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+TE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:338 
+scanned SSID : hpp 
+
+In the receive scan result, after dequeue nLength:338 
+scanned SSID : hpp 
+
+In the receive scan result, after dequeue nLength:338 
+scanned SSID : hpp 
+
+In the receive scan result, after dequeue nLength:422 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
 In the receive scan result, after dequeue nLength:462 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+scanned SSID : ZTE_2.4G Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+_FFwiSx 
 
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
+In the receive scan result, after dequeue nLength:462 
 scanned SSID : ZTE_2.4G_FFwiSx 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 26d5f0 nqueue->head->next: 26e600 
+In the receive scan result, after dequeue nLength:378 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+scanned SSID : wyfii 
+
+In the receive scan result, after dequeue nLength:14 
+In the receive scan result, after dequeue nLength:378 
+scanned SSID : Airtel Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+_8317514147 
+
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:298 
+scanne Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+d SSID : prak1 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : 201 
+
+In the receive scan result, after dequeue nLength:610 
+scann Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ed SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:390 
+scanned SSID : Golden rain scotline 
+
+In the receive scan result, after dequeue nLength:438 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned  Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : Sec Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+TeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:438 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned S Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+SID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:422 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : S Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ecTeamNortan 
+
+In the receive scan result, after dequeue nLength:422 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
 In the receive scan result, after dequeue nLength:474 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : Cit.pvt ldt 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 26e600 nqueue->head->next: 26f610 
-In the receive scan result, after dequeue nLength:306 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+In the receive scan result, after dequeue nLength:474 
+scanned SSID : Cit.pvt ldt Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:474 
+scanned SSID : Cit.pvt ldt 
 
-total  loop 1 bss:2ea7e4 
+In the receive scan result, after dequeue nLength:474 
+scanned SSI Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+D : Cit.pvt ldt 
 
-Start of result loop 0 
+In the receive scan result, after dequeue nLength:474 
+scanned SSID : Cit.pvt ldt 
 
-scanned SSID : Zoro 
+In the receive scan result, after dequeue nLength:474 
+scanned SSID : Cit.pvt ldt 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 26f610 nqueue->head->next: 270620 
-In the receive scan result, after dequeue nLength:310 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+In the receive scan result, after dequeue nLength:458 
+scanned SSID : mounisha 
 
-total-1 scan_res:2ea7d8 loop 1 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : mounisha 
 
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : ABHINAV PARKOUR ACADEMY 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 270620 nqueue->head->next: 271630 
-In the receive scan result, after dequeue nLength:314 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : ABHINAV PARKOUR ACADEMY 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 271630 nqueue->head->next: 272640 
-In the receive scan result, after dequeue nLength:310 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : ABHINAV PARKOUR ACADEMY 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 272640 nqueue->head->next: 26b5d0 
 In the receive scan result, after dequeue nLength:14 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 0 
-
-total  loop 0 bss:2ea7e4 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 26b5d0 nqueue->head->next: 274660 
-In the receive scan result, after dequeue nLength:610 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : SecTeamNortan 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 274660 nqueue->head->next: 275670 
 In the receive scan result, after dequeue nLength:298 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : prak1 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 275670 nqueue->head->next: 276680 
-In the receive scan result, after dequeue nLength:610 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+In the receive scan result, after dequeue nLength:414 
+s Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+canned SSID :  
 
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : SecTeamNortan 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 276680 nqueue->head->next: 277690 
-In the receive scan result, after dequeue nLength:298 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : prak1 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 277690 nqueue->head->next: 2786a0 
-In the receive scan result, after dequeue nLength:438 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : SecTeamNortan 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 2786a0 nqueue->head->next: 2796b0 
 In the receive scan result, after dequeue nLength:306 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
 scanned SSID : prak1 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 2796b0 nqueue->head->next: 27a6c0 
-In the receive scan result, after dequeue nLength:494 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+In the receive scan result, after dequeue nLength:298 
+sca Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+nned SSID : prak1 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:306 
+scanned SSID : prak1 
 
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
-scanned SSID : ZTE_2.4G_J7NqHZ 
-
-In the receive scan result 
-dequeu 1 nqueue->head: 27a6c0 nqueue->head->next: 27b6d0 
 In the receive scan result, after dequeue nLength:610 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
-
-total-1 scan_res:2ea7d8 loop 1 
-
-total  loop 1 bss:2ea7e4 
-
-Start of result loop 0 
-
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
 scanned SSID : SecTeamNortan 
 
-In the receive scan result 
-dequeu 1 nqueue->head: 27b6d0 nqueue->head->next: 27c6e0 
-In the receive scan result, after dequeue nLength:494 
-In the receive scan result, after dequeue pResultLength :0X2ea7d4 
-In the receive scan result, after dequeue pResultLength 2 :0X2ea7d4 
-Inside scan result loop 
+In the receive scan result, after dequeue nLength:438 
+scanned SSID : SecTeamNortan 
 
-total-1 scan_res:2ea7d8 loop 1 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
 
-total  loop 1 bss:2ea7e4 
+In the receive scan result, after dequeue nLength:14 
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
 
-Start of result loop 0 
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
 
+In the receive scan result, after dequeue nLength:306 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:422 
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result, after dequeue nLength:390 
+scanned SSID : Golden rain scotline 
+
+In the receive scan result, after dequeue nLength:610 
+sca Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+nned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:390 
+scanned SSID : Golden rain scotline 
+
+In the receive scan result, after dequeue nLength:422 
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result, after dequeue nLength:610 
+scan Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:306 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamN Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:438 
+sca Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+nned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:14 
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:298 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:306 
+scann Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ed SSID : prak1 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : 201 
+
+In the receive scan result, after dequeue nLength:374 
+scan Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ned SSID : 201 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : 201 
+
+In the receive scan result, after dequeue nLength:374 
+scann Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ed SSID : 201 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : 201 
+
+In the receive scan result, after dequeue nLength:306 
+scanne Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+d SSID : prak1 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:422 
+scanned SSID : ZTE_2.4G_ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+NMRbbF 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:306 
+sca Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+nned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:422 
 scanned SSID : ZTE_2.4G_J7NqHZ 
 
-In the receive scan result 
-dequeu 1 nqueue->hea
-00000000 00000001 00001629 00008198 E5168008 0000818C 
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecT Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+eamNortan 
+
+In the receive scan result, after dequeue nLength:334 
+scanned SSID : ACT101596041216 
+
+In the receive scan result, after dequeue nLength:334 
+scanned SSID : ACT101596041216 
+
+In the receive scan result, after dequeue nLength:438 
+scanned SSID : SecTeamNort Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+an 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanne Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+d SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:466 
+scanned SSID : pavan 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:438 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:494 
+sc Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+anned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:338 
+scanne Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+d SSID : hpp 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : wyfii 
+
+In the receive scan result, after dequeue nLength:474 
+scann Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ed SSID : Cit.pvt ldt 
+
+In the receive scan result, after dequeue nLength:474 
+scanned SSID : Cit.pvt ldt 
+
+In the receive scan result, after dequeue nLength:306 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : mounisha 
+
+In the receive scan result, after dequeue nLength:14 
+In the receive scan result, after dequeue nLength:298 
+scanned Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ SSID : prak1 
+
+In the receive scan result, after dequeue nLength:378 
+scanned SSID : Airtel_8317514147 
+
+In the receive scan result, after dequeue nLength:306 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:366 
+scanned SSID : AKSHAY2G 
+
+In the receive scan result, after dequeue nLength:422 
+scanned SSID : ZTE_2.4G_NMRbbF 
+
+In the receive scan result, after dequeue nLength:306 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:358 
+scanned SSID : Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ AKSHAY2G 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:306 
+scanned SSID : prak1 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:334 
+scanned SSID : ACT101596041216 
+
+In the receive scan result, after dequeue nLength:438 
+scanned  Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:610 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:374 
+scanned SSID : JioPrivateNet 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:438 
+scanned SSID : SecTeamNortan 
+
+In the receive scan result, after dequeue nLength:466 
+scanned SSID : pavan 
+
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+In the receive scan result, after dequeue nLength:466 
+scanned SSID : pavan 
+
+In the receive scan result, after dequeue nLength:338 
+scanned SSID : hpp 
+
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+In the receive scan result, after dequeue nLength:338 
+scanned SSID : hpp 
+
+In the receive scan result, after dequeue nLength:494 
+scanned SSID : ZTE_2.4 Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:422 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:398 
+scanned SSID : pavan 
+
+In the receive scan result, after dequeue nLength:422 
+scanned SSID : ZTE_2.4G_J7NqHZ 
+
+In the receive scan result, after dequeue nLength:474 
+In the receive scan result, after dequeue nLength:474 
+In the receive scan result, after dequeue nLength:474 
+In the receive scan result, after dequeue nLength:306 
+In the receive scan result, after dequeue nLength:458 
+In the receive scan result, after dequeue nLength:458 
+In the receive scan result, after dequeue nLength:14 
+In the receive scan result, after dequeue nLength:298 
+In the receive scan result, after dequeue nLength:446 
+In the receive scan result, after dequeue nLength:306 
+In the receive scan result, after dequeue nLength:298 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue nLength:390 
+In the receive scan result, after dequeue nLength:438 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue nLength:494 
+In the receive scan result, after dequeue nLength:610 
+In the receive scan result, after dequeue nLength:422 
+In the receive scan result, after dequeue nLength:306 
+In the receive scan result, after dequeue nLength:494 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+ Error in schedular alogirithm nTask:   status: -1954250232 task_sp: c4fc0 
+
+-----------------Kernel Started Dude........................
+Kernel End: 0x20a000 
+Kalloc start: 0x220000 end:0x2e8000 
+Kernel allocation init success 
+new queue: q: 0x220010 head:0 tail: 0 lock: 220018 
+new queue: q: 0x220060 head:0 tail: 0 lock: 220068 
+initialize: 0x0 
+In praakash main 
+initialize_link_layer: 0x0 
+wpa_supplicant_main: 0x0 
+ clk_id: 1 clk_rate: 200000000 

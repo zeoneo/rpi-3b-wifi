@@ -73,6 +73,8 @@ void task_ms_sleep(uint32_t nMilliSeconds);
 void task_sleep(uint32_t nSeconds);
 void task_us_sleep(uint32_t nMicroSeconds);
 
+void preempt_disable(void);
+void preempt_enable(void);
 #ifdef __cplusplus
 }
 #endif

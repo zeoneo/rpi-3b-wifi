@@ -137,12 +137,7 @@ void dump_status(bcm4343_net_device* net_device) {
 void etheriq(Ether* pEther, Block* pBlock, uint32_t nFlag) {
     printf("etheriq ignore nFlag: %d \n", nFlag);
     printf("etheriq: %x BLEN : %d pEther:%x \n", (const char *)pBlock, BLEN (pBlock), pEther);
-
-    // bcm4343_net_device* net_device = (bcm4343_net_device*) pEther->net_dev;
-    // // assert (pBlock != 0);
-    // enqueue(net_device->net_device->in, pBlock->rp);
-    enqueue_nqueue(frame_receive_queue, pBlock->rp, BLEN (pBlock), 0);
-    freeb(pBlock);
+    // enqueue_nqueue(frame_receive_queue, pBlock->rp, BLEN(pBlock), 0);
 }
 
 bool wifi_control(bcm4343_net_device* net_device, const char* pFormat, ...) {
@@ -171,19 +166,22 @@ bool wifi_control_cmd(bcm4343_net_device* net_device, char* cmd, unsigned int le
 
 bool receive_scan_results(void* pBuffer, unsigned* pResultLength) {
     //   // assert(pBuffer != 0);
-    printf("In the receive scan result \n");
+    if(is_empty_nqueue(scan_results_queue)) {
+        return false;
+    }
+    // printf("In the receive scan result \n");
     unsigned nLength = dequeue_nqueue(scan_results_queue, pBuffer, 0);
     printf("In the receive scan result, after dequeue nLength:%d \n", nLength);
     if (nLength == 0) {
-        printf("In the receive scan result, after dequeue returning nLength:%d \n", nLength);
+        // printf("In the receive scan result, after dequeue returning nLength:%d \n", nLength);
         return false;
     }
     
-    printf("In the receive scan result, after dequeue pResultLength :0X%x \n", pResultLength);
+    // printf("In the receive scan result, after dequeue pResultLength :0X%x \n", pResultLength);
 
     //   // assert(pResultLength != 0);
     *pResultLength = nLength;
-    printf("In the receive scan result, after dequeue pResultLength 2 :0X%x \n", pResultLength);
+    // printf("In the receive scan result, after dequeue pResultLength 2 :0X%x \n", pResultLength);
 
 
     // hexdump (pBuffer, nLength, "wlanscan");

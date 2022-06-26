@@ -5,9 +5,8 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
- 
 
-# Make data base, printed on Sat Jun 25 13:07:41 2022
+# Make data base, printed on Sun Jun 26 12:16:00 2022
 
 # Variables
 
@@ -20,7 +19,7 @@ IDF_PATH = /Users/prakashborkar/esp/esp-idf
 # environment
 XPC_SERVICE_NAME = application.com.microsoft.VSCode.8650218168.8650218174
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/vscode-ipc-67f94c0e-bba1-42f1-a1ea-51ca28638365.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/vscode-ipc-1bc402d6-351f-4042-ab77-2f525635f501.sock
 # environment
 VSCODE_CWD = /
 # default
@@ -64,13 +63,13 @@ CURDIR := /Users/prakashborkar/Desktop/Projectes/rpi-3b-wifi
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.IMj2Aj5kDX/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.YKf9XAUavm/Listeners
 # default
 .SHELLFLAGS := -c
 # automatic
@@ -84,7 +83,7 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 2314
+VSCODE_PID = 629
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
@@ -134,7 +133,7 @@ XPC_FLAGS = 0x0
 # makefile
 .DEFAULT_GOAL := all
 # environment
-DISPLAY = /private/tmp/com.apple.launchd.1S3kiGrqyY/org.macosforge.xquartz:0
+DISPLAY = /private/tmp/com.apple.launchd.NtlyUrLpLT/org.macosforge.xquartz:0
 # environment
 USER = prakashborkar
 # default
@@ -172,9 +171,9 @@ SUFFIXES :=
 
 # Directories
 
-# . (device 16777220, inode 8650265143): 22 files, no impossibilities.
+# . (device 16777220, inode 8650265143): 23 files, no impossibilities.
 
-# 22 files, no impossibilities in 1 directories.
+# 23 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -222,7 +221,6 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
- 
 #  recipe to execute (from 'Makefile', line 10):
 	cd src && $(MAKE) clean
 	cd hostap/wpa_supplicant && $(MAKE) clean
@@ -259,12 +257,12 @@ all: wpa_supplicant.a
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 29 / storage = 291 B / avg = 10 B
-# current buf: size = 8162 B / used = 291 B / count = 29 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 30 / storage = 313 B / avg = 10 B
+# current buf: size = 8162 B / used = 313 B / count = 30 / avg = 10 B
 
-# strcache performance: lookups = 38 / hit rate = 23%
+# strcache performance: lookups = 39 / hit rate = 23%
 # hash-table stats:
-# Load=29/8192=0%, Rehash=0, Collisions=0/38=0%
-# Finished Make data base on Sat Jun 25 13:07:41 2022
+# Load=30/8192=0%, Rehash=0, Collisions=0/39=0%
+# Finished Make data base on Sun Jun 26 12:16:00 2022
 
  

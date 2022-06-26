@@ -10,7 +10,7 @@ int create_task(char* name, uint32_t fn, uint32_t arg) {
     preempt_disable();
     struct task_struct* p;
 
-    p = (task_struct_t*) alloc_frame();
+    p = (task_struct_t*) alloc_contiguous_frames(10);
     if (!p) {
         return 0;
     }
@@ -23,8 +23,9 @@ int create_task(char* name, uint32_t fn, uint32_t arg) {
     p->cpu_context.lr = fn;
     p->cpu_context.r0 = arg;
     // p->cpu_context.pc = (unsigned) ret_from_fork;
-    p->cpu_context.sp = (unsigned long) p + THREAD_SIZE;
+    p->cpu_context.sp = (unsigned long) p + (9*THREAD_SIZE);
     int pid           = add_task(p);
+    printf("NEw Task name: %s base: %x  sp: %x \n",p->name,p,  p->cpu_context.sp);
     preempt_enable();
     return pid;
 }

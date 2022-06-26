@@ -1,0 +1,34 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/include/**",
+                "/Users/prakashborkar/Desktop/Projectes/rpi-3b-wifi/include"
+            ],
+            "defines": [],
+            "macFrameworkPath": [
+                "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
+            ],
+            "compilerPath": "/Users/prakashborkar/gcc-arm-none-eabi/bin/arm-none-eabi-gcc",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-clang-arm",
+            "configurationProvider": "ms-vscode.makefile-tools",
+            "compilerArgs": [
+                "-O2",
+                "-g",
+                "-march=armv8-a+crc",
+                "-mcpu=cortex-a53",
+                "-mfpu=crypto-neon-fp-armv8",
+                "-fpic",
+                "-ffreestanding",
+                "-nostdlib",
+                "-nostartfiles",
+                "-mno-unaligned-access"
+            ],
+            "compileCommands": "compile_commands.json"
+        }
+    ],
+    "version": 4
+}

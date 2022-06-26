@@ -1469,7 +1469,7 @@ static void intwait(Ctlr* ctlr, int wait) {
         ints = cfgreadl(Fn1, ctlr->sdregs + Intstatus);
         cfgwritel(Fn1, ctlr->sdregs + Intstatus, ints);
         // if (0)
-        printf("INTS: (%x) %x -> %x\n", i, ints, cfgreadl(Fn1, ctlr->sdregs + Intstatus));
+        // printf("INTS: (%x) %x -> %x\n", i, ints, cfgreadl(Fn1, ctlr->sdregs + Intstatus));
         if (ints & MailboxInt) {
             mbox = cfgreadl(Fn1, ctlr->sdregs + Hostmboxdata);
             cfgwritel(Fn1, ctlr->sdregs + Sbmbox, 2); /* ack */

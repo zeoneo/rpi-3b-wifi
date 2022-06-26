@@ -157,7 +157,7 @@ static void remove_task(task_struct_t* pTask) {
 // they never get blocked, just preempted by schedular.
 // TODO: Check the bug here.
 static uint32_t get_next_task() {
-
+    int task_sp=0;
     uint32_t nTask = current->pid < NR_TASKS ? current->pid : 0;
 
     uint32_t nTicks = timer_getTickCount32();
@@ -193,7 +193,8 @@ static uint32_t get_next_task() {
                 break;
 
             default:
-                printf(" Error in schedular alogirithm nTask: %d  %s status: %d \n", pTask->name, pTask->state, nTask);
+                __asm__ volatile ("mov %0, sp\n\t": "=r" (task_sp));
+                printf(" Error in schedular alogirithm nTask: %s  status: %d task_sp: %x \n", pTask->name, pTask->state, task_sp);
                 break;
         }
     }

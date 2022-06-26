@@ -68,7 +68,7 @@ unsigned dequeue_nqueue(net_queue_t* nqueue, void* pBuffer, void** ppParam) {
     if(is_empty_nqueue(nqueue)) {
         return nResult;
     }
-    printf("dequeu 1 nqueue->head: %x nqueue->head->next: %x \n", nqueue->head,  nqueue->head->next);
+    // printf("dequeu 1 nqueue->head: %x nqueue->head->next: %x \n", nqueue->head,  nqueue->head->next);
 
     volatile net_queue_entry_t* pEntry = nqueue->head;
 
