@@ -99,7 +99,7 @@ kernel8-32.img:kernel8-32.elf
 	@echo "  OBJCOPY    $@"
 	@arm-none-eabi-objcopy kernel8-32.elf -O binary kernel8-32.img
 
-kernel8-32.elf: librpi3b.a kernel.o ../linker.ld
+kernel8-32.elf: librpi3b.a kernel.o libwpa_supplicant.a ../linker.ld
 	@echo "  LD    $@"
 	@$(CC) -T ../linker.ld -o $@  $(LDFLAGS)  kernel.o -L . -lrpi3b -lwpa_supplicant $(LIBS)
 	

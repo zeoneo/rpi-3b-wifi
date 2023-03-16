@@ -225,7 +225,7 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
     // set_auth(net_device, AuthModeNone, "");
 
     printf("initialize: 0x%x \n", initialize);
-    prakash_main();
+    // prakash_main();
     printf("initialize_link_layer: 0x%x \n", initialize_link_layer);
     printf("wpa_supplicant_main: 0x%x \n", wpa_supplicant_main);
 
