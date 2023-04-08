@@ -237,6 +237,13 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags) {
         printf("error while starting process 3");
         return;
     }
+
+    int pid3 = create_task("link", (unsigned long) &process_l2_layer_loop, 0);
+    if (pid3 == 0) {
+        printf("error while starting link layer process");
+        return;
+    }
+
 #endif
     schedule();
     // if () {

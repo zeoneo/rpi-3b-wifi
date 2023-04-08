@@ -13,6 +13,17 @@ bool is_empty_nqueue(net_queue_t* nqueue) {
     return nqueue->head == 0;
 }
 
+// static void dump(char* s, void* a, int n) {
+//     int i;
+//     uint8_t* p;
+
+//     p = a;
+//     printf("%s: length: %d \n", s, n);
+//     for (i = 0; i < n; i++)
+//         printf("%c%2.2x", i & 15 ? ' ' : '\n', *p++);
+//     printf("\n");
+//  }
+
 void flush_nqueue(net_queue_t* nqueue) {
 
     while (nqueue->head != 0) {
@@ -81,7 +92,7 @@ unsigned dequeue_nqueue(net_queue_t* nqueue, void* pBuffer, void** ppParam) {
     memcpy(pBuffer, (const void*) pEntry->Buffer, nResult);
     if (ppParam != 0) {
         *ppParam = pEntry->pParam;
-        // printf(" deque param copy \n");
+        // dump("EhterSender ", pEntry->pParam, 6);
     }
 
     lock(&(nqueue->m_SpinLock));

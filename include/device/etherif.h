@@ -79,6 +79,7 @@ typedef struct Ether {
     void (*attach)(struct Ether* edev);
     void (*transmit)(struct Ether* edev);
     long (*ifstat)(struct Ether* edev, void* buf, long size, uint32_t offset);
+    void (*getbssid) (struct Ether *edev, void *bssid);
    	void (*setevhndlr) (struct Ether *edev, ether_event_handler_t *hndlr, void *context);
 
     long (*ctl)(struct Ether* edev, void* buf, long n);

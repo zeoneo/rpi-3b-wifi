@@ -188,6 +188,7 @@ typedef struct {
     int joinstatus;
     int cryptotype;
     int chanid;
+    uint8_t bssid[Eaddrlen];
     char essid[WNameLen + 1];
     WKey keys[WNKeys];
     Block* rsp;
@@ -500,11 +501,11 @@ static void dump(char* s, void* a, int n) {
     uint8_t* p;
 
     p = a;
-    printf("%s:", s);
+    printf("%s: length: %d \n", s, n);
     for (i = 0; i < n; i++)
         printf("%c%2.2x", i & 15 ? ' ' : '\n', *p++);
     printf("\n");
-}
+ }
 
 /*
  * SDIO communication with dongle
@@ -1421,7 +1422,7 @@ static void txstart(Ether* edev) {
         p->doffset = off;
         put4(b->rp + off, 0x20); /* BDC header */
         // if(iodebug)
-        dump("send", b->rp, len);
+        dump("sending bhai", b->rp, len);
         mutex_acquire(&ctl->pktlock);
         // if(waserror()){
         // 	if(iodebug) print("halt frame %x %x\n", cfgr(Wfrmcnt+1), cfgr(Wfrmcnt+1));
@@ -1620,6 +1621,10 @@ static void wlcmd(Ctlr* ctl, int write, int op, void* data, int dlen, void* res,
     // qunlock(&ctl->cmdlock);
     // nexterror();
     // }
+
+    printf("starting command: %d %s \n", op, data);
+	dump("command value: ", res, rlen);
+
     memset(b->wp, 0, len);
     mutex_acquire(&ctl->pktlock);
     p = (Sdpcm*) b->wp;
@@ -1669,6 +1674,7 @@ static void wlcmd(Ctlr* ctl, int write, int op, void* data, int dlen, void* res,
     if (!write)
         memmove(res, q + 1, rlen);
     freeb(b);
+    printf("--------------completed success command: %d %s \n", op, data);
     mutex_release(&ctl->cmdlock);
     // poperror();
 }
@@ -1679,7 +1685,9 @@ static void wlsetvar(Ctlr* ctl, char* name, void* val, int len) {
     // snprint(buf, sizeof buf, "wlsetvar %s", name);
     // dump(buf, val, len);
     // }
+    // printf("setvar : %s \n", name);
     wlcmd(ctl, 1, SetVar, name, strlen(name) + 1, val, len);
+    // printf("completed setvar : %s \n", name);
 }
 
 static void wlsetcountry(Ctlr* ctlr, const char* ccode) {
@@ -1698,6 +1706,20 @@ static void wlsetcountry(Ctlr* ctlr, const char* ccode) {
     strcpy(params.country_ie, ccode);
     strcpy(params.country_code, ccode);
     params.revision = (unsigned int) -1;
+
+    // uint8_t *x = (uint8_t *)&params;
+    // x[0] = 0x49;
+    // x[1] = 0x4e;
+    // x[2] = 0x0;
+    // x[3] = 0x6f;
+    // x[4] = 0xff;
+    // x[5] = 0xff;
+    // x[6] = 0xff;
+    // x[7] = 0xff;
+    // x[8] = 0x49;
+    // x[9] = 0x4e;
+    // x[10] = 0x0;
+    // x[11] = 0x73;
 
     wlsetvar(ctlr, (char*) "country", (void*) &params, (int) sizeof(params));
 }
@@ -1733,6 +1755,8 @@ static void bcmevent(Ctlr* ctl, uint8_t* p, int len) {
             break;
     /* fall through */
     case 0: /* E_SET_SSID */
+    	memcpy(ctl->bssid, p + 24, Eaddrlen);
+        dump("bcm_connected_bssid", ctl->bssid, Eaddrlen);
         ctl->joinstatus = 1 + status;
         wakeup(&ctl->joinr);
         break;
@@ -1840,12 +1864,13 @@ static void rproc(void* a) {
             break;
         case 2:
             // if(iodebug)
-            // dump("packet", b->rp, BLEN(b));
+            
             if (BLEN(b) > p->doffset + 4) {
                 bdc = 4 + (b->rp[p->doffset + 3] << 2);
                 if (BLEN(b) >= p->doffset + bdc + ETHERHDRSIZE) {
                     b->rp += p->doffset + bdc; /* skip BDC header */
                     etheriq(edev, b, 1);
+                    dump("etheriq -> packet", b->rp, BLEN(b));
                     continue;
                 }
             }
@@ -1903,18 +1928,28 @@ static void wlscanstart(Ctlr* ctl) {
         scan_type[1] nprobes[4] active_time[4] passive_time[4] home_time[4]
         nchans[2] nssids[2] chans[nchans][2] ssids[nssids][32] */
     /* hack - this is only correct on a little-endian cpu */
-    static uint8_t params[4 + 2 + 2 + 4 + 32 + 6 + 1 + 1 + 4 * 4 + 2 + 2 + 14 * 2 + 32 + 4] = {
-        1,    0,    0,    0,    1,    0,    0x34, 0x12, 0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 2,
-        0,    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-        14,   0,    1,    0,    0x01, 0x2b, 0x02, 0x2b, 0x03, 0x2b, 0x04, 0x2b, 0x05, 0x2e, 0x06, 0x2e, 0x07,
-        0x2e, 0x08, 0x2b, 0x09, 0x2b, 0x0a, 0x2b, 0x0b, 0x2b, 0x0c, 0x2b, 0x0d, 0x2b, 0x0e, 0x2b, 0,    0,
-        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    };
+    static uint8_t params[4+2+2+4+32+6+1+1+4*4+2+2+14*2+32+4] = {
+		1,0,0,0,
+		1,0,
+		0x34,0x12,
+		0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0xff,0xff,0xff,0xff,0xff,0xff,
+		2,
+		0,
+		0xff,0xff,0xff,0xff,
+		0xff,0xff,0xff,0xff,
+		0xff,0xff,0xff,0xff,
+		0xff,0xff,0xff,0xff,
+		14,0,
+		1,0,
+		0x01,0x2b,0x02,0x2b,0x03,0x2b,0x04,0x2b,0x05,0x2e,0x06,0x2e,0x07,0x2e,
+		0x08,0x2b,0x09,0x2b,0x0a,0x2b,0x0b,0x2b,0x0c,0x2b,0x0d,0x2b,0x0e,0x2b,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	};
 
     wlcmdint(ctl, 49, 0); /* PASSIVE_SCAN */
+    printf("Starting passive scan \n");
     wlsetvar(ctl, "escan", params, sizeof params);
 }
 
@@ -1929,16 +1964,16 @@ static void lproc(void* a) {
     // printf("%s: %d edev: %x \n", __FILE__, __LINE__, edev);
     for (;;) {
         // printf("In LPROC \n");
-        tsleep(&up->sleep, return0, 0, 1000);
+        tsleep(&up->sleep, return0, 0, 2000);
         // MicroDelay(1000);
         if (ctlr->scansecs) {
             if (secs == 0) {
                 // if(waserror())
                 // 	ctlr->scansecs = 0;
                 // else{
-                // printf("Stating scans: \n");
+                printf("Stating lproc scans: \n");
                 wlscanstart(ctlr);
-                // printf("scan ended: \n");
+                printf("scan ended: \n");
                 // poperror();
                 // }
                 secs = ctlr->scansecs;
@@ -1956,13 +1991,14 @@ static void wlgetvar(Ctlr* ctl, char* name, void* val, int len) {
 }
 
 static void wlinit(Ether* edev, Ctlr* ctlr) {
-    uint8_t ea[Eaddrlen];
+    uint8_t ea[Eaddrlen] = {0};
     uint8_t eventmask[16];
     char version[128];
     char* p;
     static uint8_t keepalive[12] = {1, 0, 11, 0, 0xd8, 0xd6, 0, 0, 0, 0, 0, 0};
 
     wlgetvar(ctlr, "cur_etheraddr", ea, Eaddrlen);
+    dump("current address: ", ea, Eaddrlen);
     memmove(edev->ea, ea, Eaddrlen);
     memmove(edev->addr, ea, Eaddrlen);
     printf("ether4330: addr %02X:%02X:%02X:%02X:%02X:%02X\n", ea[0], ea[1], ea[2], ea[3], ea[4], ea[5]);
@@ -2139,11 +2175,12 @@ Cmdtab* lookupcmd(Cmdbuf* cb, Cmdtab* ct, size_t nelem) {
 
 static void setauth(Ctlr* ctlr, Cmdbuf* cb, char* a) {
     USED(cb);
+
     uint8_t wpaie[32];
     int i;
 
     i = parsehex((char*) wpaie, sizeof wpaie, a);
-    printf(" i : %d a:%s \n", i, a);
+    printf(" i : %d wpaie: %s a:%s \n", i, wpaie, a);
 
     if (i < 2 || i != wpaie[1] + 2) {
         printf("bad wpa ie syntax \n");
@@ -2156,19 +2193,23 @@ static void setauth(Ctlr* ctlr, Cmdbuf* cb, char* a) {
     } else {
         printf("bad wpa ie \n");
     }
-
+    printf("Selected ctlr->cryptotype : %d \n wpaie:", ctlr->cryptotype);
+    // for(int ij=0;ij<32;ij++) {
+    //     printf("%x ", wpaie[ij]);
+    // }
+    printf("\n");
     wlsetvar(ctlr, "wpaie", wpaie, i);
-    if (ctlr->cryptotype == Wpa) {
-        wlsetint(ctlr, "wpa_auth", 4 | 2); /* auth_psk | auth_unspecified */
-        wlsetint(ctlr, "auth", 0);
-        wlsetint(ctlr, "wsec", 2);     /* tkip */
-        wlsetint(ctlr, "wpa_auth", 4); /* auth_psk */
-    } else {
-        wlsetint(ctlr, "wpa_auth", 0x80 | 0x40); /* auth_psk | auth_unspecified */
-        wlsetint(ctlr, "auth", 0);
-        wlsetint(ctlr, "wsec", 4);        /* aes */
-        wlsetint(ctlr, "wpa_auth", 0x80); /* auth_psk */
-    }
+    if(ctlr->cryptotype == Wpa){
+		wlsetint(ctlr, "wpa_auth", 4|2);	/* auth_psk | auth_unspecified */
+		wlsetint(ctlr, "auth", 0);
+		wlsetint(ctlr, "wsec", 2);		/* tkip */
+		wlsetint(ctlr, "wpa_auth", 4);		/* auth_psk */
+	}else{
+		wlsetint(ctlr, "wpa_auth", 0x80|0x40);	/* auth_psk | auth_unspecified */
+		wlsetint(ctlr, "auth", 0);
+		wlsetint(ctlr, "wsec", 4);		/* aes */
+		wlsetint(ctlr, "wpa_auth", 0x80);	/* auth_psk */
+	}
 }
 
 #define cistrcmp  strcasecmp
@@ -2180,8 +2221,11 @@ static int setcrypt(Ctlr* ctlr, Cmdbuf* cb, char* a) {
         ctlr->cryptotype = Wep;
     else if (cistrcmp(a, "off") == 0 || cistrcmp(a, "none") == 0)
         ctlr->cryptotype = 0;
-    else
+    else {
+        printf("returning 0 from setcrypt %d \n", ctlr->cryptotype);
         return 0;
+    }
+    printf("calling wlsetint auth and returning 1 from setcrypt %d \n", ctlr->cryptotype);
     wlsetint(ctlr, "auth", ctlr->cryptotype);
     return 1;
 }
@@ -2423,17 +2467,20 @@ static void wljoin(Ctlr* ctl, char* ssid, int chan, uint8_t *bssid) {
     uint8_t params[72];
     uint8_t* p;
     int n;
-    printf("Sending wl join to essid: %s \n", ssid);
+    // printf("Sending wl join to essid: %s \n", ssid);
     if (chan != 0)
         chan |= 0x2b00; /* 20Mhz channel width */
     p = params;
     n = strlen(ssid);
+    printf("n: %d", n);
     n = MIN(n, 32);
+    printf("n1: %d", n);
     p = put4(p, n);
     memmove(p, ssid, n);
     memset(p + n, 0, 32 - n);
     p += 32;
     p = put4(p, 0xff); /* scan type */
+    printf("chan: %d", chan);
     if (chan != 0) {
         p = put4(p, 2);   /* num probes */
         p = put4(p, 120); /* active time */
@@ -2444,10 +2491,15 @@ static void wljoin(Ctlr* ctl, char* ssid, int chan, uint8_t *bssid) {
         p = put4(p, -1); /* passive time */
     }
     p = put4(p, -1);           /* home time */
-	if(bssid != 0)
+	if(bssid != 0) {
+		printf("copying bssid");
+		dump("bssid", bssid, Eaddrlen);
 		memcpy(p, bssid, Eaddrlen);	/* bssid */
-	else
+	} 
+	else {
+		printf("setting FF as bssid: ");
 		memset(p, 0xFF, Eaddrlen);
+	}
     p += Eaddrlen;
     p = put2(p, 0); /* pad */
     if (chan != 0) {
@@ -2466,9 +2518,10 @@ static void wljoin(Ctlr* ctl, char* ssid, int chan, uint8_t *bssid) {
         }
     }
 
-    printf("Wifi sending join command \n");
+   	printf("Wifi sending join command : %d \n", chan? sizeof params : sizeof params - 4);
+
     wlsetvar(ctl, "join", params, chan ? sizeof params : sizeof params - 4);
-    dump("join_setvar:", params, sizeof params);
+    // dump("join_setvar:", params, sizeof params);
     printf("Wifi sending join command completed \n");
     ctl->status = Connecting;
     printf("Called waitjoin \n");
@@ -2563,23 +2616,30 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
             if (cistrcmp(cb->f[1], "default") != 0) {
                 strncpy(ctlr->essid, cb->f[1], sizeof(ctlr->essid) - 1);
                 ctlr->essid[sizeof(ctlr->essid) - 1] = 0;
+                dump("ctrl->essid set:", ctlr->essid, sizeof(ctlr->essid) - 1);
             } else {
                 memset(ctlr->essid, 0, sizeof(ctlr->essid));
             }
         } else if (ctlr->essid[0] == 0) {
-            printf("essid not set \n");
+            printf("error essid not set \n");
+            return 0;
+        }
+        if(parseether(ea, cb->f[2]) < 0) {
+            printf("bad bssid \n");
             return 0;
         }
 
-        if ((i = atoi(cb->f[2])) >= 0 && i <= 16)
+        if((i = atoi(cb->f[3])) >= 0 && i <= 16) {
+            printf("setting channel id : %d \n", i);
             ctlr->chanid = i;
+        }            
         else {
-            printf("bad channel number");
+            printf("error bad channel number");
             return 0;
         }
 
         if (!setcrypt(ctlr, cb, cb->f[4])) {
-            printf("Called setauth from !setcrypt(ctlr, cb, cb->f[3]) \n");
+            // printf("Called setauth from !setcrypt cond %s \n", cb->f[4]);
             // // printf(" pCmdbuf->buf : %s \n", cb->buf);
             // for(int xy=0; xy < 10; xy++) {
             //     printf("%s \t", cb->f[xy]);
@@ -2588,8 +2648,11 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
             setauth(ctlr, cb, cb->f[4]);
         }
             
-        if (ctlr->essid[0])
+        if (ctlr->essid[0]) {
+            // printf("Calling wljoin from cmjoin ssid :%s \n", ctlr->essid);
             wljoin(ctlr, ctlr->essid, ctlr->chanid, ea);
+        }
+            
 
         printf("CMJOIN \n");
         break;
@@ -2628,11 +2691,11 @@ static long etherbcmctl(Ether* edev, void* buf, long n) {
         printf("CMRXKEY123 \n");
         break;
     case CMescan: /* escan seconds */
-     printf("CMScan \n");
+     printf("CMScan Step \n");
         etherbcmscan((void*) edev, (uint32_t) atoi(cb->f[1]));
         break;
     case CMcountry: /* country alpha2 */
-     printf("CMCOUntry \n");
+     printf("CMCOUntry : %s \n", cb->f[1]);
         wlsetcountry(ctlr, cb->f[1]);
         break;
     case CMdebug:
@@ -2672,6 +2735,15 @@ static void callevhndlr(Ctlr* ctlr, ether_event_type_t type, const ether_event_p
     }
 }
 
+static void etherbcmgetbssid (struct Ether *edev, void *bssid)
+{
+	Ctlr* ctlr;
+
+	ctlr = edev->ctlr;
+	memcpy(bssid, ctlr->bssid, Eaddrlen);
+}
+
+
 int etherbcmpnp(Ether* edev) {
     Ctlr* ctlr = kernel_allocate(sizeof(Ctlr));
 
@@ -2686,6 +2758,7 @@ int etherbcmpnp(Ether* edev) {
     edev->ctlr       = ctlr;
     edev->attach     = etherbcmattach;
     edev->transmit   = etherbcmtransmit;
+    edev->getbssid   = etherbcmgetbssid;
     edev->setevhndlr = etherbcmsetevhndlr;
     edev->ifstat     = etherbcmifstat;
     edev->ctl        = etherbcmctl;

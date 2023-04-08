@@ -1,3 +1,12 @@
 {
-    "makefile.extensionOutputFolder": "./.vscode"
+    "makefile.extensionOutputFolder": "./.vscode",
+    "files.associations": {
+        "config.h": "c",
+        "cstdio": "c",
+        "*.tcc": "c",
+        "random": "c",
+        "cstring": "c",
+        "fstream": "c",
+        "ostream": "c"
+    }
 }

@@ -29,7 +29,8 @@ bool receive_raw_l2_packet(void *pBuffer, unsigned *pResultLength, uint8_t *send
 bool send_raw_l2_packet(const void *pFrame, unsigned nLength);
 // nProtocolType is in host byte order
 bool enable_receive_raw_l2(uint16_t nProtocolType);
-
+void process_l2_layer(void);
+void process_l2_layer_loop(void);
 #ifdef __cplusplus
 }
 #endif

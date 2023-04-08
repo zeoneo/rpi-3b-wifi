@@ -1,6 +1,7 @@
 #include <net/link_layer.h>
 #include <net/net_queue.h>
 #include <mem/kernel_alloc.h>
+#include <kernel/scheduler.h>
 #include <plibc/util.h>
 #include <plibc/stdio.h>
 
@@ -14,6 +15,17 @@ static uint8_t broadcast_addr[MAC_ADDRESS_SIZE] = {0xff, 0xff, 0xff, 0xff, 0xff,
 struct TRawPrivateData {
     unsigned char MACSender[MAC_ADDRESS_SIZE];
 };
+
+static void dump(char* s, void* a, int n) {
+    int i;
+    uint8_t* p;
+
+    p = a;
+    printf("%s: length: %d \n", s, n);
+    for (i = 0; i < n; i++)
+        printf("%c%2.2x", i & 15 ? ' ' : '\n', *p++);
+    printf("\n");
+ }
 
 bool initialize_link_layer(bcm4343_net_device* net_device) {
     if (attached_net_device == 0) {
@@ -54,11 +66,13 @@ bool receive_raw_l2_packet(void* pBuffer, unsigned* pResultLength, uint8_t* send
     // assert (pResultLength != 0);
 
     if (pBuffer == 0 || pResultLength == 0) {
+        printf("receive_raw_l2_packet returning as pBuffer 0 \n");
         return false;
     }
 
     *pResultLength = dequeue_nqueue(rx_net_queue, pBuffer, &pParam);
     if (*pResultLength == 0) {
+        // printf("receive_raw_l2_packet returning as pResultLength 0 \n");
         return false;
     }
 
@@ -66,9 +80,16 @@ bool receive_raw_l2_packet(void* pBuffer, unsigned* pResultLength, uint8_t* send
 
     if (sender_mac != 0 && pData != 0) {
         memcpy(sender_mac, pData->MACSender, MAC_ADDRESS_SIZE);
-    }
-
+   }
+    // printf("receive_raw_l2_packet returning true : sender_mac: %x MacSender: %x \n",sender_mac, pData->MACSender);
     return true;
+}
+
+void process_l2_layer_loop(void) {
+    while(1) {
+        process_l2_layer();
+        task_ms_sleep(700);
+    }
 }
 
 
@@ -116,11 +137,13 @@ void process_l2_layer(void) {
             // 	break;
 
         default:
+            printf("linklayer receive frame: proto %x raw_proto:%x \n", pHeader->nProtocolType, raw_protocol_type);
             if (pHeader->nProtocolType == raw_protocol_type) {
                 struct TRawPrivateData* pParam = kernel_allocate(sizeof(struct TRawPrivateData));
                 // assert(pParam != 0);
                 if (pParam != 0) {
                     memcpy(pParam->MACSender, pHeader->MACSender, MAC_ADDRESS_SIZE);
+                    dump("prakash_sender mac----> ", pParam->MACSender, 6);
                     enqueue_nqueue(rx_net_queue, Buffer + sizeof(struct TEthernetHeader), nLength, pParam);
                 }
             }

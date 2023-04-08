@@ -77,6 +77,12 @@ const uint8_t* get_mac_address(bcm4343_net_device* net_device) {
     return net_device->net_device->maddr;
 }
 
+void get_bssid(bcm4343_net_device* net_device, void * bssid_buf)
+{
+	net_device->edev->getbssid(net_device->edev, bssid_buf);
+    
+}
+
 void register_event_handler(bcm4343_net_device* net_device, ether_event_handler_t* pHandler, void* pContext) {
     if (net_device->edev->setevhndlr != 0) {
         net_device->edev->setevhndlr(net_device->edev, pHandler, pContext);
@@ -87,7 +93,7 @@ bool send_frame(bcm4343_net_device* net_device, const void* frame_buffer, uint32
 
     Block* block = allocb(length);
 
-    if (block == NULL || block->wp != NULL || frame_buffer == NULL) {
+    if (block == NULL || block->wp == NULL || frame_buffer == NULL) {
         printf("NULL error \n");
         return false;
     }
@@ -117,6 +123,7 @@ bool receive_frame(bcm4343_net_device* net_device, void* frame_buffer, uint32_t*
     }
     unsigned nLength = dequeue_nqueue(frame_receive_queue, frame_buffer, 0);
     *length = nLength;
+    // printf("receive_frame called : %d \n", nLength);
     return nLength != 0;
 }
 
@@ -137,12 +144,12 @@ void dump_status(bcm4343_net_device* net_device) {
 void etheriq(Ether* pEther, Block* pBlock, uint32_t nFlag) {
     printf("etheriq ignore nFlag: %d \n", nFlag);
     printf("etheriq: %x BLEN : %d pEther:%x \n", (const char *)pBlock, BLEN (pBlock), pEther);
-    // enqueue_nqueue(frame_receive_queue, pBlock->rp, BLEN(pBlock), 0);
+    enqueue_nqueue(frame_receive_queue, pBlock->rp, BLEN(pBlock), 0);
 }
 
 bool wifi_control(bcm4343_net_device* net_device, const char* pFormat, ...) {
     // assert(pFormat != 0);
-    printf("Inside wifi_control \n");
+    // printf("Inside wifi_control \n");
     va_list var;
     va_start(var, pFormat);
 
@@ -152,7 +159,8 @@ bool wifi_control(bcm4343_net_device* net_device, const char* pFormat, ...) {
     int i = vsprintf(new_buf, pFormat, var);
     new_buf[i] = '\0';
     va_end(var);
-    printf("Formatted command : %s %x \n ", &new_buf[0], Command->buffer);
+    if(Command->buffer)
+    printf("Formatted command : %s\n", &new_buf[0]);
 
     bool x = net_device->edev->ctl(net_device->edev, (char*) &new_buf[0], i) != 0l;
     kernel_deallocate(new_buf);
@@ -171,7 +179,7 @@ bool receive_scan_results(void* pBuffer, unsigned* pResultLength) {
     }
     // printf("In the receive scan result \n");
     unsigned nLength = dequeue_nqueue(scan_results_queue, pBuffer, 0);
-    printf("In the receive scan result, after dequeue nLength:%d \n", nLength);
+    // printf("In the receive scan result, after dequeue nLength:%d \n", nLength);
     if (nLength == 0) {
         // printf("In the receive scan result, after dequeue returning nLength:%d \n", nLength);
         return false;

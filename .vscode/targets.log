@@ -1,169 +1,264 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # GNU Make 4.3
-# Built for x86_64-apple-darwin19.2.0
+# Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2020 Free Software Foundation, Inc.
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
+ 
 
-# Make data base, printed on Sun Jun 26 12:16:00 2022
+# Make data base, printed on Fri Apr  7 09:00:25 2023
 
 # Variables
 
 # environment
+GDK_BACKEND = x11
+# environment
 LC_ALL = C
 # environment
-TMPDIR = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/
+GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-IDF_PATH = /Users/prakashborkar/esp/esp-idf
+SSH_AGENT_LAUNCHER = gnome-keyring
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.8650218168.8650218174
+GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/9r/8ncc2wlj4772jyrtt2508t0m0000gn/T/vscode-ipc-1bc402d6-351f-4042-ab77-2f525635f501.sock
+SNAP_LAUNCHER_ARCH_TRIPLET = x86_64-linux-gnu
 # environment
-VSCODE_CWD = /
+VSCODE_CRASH_REPORTER_PROCESS_TYPE = extensionHost
+# environment
+VSCODE_CWD = /home/prakash
+# environment
+WINDOWPATH = 2
 # default
 MAKE_COMMAND := make
 # environment
-__CFBundleIdentifier = com.microsoft.VSCode
+QT_ACCESSIBILITY = 1
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
+# environment
+SNAP_INSTANCE_NAME = code
+# environment
+GDK_PIXBUF_MODULEDIR = /snap/code/124/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
 .VARIABLES := 
 # environment
-COMMAND_MODE = unix2003
-# environment
-PWD = /Users/prakashborkar/Desktop/Projectes/rpi-3b-wifi
+PWD = /home/prakash/Desktop/rpi-3b-wifi
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
+# environment
+XDG_DATA_DIRS = /home/prakash/snap/code/124/.local/share:/home/prakash/snap/code/124:/snap/code/124/usr/share:/usr/share/ubuntu:/usr/share/gnome:/home/prakash/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
-# environment
-VSCODE_LOG_STACK = false
 # automatic
 %F = $(notdir $%)
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/prakashborkar/Library/Application Support/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
+VSCODE_CODE_CACHE_PATH = /home/prakash/.config/Code/CachedData/b7886d7461186a5eac768481578c1d7ca80e2d21
 # environment
 LANG = C
+# environment
+XAUTHORITY = /run/user/1000/gdm/Xauthority
 # default
 .LOADED := 
 # default
-.INCLUDE_DIRS = /usr/local/Cellar/make/4.3/include /usr/local/include
-# environment
-__CF_USER_TEXT_ENCODING = 0x1F5:0x0:0x0
+.INCLUDE_DIRS = /usr/local/include /usr/include /usr/include
 # makefile
 MAKEFLAGS = pqrR
 # environment
-PKG_CONFIG_PATH = /usr/local/opt/python@3.8/lib/pkgconfig
+GTK_USE_PORTAL = 1
 # makefile
-CURDIR := /Users/prakashborkar/Desktop/Projectes/rpi-3b-wifi
+CURDIR := /home/prakash/Desktop/rpi-3b-wifi
 # environment
-VSCODE_PIPE_LOGGING = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+LESSOPEN = | /usr/bin/lesspipe %s
+# environment
+VSCODE_L10N_BUNDLE_LOCATION = 
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.YKf9XAUavm/Listeners
+SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # default
 .SHELLFLAGS := -c
+# environment
+XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
-P9K_SSH = 0
+XDG_SESSION_DESKTOP = ubuntu
 # makefile (from 'Makefile', line 1)
 MAKEFILE_LIST := Makefile
 # automatic
 @F = $(notdir $@)
 # environment
-VSCODE_VERBOSE_LOGGING = true
+VSCODE_PID = 5522
 # environment
-VSCODE_PID = 629
+XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
+# environment
+BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
+# environment
+SESSION_MANAGER = local/zeo:@/tmp/.ICE-unix/2622,unix/zeo:/tmp/.ICE-unix/2622
 # automatic
 *F = $(notdir $*)
+# environment
+CHROME_DESKTOP = code-url-handler.desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
 # environment
-VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"en-gb","osLocale":"en-in","availableLanguages":{},"_languagePackSupport":true}
 # default
-MAKE_HOST := x86_64-apple-darwin19.2.0
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+GTK_PATH = /snap/code/124/usr/lib/x86_64-linux-gnu/gtk-3.0
+# environment
+GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 # makefile
 SHELL = /bin/sh
 # default
 MAKECMDGOALS := all
 # environment
-SHLVL = 1
+XMODIFIERS = @im=ibus
 # environment
-PICO_SDK_PATH = /Users/prakashborkar/development/tools/pico-sdk
+GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-JENV_LOADED = 1
+SHLVL = 0
 # environment
 MAKELEVEL := 0
 # default
 MAKE = $(MAKE_COMMAND)
 # environment
-PATH = /Users/prakashborkar/.jbang/bin:/usr/local/opt/php@7.3/sbin:/usr/local/opt/php@7.3/bin:/usr/local/opt/php@7.3/sbin:/usr/local/opt/php@7.3/bin:/usr/local/opt/python@3.8/bin:/Users/prakashborkar/.jenv/shims:/Users/prakashborkar/.cargo/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/local/opt/make/libexec/gnubin:/usr/local/opt/python@3.8/bin:/Users/prakashborkar/development/tools:/Users/prakashborkar/development/flutter/bin:/usr/bin:/opt/local/bin:/usr/local/opt/make/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/share/dotnet:/opt/X11/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/Users/prakashborkar/.cargo/bin:/Users/prakashborkar/.rvm/bin:/Users/prakashborkar/.composer/vendor/bin:/usr/local/Cellar/gdb/8.1/bin/:/Users/prakashborkar/esp/xtensa-esp32-elf/bin/:/Users/prakashborkar/Desktop/AndroidStudioProjects/flutter/bin:/Users/prakashborkar/gcc-arm-none-eabi/bin:/Users/prakashborkar/i386-elf-gcc/bin:/Users/prakashborkar/objconv:/Users/prakashborkar:/Users/prakashborkar/gcc-arm-none-eabi/arm-none-eabi/bin:/Users/prakashborkar/flutter/bin:/Applications/microchip/xc8/v1.44/bin:/Applications/microchip/xc8/v2.00/bin
+SNAP_COOKIE = C8vtmYbNeKrqyW_ed-5kACxWiqvdYXF_GxBVgNomFTULmxQIfhei
+# environment
+PATH = /home/prakash/.poetry/bin:/home/prakash/.local/bin:/home/prakash/.poetry/bin:/home/prakash/tools/gcc-arm-none-eabi-10.3-2021.10/bin:/home/prakash/tools/bin:/home/prakash/.poetry/bin:/home/prakash/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
 # default
 MAKEFILES := 
+# environment
+LANGUAGE = en_IN:en
 # automatic
 ^F = $(notdir $^)
 # environment
-JENV_SHELL = zsh
+SNAP_USER_COMMON = /home/prakash/snap/code/common
 # environment
-VSCODE_LOG_NATIVE = false
+SNAP = /snap/code/124
+# environment
+INVOCATION_ID = 44447204df504ac4b35b4430f3d7ecbd
+# environment
+SNAP_REVISION = 124
+# environment
+SNAP_REAL_HOME = /home/prakash
+# environment
+USERNAME = prakash
+# environment
+LESSCLOSE = /usr/bin/lesspipe %s %s
 # automatic
 ?F = $(notdir $?)
+# environment
+GTK_IM_MODULE_FILE = /home/prakash/snap/code/common/.cache/immodules/immodules.cache
+# environment
+XDG_CURRENT_DESKTOP = Unity
 # automatic
 +F = $(notdir $+)
 # environment
-ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+DESKTOP_SESSION = ubuntu
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
+# environment
+LOCPATH = /snap/code/124/usr/lib/locale
 # 'override' directive
 GNUMAKEFLAGS := 
 # environment
-LOGNAME = prakashborkar
+LOGNAME = prakash
 # environment
-XPC_FLAGS = 0x0
+GIO_LAUNCHED_DESKTOP_FILE = /var/lib/snapd/desktop/applications/code_code.desktop
+# environment
+SNAP_ARCH = amd64
 # makefile
 .DEFAULT_GOAL := all
 # environment
-DISPLAY = /private/tmp/com.apple.launchd.NtlyUrLpLT/org.macosforge.xquartz:0
+SYSTEMD_EXEC_PID = 2641
 # environment
-USER = prakashborkar
+DISPLAY = :0
+# environment
+USER = prakash
+# environment
+GTK_MODULES = gail:atk-bridge
 # default
 MAKE_VERSION := 4.3
 # environment
-LDFLAGS = -L/usr/local/opt/python@3.8/lib
+SNAP_DATA = /var/snap/code/124
 # environment
-ANDROID_TOOLS = /Users/prakashborkar/development/tools
+SNAP_CONTEXT = C8vtmYbNeKrqyW_ed-5kACxWiqvdYXF_GxBVgNomFTULmxQIfhei
 # environment
-_ = /usr/local/opt/make/libexec/gnubin/make
+MANAGERPID = 2048
 # environment
-GOOGLE_APPLICATION_CREDENTIALS = /Users/prakashborkar/question-cms-20211108.json
+GIO_LAUNCHED_DESKTOP_FILE_PID = 5470
+# environment
+_ = /snap/code/124/usr/share/code/code
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
+# environment
+GDK_PIXBUF_MODULE_FILE = /home/prakash/snap/code/common/.cache/gdk-pixbuf-loaders.cache
+# environment
+GIO_MODULE_DIR = /home/prakash/snap/code/common/.cache/gio-modules
+# environment
+JOURNAL_STREAM = 8:60435
+# environment
+XDG_SESSION_CLASS = user
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-HOME = /Users/prakashborkar
+HOME = /home/prakash
+# environment
+QT_IM_MODULE = ibus
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-VSCODE_IPC_HOOK = /Users/prakashborkar/Library/Application Support/Code/1.68.1-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-a296046a-1.77-main.sock
+# environment
+GTK_EXE_PREFIX = /snap/code/124/usr
+# environment
+SNAP_NAME = code
+# environment
+GSETTINGS_SCHEMA_DIR = /home/prakash/snap/code/124/.local/share/glib-2.0/schemas
+# environment
+IM_CONFIG_PHASE = 1
 # default
 .RECIPEPREFIX := 
 # automatic
 <F = $(notdir $<)
+# environment
+SNAP_VERSION = b7886d74
+# environment
+VSCODE_CRASH_REPORTER_SANDBOXED_HINT = 1
 # default
 SUFFIXES := 
+# environment
+VSCODE_CLI = 1
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+SNAP_COMMON = /var/snap/code/common
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
+# environment
+SNAP_USER_DATA = /home/prakash/snap/code/124
+# environment
+XDG_MENU_PREFIX = gnome-
+# environment
+GDMSESSION = ubuntu
+# environment
+SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # variable set hash-table stats:
-# Load=76/1024=7%, Rehash=0, Collisions=4/107=4%
+# Load=123/1024=12%, Rehash=0, Collisions=4/156=3%
 
 # Pattern-specific Variable Values
 
@@ -171,9 +266,9 @@ SUFFIXES :=
 
 # Directories
 
-# . (device 16777220, inode 8650265143): 23 files, no impossibilities.
+# . (device 66309, inode 12341161): 24 files, no impossibilities.
 
-# 23 files, no impossibilities in 1 directories.
+# 24 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -184,7 +279,7 @@ SUFFIXES :=
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-01-26 21:21:26
+#  Last modified 2023-04-06 21:33:02.339434403
 #  File has been updated.
 #  Successfully updated.
 
@@ -211,6 +306,7 @@ wpa_supplicant.a:
 # automatic
 # | := 
 # variable set hash-table stats:
+ 
 # Load=8/32=25%, Rehash=0, Collisions=1/11=9%
 #  recipe to execute (from 'Makefile', line 5):
 	# git submodule update --init hostap
@@ -257,12 +353,12 @@ all: wpa_supplicant.a
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 30 / storage = 313 B / avg = 10 B
-# current buf: size = 8162 B / used = 313 B / count = 30 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 31 / storage = 303 B / avg = 9 B
+# current buf: size = 8162 B / used = 303 B / count = 31 / avg = 9 B
 
-# strcache performance: lookups = 39 / hit rate = 23%
+# strcache performance: lookups = 41 / hit rate = 24%
 # hash-table stats:
-# Load=30/8192=0%, Rehash=0, Collisions=0/39=0%
-# Finished Make data base on Sun Jun 26 12:16:00 2022
+# Load=31/8192=0%, Rehash=0, Collisions=0/41=0%
+# Finished Make data base on Fri Apr  7 09:00:25 2023
 
  
